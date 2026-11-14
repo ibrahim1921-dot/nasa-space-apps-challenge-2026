@@ -1,18 +1,36 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { DEMO_ACCOUNTS } from '../lib/demoAccounts.js';
+import { useEffect, useRef, useState } from 'react';
 import { useOnboard } from '../hooks/useOnboard.jsx';
+import { LOGIN_MEDIA } from '../lib/loginMedia.js';
 
-const ROLE_NOTE = {
-  maya: 'Flight engineer · her own dashboard, check-ins and stand tests',
-  lena: 'Crew medical officer · her own dashboard plus the whole-crew view',
-};
-
-/** Signed-out state: what the app is, and the two demo doors. No sign-up, no password. */
 export default function Landing() {
-  const { enter, busy, server } = useOnboard();
+  const { enter, busy } = useOnboard();
   const headingRef = useRef(null);
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleLogin(event) {
+    event.preventDefault();
+    if (submitting || busy) return;
+    if (!name.trim()) {
+      setError('Enter your name.');
+      return;
+    }
+    setError('');
+    setSubmitting(true);
+    try {
+      // Frontend preview only; credentials are not authenticated or persisted.
+      enter('maya');
+      setPassword('');
+    } catch {
+      setError('Unable to open your profile. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -20,46 +38,48 @@ export default function Landing() {
 
   return (
     <main className="landing">
-      <section className="card card--lg landing__panel" aria-labelledby="landing-title">
-        <p className="cmo__eyebrow">Demo mission</p>
-        <h1 id="landing-title" ref={headingRef} tabIndex={-1} className="landing__title">
-          Crew health monitor
-        </h1>
-        <p className="landing__lede">
-          Daily vitals and stand tests for a spaceflight crew, checked on the device against each person’s own baseline
-          and published limits, with a whole-crew view for the Crew Medical Officer.
-        </p>
-
-        <div className="landing__doors" role="group" aria-label="Choose a demo person">
-          {Object.values(DEMO_ACCOUNTS).map((a) => (
-            <button
-              key={a.who}
-              type="button"
-              className="landing__door"
-              onClick={() => enter(a.who)}
-              disabled={busy}
-            >
-              <span className="landing__door-name">{a.button}</span>
-              <span className="landing__door-note">{ROLE_NOTE[a.who]}</span>
-            </button>
-          ))}
+      <svg width="0" height="0" className="landing__filters" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id="landing-logo-transparency" colorInterpolationFilters="sRGB">
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  1 1 1 0 0" />
+          </filter>
+        </defs>
+      </svg>
+      {LOGIN_MEDIA.background && (
+        <img className="landing__background" src={LOGIN_MEDIA.background} alt="" aria-hidden="true" />
+      )}
+      <section className="landing__panel" aria-labelledby="landing-title">
+        <div className="landing__brand">
+          <span className="landing__icon" aria-hidden="true">
+            {LOGIN_MEDIA.icon ? (
+              <img src={LOGIN_MEDIA.icon} alt="" />
+            ) : (
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="14" stroke="currentColor" strokeWidth="1.5" />
+                <ellipse cx="24" cy="24" rx="23" ry="8" transform="rotate(-35 24 24)" stroke="currentColor" strokeWidth="1.5" />
+                <path d="m15 24 5 0 3-7 4 14 3-7h4" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+              </svg>
+            )}
+          </span>
+          <h1 id="landing-title" ref={headingRef} tabIndex={-1} className="landing__title">
+            StellarHealth
+          </h1>
         </div>
-
-        <p className="muted landing__note">
-          Demo accounts: one click, no sign-up and no password.{' '}
-          {server === 'mock'
-            ? 'Demo mode: runs on its own mock data.'
-            : server === 'connected'
-            ? 'Onboard server: connected.'
-            : server === 'offline'
-              ? 'Onboard server offline: everything is saved on this device.'
-              : ''}
-        </p>
+        <form className="landing__form" onSubmit={handleLogin} aria-busy={submitting}>
+        <label className="landing__field" htmlFor="login-name">
+          Name
+          <input id="login-name" name="username" autoComplete="username" value={name} onChange={(event) => setName(event.target.value)} required disabled={submitting} />
+        </label>
+        <label className="landing__field" htmlFor="login-password">
+          Password
+          <input id="login-password" name="password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={submitting} />
+        </label>
+        {error && <p className="landing__error" role="alert">{error}</p>}
+        <button className="landing__submit" type="submit" disabled={busy || submitting}>
+          {submitting ? 'Logging in…' : 'Login'}
+        </button>
+        </form>
       </section>
-      <p className="landing__foot muted">
-        Crew data is synthetic, for a fictional crew. Sleep nights are general human data from PhysioNet; lab values
-        are from NASA’s Inspiration4 mission.
-      </p>
     </main>
   );
 }
