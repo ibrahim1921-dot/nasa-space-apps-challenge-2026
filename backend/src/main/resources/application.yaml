@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Nasa_Space_App_Backend
+  jpa:
+    hibernate:
+      ddl-auto=validate:
