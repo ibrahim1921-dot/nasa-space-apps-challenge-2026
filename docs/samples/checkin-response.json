@@ -1,0 +1,19 @@
+{
+  "crewId": "crew-01",
+  "recordedAt": "2026-11-14T08:00:00Z",
+  "overall": "watch",
+  "indicators": {
+    "sleep_hours": {
+      "value": 6.4,
+      "unit": "h",
+      "status": "watch",
+      "reasons": ["Sleep 6.4 h is 2.1 SD below your 14-day average of 7.1 h"],
+      "usual": { "mean": 7.1, "days": 14 },
+      "source": "synthetic"
+    }
+  },
+  "guidance": {
+    "steps": ["Repeat the measurement tonight", "Protect your sleep window"],
+    "escalateTo": null
+  }
+}

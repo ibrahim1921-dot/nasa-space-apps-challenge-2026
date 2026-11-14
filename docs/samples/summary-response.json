@@ -1,0 +1,12 @@
+{
+  "crewId": "crew-01",
+  "name": "TBD",
+  "asOf": "2026-11-14T08:00:00Z",
+  "overall": "normal",
+  "indicators": [
+    { "id": "heart_rate", "value": 64, "unit": "bpm", "status": "normal", "source": "synthetic" }
+  ],
+  "bodyRegions": [
+    { "id": "chest", "status": "normal", "indicators": ["heart_rate", "blood_pressure"] }
+  ]
+}

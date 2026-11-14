@@ -1,0 +1,39 @@
+# --- Secrets: never commit real env files ---
+.env
+.env.*
+!.env.example
+**/application-local.properties
+
+# --- Node / Next.js (frontend) ---
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Java / Maven (backend) ---
+target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# --- Python (ml) ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# --- ML data: raw and interim downloads are rebuilt by scripts, not committed ---
+/ml/data/raw/
+/ml/data/interim/
+
+# --- Editors and OS ---
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.log
