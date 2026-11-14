@@ -1,0 +1,47 @@
+:root {
+  color-scheme: dark;
+
+  /* Space backdrop */
+  --space-edge: #050914;
+  --space-center: #0b1633;
+
+  /* Text and accent */
+  --color-text: #e8edf7;
+  --color-muted: #a3b0c8;
+  --color-accent: #7b93ff;
+  --color-on-accent: #0a1024;
+
+  /* Dark glass surfaces */
+  --glass-bg: rgba(14, 24, 48, 0.72);
+  --glass-border: rgba(150, 175, 230, 0.16);
+  --glass-blur: 12px;
+  --drawer-bg: rgba(10, 18, 40, 0.94);
+  --input-bg: rgba(255, 255, 255, 0.04);
+  --input-border: rgba(150, 175, 230, 0.24);
+  --color-skeleton: rgba(150, 175, 230, 0.12);
+
+  /* Status: full colour for text, lines and icons; ~16% for chip backgrounds */
+  --status-normal: #3ddc97;
+  --status-watch: #f5b942;
+  --status-alert: #ff6363;
+  --status-normal-bg: rgba(61, 220, 151, 0.16);
+  --status-watch-bg: rgba(245, 185, 66, 0.16);
+  --status-alert-bg: rgba(255, 99, 99, 0.16);
+
+  /* Overall health bar */
+  --bar-red: var(--status-alert);
+  --bar-yellow: var(--status-watch);
+  --bar-green: var(--status-normal);
+  --bar-marker: #e8edf7;
+
+  /* Type */
+  --font-ui: var(--font-barlow), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-number: var(--font-barlow-semi), var(--font-barlow), system-ui, sans-serif;
+
+  /* Shape */
+  --radius-card: 14px;
+  --radius-control: 10px;
+  --radius-pill: 999px;
+
+  --focus-ring: 3px solid var(--color-accent);
+}

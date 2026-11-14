@@ -1,0 +1,2554 @@
+{
+ "source": "PhysioNet bidsleep v1.0.1 (general human data, Earth; not astronauts)",
+ "method": "Leave-one-night-out personal median; night-to-night spread pooled across people; separate heart-rate and sleep checks",
+ "thresholds": {
+  "heart_rate": {
+   "watch": 2.92,
+   "alert": 3.37
+  },
+  "sleep": {
+   "watch": 4.29,
+   "alert": 6.09
+  }
+ },
+ "pooled_spread": {
+  "sleep_hr_median": 4.448,
+  "sleep_hr_p5": 2.965,
+  "total_sleep_h": 1.086,
+  "wake_pct": 4.114,
+  "n3_pct_of_sleep": 6.561,
+  "rem_pct_of_sleep": 5.819
+ },
+ "nights": [
+  {
+   "subject_id": "Bidslab00",
+   "night_index": 1,
+   "rec_start_et": "2021-12-02 23:11:25",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": -0.18,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab00",
+   "night_index": 2,
+   "rec_start_et": "2021-12-04 00:31:56",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 1.17,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab00",
+   "night_index": 3,
+   "rec_start_et": "2021-12-04 23:40:29",
+   "status": "normal",
+   "heart_rate_score": 0.11,
+   "sleep_score": 1.32,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab00",
+   "night_index": 4,
+   "rec_start_et": "2021-12-06 23:36:31",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 0.06,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab00",
+   "night_index": 5,
+   "rec_start_et": "2021-12-07 23:34:53",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 1.2,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab00",
+   "night_index": 6,
+   "rec_start_et": "2021-12-08 23:39:13",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.96,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab00",
+   "night_index": 7,
+   "rec_start_et": "2021-12-11 23:34:23",
+   "status": "normal",
+   "heart_rate_score": -0.45,
+   "sleep_score": 2.22,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab01",
+   "night_index": 1,
+   "rec_start_et": "2021-12-10 22:35:53",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.55,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab01",
+   "night_index": 2,
+   "rec_start_et": "2021-12-16 22:28:22",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 0.07,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab01",
+   "night_index": 3,
+   "rec_start_et": "2021-12-19 22:46:38",
+   "status": "data quality issue",
+   "heart_rate_score": 1.18,
+   "sleep_score": -0.47,
+   "reason": "",
+   "quality_issue": "low HR coverage"
+  },
+  {
+   "subject_id": "Bidslab01",
+   "night_index": 4,
+   "rec_start_et": "2021-12-21 22:22:08",
+   "status": "normal",
+   "heart_rate_score": 2.02,
+   "sleep_score": 2.09,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab01",
+   "night_index": 5,
+   "rec_start_et": "2021-12-26 22:54:28",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 0.9,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab02",
+   "night_index": 1,
+   "rec_start_et": "2021-12-09 00:03:06",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.34,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab02",
+   "night_index": 2,
+   "rec_start_et": "2021-12-11 00:40:09",
+   "status": "normal",
+   "heart_rate_score": -0.45,
+   "sleep_score": 0.81,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab02",
+   "night_index": 3,
+   "rec_start_et": "2021-12-14 00:22:38",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.61,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab02",
+   "night_index": 4,
+   "rec_start_et": "2021-12-15 23:49:44",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 0.21,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab02",
+   "night_index": 5,
+   "rec_start_et": "2021-12-17 01:12:19",
+   "status": "alert",
+   "heart_rate_score": 3.37,
+   "sleep_score": 1.71,
+   "reason": "Lowest sleeping heart rate (5th pct) 72 bpm is 10 bpm above your usual (3.4x a typical night-to-night change); Sleeping heart rate 76 bpm is 9 bpm above your usual (2.0x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab02",
+   "night_index": 6,
+   "rec_start_et": "2021-12-19 00:20:01",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.76,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab06",
+   "night_index": 1,
+   "rec_start_et": "2022-02-03 00:17:13",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 1.19,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab06",
+   "night_index": 2,
+   "rec_start_et": "2022-02-06 23:49:31",
+   "status": "data quality issue",
+   "heart_rate_score": 2.25,
+   "sleep_score": 1.65,
+   "reason": "",
+   "quality_issue": "about double the normal HR rate"
+  },
+  {
+   "subject_id": "Bidslab06",
+   "night_index": 3,
+   "rec_start_et": "2022-03-06 01:26:27",
+   "status": "normal",
+   "heart_rate_score": 0.84,
+   "sleep_score": 0.92,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab06",
+   "night_index": 4,
+   "rec_start_et": "2022-03-07 23:57:05",
+   "status": "normal",
+   "heart_rate_score": -0.17,
+   "sleep_score": 0.62,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab07",
+   "night_index": 1,
+   "rec_start_et": "2022-02-01 22:52:17",
+   "status": "normal",
+   "heart_rate_score": 2.19,
+   "sleep_score": 0.96,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab07",
+   "night_index": 2,
+   "rec_start_et": "2022-02-11 23:25:29",
+   "status": "normal",
+   "heart_rate_score": 2.87,
+   "sleep_score": 0.61,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab07",
+   "night_index": 3,
+   "rec_start_et": "2022-02-12 23:38:53",
+   "status": "normal",
+   "heart_rate_score": 1.85,
+   "sleep_score": 1.32,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab07",
+   "night_index": 4,
+   "rec_start_et": "2022-02-13 22:32:23",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": 0.84,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab07",
+   "night_index": 5,
+   "rec_start_et": "2022-03-28 00:56:58",
+   "status": "normal",
+   "heart_rate_score": -2.81,
+   "sleep_score": 0.72,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab07",
+   "night_index": 6,
+   "rec_start_et": "2022-04-01 01:24:54",
+   "status": "normal",
+   "heart_rate_score": -3.04,
+   "sleep_score": 1.12,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab07",
+   "night_index": 7,
+   "rec_start_et": "2022-04-12 01:03:26",
+   "status": "normal",
+   "heart_rate_score": -2.14,
+   "sleep_score": 0.42,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab08",
+   "night_index": 1,
+   "rec_start_et": "2022-01-28 23:40:40",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 1.43,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab08",
+   "night_index": 2,
+   "rec_start_et": "2022-01-29 23:03:00",
+   "status": "normal",
+   "heart_rate_score": -0.79,
+   "sleep_score": 1.76,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab08",
+   "night_index": 3,
+   "rec_start_et": "2022-02-01 00:06:26",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 0.31,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab08",
+   "night_index": 4,
+   "rec_start_et": "2022-02-04 00:19:29",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 2.92,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab08",
+   "night_index": 5,
+   "rec_start_et": "2022-02-12 01:01:58",
+   "status": "normal",
+   "heart_rate_score": 2.36,
+   "sleep_score": 2.07,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab08",
+   "night_index": 6,
+   "rec_start_et": "2022-02-14 00:13:25",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 0.94,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab08",
+   "night_index": 7,
+   "rec_start_et": "2022-03-02 00:32:07",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 0.79,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab09",
+   "night_index": 1,
+   "rec_start_et": "2022-02-06 22:50:30",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.6,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab09",
+   "night_index": 2,
+   "rec_start_et": "2022-02-14 23:29:19",
+   "status": "normal",
+   "heart_rate_score": 1.57,
+   "sleep_score": 0.58,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab09",
+   "night_index": 3,
+   "rec_start_et": "2022-04-17 23:10:33",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 0.82,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab09",
+   "night_index": 4,
+   "rec_start_et": "2022-04-27 02:27:24",
+   "status": "watch",
+   "heart_rate_score": -1.18,
+   "sleep_score": 5.89,
+   "reason": "Time awake 32% is 24 points above your usual (5.9x a typical night-to-night change); Total sleep 3.6 h is 2.4 h below your usual (2.2x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab09",
+   "night_index": 5,
+   "rec_start_et": "2022-04-28 01:18:47",
+   "status": "normal",
+   "heart_rate_score": -0.84,
+   "sleep_score": 1.13,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab10",
+   "night_index": 1,
+   "rec_start_et": "2022-02-06 00:31:04",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": 0.35,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab10",
+   "night_index": 2,
+   "rec_start_et": "2022-02-06 22:45:17",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.43,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab10",
+   "night_index": 3,
+   "rec_start_et": "2022-02-07 22:52:18",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": -0.34,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab10",
+   "night_index": 4,
+   "rec_start_et": "2022-02-14 23:15:27",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 0.44,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab10",
+   "night_index": 5,
+   "rec_start_et": "2022-02-17 22:52:52",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 0.81,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab10",
+   "night_index": 6,
+   "rec_start_et": "2022-03-07 01:55:00",
+   "status": "alert",
+   "heart_rate_score": 1.01,
+   "sleep_score": 6.1,
+   "reason": "Time awake 32% is 25 points above your usual (6.1x a typical night-to-night change); Total sleep 4.2 h is 3.2 h below your usual (3.0x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab11",
+   "night_index": 1,
+   "rec_start_et": "2022-02-15 22:27:17",
+   "status": "normal",
+   "heart_rate_score": -1.69,
+   "sleep_score": -0.66,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab11",
+   "night_index": 2,
+   "rec_start_et": "2022-02-21 00:02:03",
+   "status": "normal",
+   "heart_rate_score": -2.14,
+   "sleep_score": 0.94,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab11",
+   "night_index": 3,
+   "rec_start_et": "2022-03-28 22:18:25",
+   "status": "normal",
+   "heart_rate_score": 2.36,
+   "sleep_score": 1.7,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab11",
+   "night_index": 4,
+   "rec_start_et": "2022-03-29 22:06:57",
+   "status": "normal",
+   "heart_rate_score": 1.69,
+   "sleep_score": 2.63,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab11",
+   "night_index": 5,
+   "rec_start_et": "2022-04-01 21:49:20",
+   "status": "normal",
+   "heart_rate_score": 1.69,
+   "sleep_score": 1.13,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab13",
+   "night_index": 1,
+   "rec_start_et": "2022-02-20 00:21:17",
+   "status": "normal",
+   "heart_rate_score": -0.17,
+   "sleep_score": 0.34,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab13",
+   "night_index": 2,
+   "rec_start_et": "2022-02-20 23:32:40",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 0.12,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab13",
+   "night_index": 3,
+   "rec_start_et": "2022-02-21 23:20:13",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": 0.38,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab13",
+   "night_index": 4,
+   "rec_start_et": "2022-02-23 23:50:57",
+   "status": "normal",
+   "heart_rate_score": -0.84,
+   "sleep_score": 2.69,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab13",
+   "night_index": 5,
+   "rec_start_et": "2022-02-24 23:56:48",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": -0.42,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab13",
+   "night_index": 6,
+   "rec_start_et": "2022-02-26 00:02:36",
+   "status": "normal",
+   "heart_rate_score": 0.9,
+   "sleep_score": 2.27,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab13",
+   "night_index": 7,
+   "rec_start_et": "2022-02-26 23:51:18",
+   "status": "watch",
+   "heart_rate_score": -0.17,
+   "sleep_score": 6.06,
+   "reason": "Time awake 33% is 25 points above your usual (6.1x a typical night-to-night change); Total sleep 4.2 h is 3.0 h below your usual (2.7x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab14",
+   "night_index": 1,
+   "rec_start_et": "2022-02-20 00:24:15",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 1.94,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab14",
+   "night_index": 2,
+   "rec_start_et": "2022-02-20 23:37:16",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": -0.34,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab14",
+   "night_index": 3,
+   "rec_start_et": "2022-02-22 23:34:20",
+   "status": "normal",
+   "heart_rate_score": 0.22,
+   "sleep_score": 1.07,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab14",
+   "night_index": 4,
+   "rec_start_et": "2022-02-23 23:54:07",
+   "status": "data quality issue",
+   "heart_rate_score": 0.17,
+   "sleep_score": 1.21,
+   "reason": "",
+   "quality_issue": "low HR coverage"
+  },
+  {
+   "subject_id": "Bidslab14",
+   "night_index": 5,
+   "rec_start_et": "2022-02-25 00:01:52",
+   "status": "normal",
+   "heart_rate_score": 0.9,
+   "sleep_score": 1.23,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab14",
+   "night_index": 6,
+   "rec_start_et": "2022-02-26 00:06:46",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 0.78,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab14",
+   "night_index": 7,
+   "rec_start_et": "2022-04-01 01:09:28",
+   "status": "normal",
+   "heart_rate_score": 2.02,
+   "sleep_score": 1.7,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab15",
+   "night_index": 1,
+   "rec_start_et": "2022-03-05 00:31:30",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 0.31,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab15",
+   "night_index": 2,
+   "rec_start_et": "2022-03-06 01:20:09",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": -0.16,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab15",
+   "night_index": 3,
+   "rec_start_et": "2022-03-15 01:28:04",
+   "status": "normal",
+   "heart_rate_score": -0.17,
+   "sleep_score": 1.28,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab16",
+   "night_index": 1,
+   "rec_start_et": "2022-03-01 23:29:13",
+   "status": "normal",
+   "heart_rate_score": 0.22,
+   "sleep_score": 1.43,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab16",
+   "night_index": 2,
+   "rec_start_et": "2022-03-03 00:43:09",
+   "status": "normal",
+   "heart_rate_score": 0.51,
+   "sleep_score": 0.43,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab16",
+   "night_index": 3,
+   "rec_start_et": "2022-03-05 22:45:04",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.46,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab16",
+   "night_index": 4,
+   "rec_start_et": "2022-03-07 00:41:13",
+   "status": "normal",
+   "heart_rate_score": 0.84,
+   "sleep_score": 0.76,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab16",
+   "night_index": 5,
+   "rec_start_et": "2022-03-08 22:59:32",
+   "status": "normal",
+   "heart_rate_score": -0.45,
+   "sleep_score": -0.03,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab16",
+   "night_index": 6,
+   "rec_start_et": "2022-03-10 00:40:38",
+   "status": "normal",
+   "heart_rate_score": -0.51,
+   "sleep_score": 1.36,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab16",
+   "night_index": 7,
+   "rec_start_et": "2022-03-10 22:22:07",
+   "status": "normal",
+   "heart_rate_score": 0.84,
+   "sleep_score": 1.85,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab17",
+   "night_index": 1,
+   "rec_start_et": "2022-03-05 22:48:48",
+   "status": "normal",
+   "heart_rate_score": 1.12,
+   "sleep_score": 1.77,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab17",
+   "night_index": 2,
+   "rec_start_et": "2022-03-06 23:25:07",
+   "status": "normal",
+   "heart_rate_score": 0.9,
+   "sleep_score": 0.46,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab17",
+   "night_index": 3,
+   "rec_start_et": "2022-03-30 22:47:00",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.32,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab17",
+   "night_index": 4,
+   "rec_start_et": "2022-04-15 01:06:06",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 1.22,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab17",
+   "night_index": 5,
+   "rec_start_et": "2022-05-18 01:57:12",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 1.94,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab17",
+   "night_index": 6,
+   "rec_start_et": "2022-05-19 01:07:55",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 1.72,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab18",
+   "night_index": 1,
+   "rec_start_et": "2022-03-07 01:48:33",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 2.21,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab18",
+   "night_index": 2,
+   "rec_start_et": "2022-03-09 01:16:40",
+   "status": "normal",
+   "heart_rate_score": 2.02,
+   "sleep_score": 1.25,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab18",
+   "night_index": 3,
+   "rec_start_et": "2022-03-10 01:10:22",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 0.19,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab18",
+   "night_index": 4,
+   "rec_start_et": "2022-03-11 01:25:12",
+   "status": "normal",
+   "heart_rate_score": 2.7,
+   "sleep_score": 0.71,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab18",
+   "night_index": 5,
+   "rec_start_et": "2022-03-13 23:39:01",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.64,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab18",
+   "night_index": 6,
+   "rec_start_et": "2022-03-25 00:15:10",
+   "status": "normal",
+   "heart_rate_score": -1.57,
+   "sleep_score": 0.93,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab19",
+   "night_index": 1,
+   "rec_start_et": "2022-03-08 00:08:04",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 0.55,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab19",
+   "night_index": 2,
+   "rec_start_et": "2022-03-09 01:11:54",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 1.48,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab19",
+   "night_index": 3,
+   "rec_start_et": "2022-03-10 01:20:40",
+   "status": "normal",
+   "heart_rate_score": -0.45,
+   "sleep_score": 1.99,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab19",
+   "night_index": 4,
+   "rec_start_et": "2022-03-11 02:18:14",
+   "status": "normal",
+   "heart_rate_score": 0.9,
+   "sleep_score": 0.98,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab19",
+   "night_index": 5,
+   "rec_start_et": "2022-03-14 00:44:15",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.5,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab19",
+   "night_index": 6,
+   "rec_start_et": "2022-03-26 02:07:51",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.12,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab20",
+   "night_index": 1,
+   "rec_start_et": "2021-11-16 22:05:14",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 0.4,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab20",
+   "night_index": 2,
+   "rec_start_et": "2021-11-18 23:06:11",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 1.71,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab20",
+   "night_index": 3,
+   "rec_start_et": "2022-01-04 00:30:15",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 1.48,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab20",
+   "night_index": 4,
+   "rec_start_et": "2022-01-05 03:08:13",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 0.35,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab20",
+   "night_index": 5,
+   "rec_start_et": "2022-02-26 01:56:04",
+   "status": "normal",
+   "heart_rate_score": -1.57,
+   "sleep_score": 1.57,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab22",
+   "night_index": 1,
+   "rec_start_et": "2021-10-25 03:36:07",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 0.55,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab22",
+   "night_index": 2,
+   "rec_start_et": "2021-10-26 00:37:36",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 4.03,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab22",
+   "night_index": 3,
+   "rec_start_et": "2021-10-27 00:59:36",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 1.22,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab22",
+   "night_index": 4,
+   "rec_start_et": "2021-11-11 23:46:31",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 2.11,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab22",
+   "night_index": 5,
+   "rec_start_et": "2021-11-13 00:34:14",
+   "status": "normal",
+   "heart_rate_score": 0.9,
+   "sleep_score": 0.41,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab22",
+   "night_index": 6,
+   "rec_start_et": "2022-03-05 01:12:52",
+   "status": "watch",
+   "heart_rate_score": 2.92,
+   "sleep_score": 1.19,
+   "reason": "Sleeping heart rate 72 bpm is 13 bpm above your usual (2.9x a typical night-to-night change); Lowest sleeping heart rate (5th pct) 61 bpm is 5 bpm above your usual (1.7x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab30",
+   "night_index": 1,
+   "rec_start_et": "2021-07-31 01:42:12",
+   "status": "normal",
+   "heart_rate_score": 1.18,
+   "sleep_score": 1.94,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab30",
+   "night_index": 2,
+   "rec_start_et": "2021-08-01 02:11:46",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 1.65,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab30",
+   "night_index": 3,
+   "rec_start_et": "2021-08-02 00:40:25",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 1.51,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab30",
+   "night_index": 4,
+   "rec_start_et": "2021-08-05 00:12:43",
+   "status": "normal",
+   "heart_rate_score": 1.18,
+   "sleep_score": 1.22,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab30",
+   "night_index": 5,
+   "rec_start_et": "2021-08-06 00:56:29",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.69,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab30",
+   "night_index": 6,
+   "rec_start_et": "2021-08-08 01:22:08",
+   "status": "normal",
+   "heart_rate_score": 1.18,
+   "sleep_score": -0.05,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab30",
+   "night_index": 7,
+   "rec_start_et": "2021-08-08 23:50:23",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 1.3,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab31",
+   "night_index": 1,
+   "rec_start_et": "2021-08-19 23:36:58",
+   "status": "normal",
+   "heart_rate_score": 2.36,
+   "sleep_score": 1.31,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab31",
+   "night_index": 2,
+   "rec_start_et": "2021-08-21 01:59:13",
+   "status": "watch",
+   "heart_rate_score": 3.04,
+   "sleep_score": 1.2,
+   "reason": "Lowest sleeping heart rate (5th pct) 63 bpm is 9 bpm above your usual (3.0x a typical night-to-night change); Sleeping heart rate 70 bpm is 9 bpm above your usual (2.0x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab31",
+   "night_index": 3,
+   "rec_start_et": "2021-08-22 23:27:16",
+   "status": "normal",
+   "heart_rate_score": -2.25,
+   "sleep_score": 2.1,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab31",
+   "night_index": 4,
+   "rec_start_et": "2021-08-24 22:22:28",
+   "status": "normal",
+   "heart_rate_score": -2.02,
+   "sleep_score": 0.15,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab31",
+   "night_index": 5,
+   "rec_start_et": "2021-08-26 22:48:07",
+   "status": "normal",
+   "heart_rate_score": -1.35,
+   "sleep_score": 0.7,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab31",
+   "night_index": 6,
+   "rec_start_et": "2021-09-26 23:17:34",
+   "status": "normal",
+   "heart_rate_score": 2.7,
+   "sleep_score": -0.29,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab32",
+   "night_index": 1,
+   "rec_start_et": "2021-09-29 00:17:27",
+   "status": "normal",
+   "heart_rate_score": -0.9,
+   "sleep_score": 0.42,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab32",
+   "night_index": 2,
+   "rec_start_et": "2021-09-30 00:32:09",
+   "status": "normal",
+   "heart_rate_score": 2.19,
+   "sleep_score": 0.46,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab32",
+   "night_index": 3,
+   "rec_start_et": "2021-10-01 01:41:08",
+   "status": "normal",
+   "heart_rate_score": 2.19,
+   "sleep_score": 0.85,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab32",
+   "night_index": 4,
+   "rec_start_et": "2021-10-03 02:09:52",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 0.32,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab32",
+   "night_index": 5,
+   "rec_start_et": "2021-10-04 23:51:03",
+   "status": "normal",
+   "heart_rate_score": -1.12,
+   "sleep_score": 0.34,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab32",
+   "night_index": 6,
+   "rec_start_et": "2021-11-05 01:53:15",
+   "status": "watch",
+   "heart_rate_score": 1.18,
+   "sleep_score": 4.31,
+   "reason": "Time awake 25% is 18 points above your usual (4.3x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab32",
+   "night_index": 7,
+   "rec_start_et": "2021-11-15 00:33:07",
+   "status": "normal",
+   "heart_rate_score": -0.9,
+   "sleep_score": 2.1,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab34",
+   "night_index": 1,
+   "rec_start_et": "2021-10-03 21:34:16",
+   "status": "data quality issue",
+   "heart_rate_score": 2.02,
+   "sleep_score": 2.48,
+   "reason": "",
+   "quality_issue": "low HR coverage"
+  },
+  {
+   "subject_id": "Bidslab34",
+   "night_index": 2,
+   "rec_start_et": "2021-10-04 22:01:13",
+   "status": "normal",
+   "heart_rate_score": -0.45,
+   "sleep_score": 3.86,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab34",
+   "night_index": 3,
+   "rec_start_et": "2021-10-06 21:43:15",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 2.88,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab34",
+   "night_index": 4,
+   "rec_start_et": "2021-10-13 23:34:48",
+   "status": "normal",
+   "heart_rate_score": 1.12,
+   "sleep_score": 2.15,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab34",
+   "night_index": 5,
+   "rec_start_et": "2021-10-21 23:56:54",
+   "status": "watch",
+   "heart_rate_score": -0.9,
+   "sleep_score": 4.69,
+   "reason": "REM sleep 26% is 27 points below your usual (4.7x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab35",
+   "night_index": 1,
+   "rec_start_et": "2021-10-29 00:51:16",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 0.72,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab35",
+   "night_index": 2,
+   "rec_start_et": "2021-10-31 01:52:42",
+   "status": "watch",
+   "heart_rate_score": 3.04,
+   "sleep_score": 0.52,
+   "reason": "Lowest sleeping heart rate (5th pct) 67 bpm is 9 bpm above your usual (3.0x a typical night-to-night change); Sleeping heart rate 73 bpm is 10 bpm above your usual (2.2x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab35",
+   "night_index": 3,
+   "rec_start_et": "2021-11-01 02:04:17",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 1.46,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab35",
+   "night_index": 4,
+   "rec_start_et": "2021-11-08 23:43:43",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 2.65,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab35",
+   "night_index": 5,
+   "rec_start_et": "2021-11-10 01:52:48",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 2.8,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab35",
+   "night_index": 6,
+   "rec_start_et": "2021-11-18 01:37:10",
+   "status": "normal",
+   "heart_rate_score": -0.9,
+   "sleep_score": 0.07,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab36",
+   "night_index": 1,
+   "rec_start_et": "2021-12-08 23:41:23",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 1.67,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab36",
+   "night_index": 2,
+   "rec_start_et": "2021-12-09 22:02:30",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 2.92,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab36",
+   "night_index": 3,
+   "rec_start_et": "2021-12-11 22:42:28",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 2.29,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab36",
+   "night_index": 4,
+   "rec_start_et": "2021-12-12 23:05:16",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.07,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab36",
+   "night_index": 5,
+   "rec_start_et": "2021-12-13 23:38:06",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 0.18,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab36",
+   "night_index": 6,
+   "rec_start_et": "2022-03-04 01:57:41",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.43,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab38",
+   "night_index": 1,
+   "rec_start_et": "2022-01-12 00:58:55",
+   "status": "watch",
+   "heart_rate_score": 3.04,
+   "sleep_score": 0.57,
+   "reason": "Lowest sleeping heart rate (5th pct) 64 bpm is 9 bpm above your usual (3.0x a typical night-to-night change); Sleeping heart rate 70 bpm is 8 bpm above your usual (1.9x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab38",
+   "night_index": 2,
+   "rec_start_et": "2022-01-14 02:28:20",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.25,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab38",
+   "night_index": 3,
+   "rec_start_et": "2022-01-16 04:06:36",
+   "status": "normal",
+   "heart_rate_score": -1.8,
+   "sleep_score": 0.28,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab39",
+   "night_index": 1,
+   "rec_start_et": "2022-01-22 00:43:46",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.76,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab39",
+   "night_index": 2,
+   "rec_start_et": "2022-01-22 22:37:50",
+   "status": "normal",
+   "heart_rate_score": -1.35,
+   "sleep_score": 1.02,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab39",
+   "night_index": 3,
+   "rec_start_et": "2022-01-28 23:34:16",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": -0.23,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab39",
+   "night_index": 4,
+   "rec_start_et": "2022-01-30 00:48:56",
+   "status": "normal",
+   "heart_rate_score": 2.02,
+   "sleep_score": 2.08,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab40",
+   "night_index": 1,
+   "rec_start_et": "2021-07-26 22:18:42",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 0.11,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab40",
+   "night_index": 2,
+   "rec_start_et": "2021-07-27 22:11:32",
+   "status": "normal",
+   "heart_rate_score": -1.01,
+   "sleep_score": -0.53,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab40",
+   "night_index": 3,
+   "rec_start_et": "2021-07-28 23:52:12",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 3.15,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab40",
+   "night_index": 4,
+   "rec_start_et": "2021-07-29 22:58:06",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": 0.7,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab40",
+   "night_index": 5,
+   "rec_start_et": "2021-07-31 02:09:00",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 3.44,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab40",
+   "night_index": 6,
+   "rec_start_et": "2021-07-31 23:31:26",
+   "status": "normal",
+   "heart_rate_score": -0.11,
+   "sleep_score": 2.9,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab40",
+   "night_index": 7,
+   "rec_start_et": "2021-08-01 23:21:57",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.58,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab41",
+   "night_index": 1,
+   "rec_start_et": "2021-08-04 00:29:36",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 2.7,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab41",
+   "night_index": 2,
+   "rec_start_et": "2021-08-05 01:39:31",
+   "status": "normal",
+   "heart_rate_score": -1.35,
+   "sleep_score": -0.43,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab41",
+   "night_index": 3,
+   "rec_start_et": "2021-08-09 23:26:46",
+   "status": "normal",
+   "heart_rate_score": -0.9,
+   "sleep_score": 1.77,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab41",
+   "night_index": 4,
+   "rec_start_et": "2021-08-11 03:24:54",
+   "status": "normal",
+   "heart_rate_score": 0.51,
+   "sleep_score": 1.02,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab41",
+   "night_index": 5,
+   "rec_start_et": "2021-08-26 02:15:39",
+   "status": "normal",
+   "heart_rate_score": 2.02,
+   "sleep_score": 1.83,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab41",
+   "night_index": 6,
+   "rec_start_et": "2021-09-17 00:19:02",
+   "status": "normal",
+   "heart_rate_score": 1.69,
+   "sleep_score": 0.31,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab41",
+   "night_index": 7,
+   "rec_start_et": "2021-09-20 23:51:19",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 0.85,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab42",
+   "night_index": 1,
+   "rec_start_et": "2021-08-05 03:06:12",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 0.26,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab42",
+   "night_index": 2,
+   "rec_start_et": "2021-08-06 03:28:11",
+   "status": "normal",
+   "heart_rate_score": 0.11,
+   "sleep_score": 0.08,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab42",
+   "night_index": 3,
+   "rec_start_et": "2021-08-08 03:36:05",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.63,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab42",
+   "night_index": 4,
+   "rec_start_et": "2021-08-11 04:23:33",
+   "status": "normal",
+   "heart_rate_score": 1.18,
+   "sleep_score": 1.04,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab42",
+   "night_index": 5,
+   "rec_start_et": "2021-08-12 03:29:19",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 0.34,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab43",
+   "night_index": 1,
+   "rec_start_et": "2021-08-08 22:16:39",
+   "status": "normal",
+   "heart_rate_score": -0.45,
+   "sleep_score": -0.05,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab43",
+   "night_index": 2,
+   "rec_start_et": "2021-08-25 21:55:16",
+   "status": "normal",
+   "heart_rate_score": 0.51,
+   "sleep_score": 1.15,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab43",
+   "night_index": 3,
+   "rec_start_et": "2021-08-28 23:15:57",
+   "status": "normal",
+   "heart_rate_score": 0.51,
+   "sleep_score": 0.29,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab43",
+   "night_index": 4,
+   "rec_start_et": "2021-08-31 23:38:00",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.17,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab43",
+   "night_index": 5,
+   "rec_start_et": "2021-09-16 22:01:52",
+   "status": "watch",
+   "heart_rate_score": 0.11,
+   "sleep_score": 4.68,
+   "reason": "Time awake 24% is 19 points above your usual (4.7x a typical night-to-night change); Total sleep 5.3 h is 2.9 h below your usual (2.7x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab44",
+   "night_index": 1,
+   "rec_start_et": "2021-08-29 20:40:48",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.02,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab44",
+   "night_index": 2,
+   "rec_start_et": "2021-08-30 22:26:29",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 3.35,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab44",
+   "night_index": 3,
+   "rec_start_et": "2021-09-16 23:02:49",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.64,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab44",
+   "night_index": 4,
+   "rec_start_et": "2021-09-17 22:16:15",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 3.79,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab44",
+   "night_index": 5,
+   "rec_start_et": "2021-09-18 23:44:15",
+   "status": "normal",
+   "heart_rate_score": -0.9,
+   "sleep_score": 1.5,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab44",
+   "night_index": 6,
+   "rec_start_et": "2021-09-19 19:51:06",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.55,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab45",
+   "night_index": 1,
+   "rec_start_et": "2021-08-25 23:11:50",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.73,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab45",
+   "night_index": 2,
+   "rec_start_et": "2021-09-01 00:33:10",
+   "status": "normal",
+   "heart_rate_score": 1.8,
+   "sleep_score": -0.12,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab45",
+   "night_index": 3,
+   "rec_start_et": "2021-09-16 00:15:00",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 0.52,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab45",
+   "night_index": 4,
+   "rec_start_et": "2021-09-16 23:54:53",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": -0.07,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab45",
+   "night_index": 5,
+   "rec_start_et": "2021-09-18 02:11:49",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 1.1,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab45",
+   "night_index": 6,
+   "rec_start_et": "2021-09-19 00:49:22",
+   "status": "normal",
+   "heart_rate_score": -1.35,
+   "sleep_score": 0.64,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab47",
+   "night_index": 1,
+   "rec_start_et": "2021-10-25 22:11:24",
+   "status": "normal",
+   "heart_rate_score": -0.96,
+   "sleep_score": 2.02,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab47",
+   "night_index": 2,
+   "rec_start_et": "2021-10-26 22:34:02",
+   "status": "normal",
+   "heart_rate_score": 1.46,
+   "sleep_score": 1.41,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab47",
+   "night_index": 3,
+   "rec_start_et": "2021-11-02 22:27:35",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 0.58,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab47",
+   "night_index": 4,
+   "rec_start_et": "2021-11-03 22:12:41",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": 1.09,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab47",
+   "night_index": 5,
+   "rec_start_et": "2021-11-09 21:50:06",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": -0.17,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab49",
+   "night_index": 1,
+   "rec_start_et": "2022-08-25 23:55:23",
+   "status": "normal",
+   "heart_rate_score": 1.12,
+   "sleep_score": 0.52,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab49",
+   "night_index": 2,
+   "rec_start_et": "2022-08-28 00:32:29",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.27,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab49",
+   "night_index": 3,
+   "rec_start_et": "2022-09-18 00:05:55",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 2.04,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab50",
+   "night_index": 1,
+   "rec_start_et": "2021-12-13 00:37:59",
+   "status": "normal",
+   "heart_rate_score": -0.67,
+   "sleep_score": 0.55,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab50",
+   "night_index": 2,
+   "rec_start_et": "2021-12-16 23:48:01",
+   "status": "alert",
+   "heart_rate_score": 3.37,
+   "sleep_score": 7.24,
+   "reason": "Time awake 42% is 30 points above your usual (7.2x a typical night-to-night change); Lowest sleeping heart rate (5th pct) 68 bpm is 10 bpm above your usual (3.4x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab50",
+   "night_index": 3,
+   "rec_start_et": "2021-12-19 23:43:45",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.2,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab50",
+   "night_index": 4,
+   "rec_start_et": "2022-07-21 00:42:06",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 2.33,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab51",
+   "night_index": 1,
+   "rec_start_et": "2022-06-15 23:47:03",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 1.98,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab51",
+   "night_index": 2,
+   "rec_start_et": "2022-06-17 00:10:04",
+   "status": "normal",
+   "heart_rate_score": 0.22,
+   "sleep_score": 1.8,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab51",
+   "night_index": 3,
+   "rec_start_et": "2022-07-03 00:56:15",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 1.62,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab51",
+   "night_index": 4,
+   "rec_start_et": "2022-07-04 23:47:51",
+   "status": "normal",
+   "heart_rate_score": 0.22,
+   "sleep_score": 0.81,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab52",
+   "night_index": 1,
+   "rec_start_et": "2022-08-15 23:10:10",
+   "status": "normal",
+   "heart_rate_score": -0.9,
+   "sleep_score": 1.98,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab52",
+   "night_index": 2,
+   "rec_start_et": "2022-08-16 23:45:55",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 0.14,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab52",
+   "night_index": 3,
+   "rec_start_et": "2022-08-18 00:06:17",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 1.34,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab52",
+   "night_index": 4,
+   "rec_start_et": "2022-08-20 23:26:27",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 2.77,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab52",
+   "night_index": 5,
+   "rec_start_et": "2022-08-22 00:27:37",
+   "status": "normal",
+   "heart_rate_score": 1.12,
+   "sleep_score": 0.27,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab52",
+   "night_index": 6,
+   "rec_start_et": "2022-08-22 23:59:14",
+   "status": "normal",
+   "heart_rate_score": 0.45,
+   "sleep_score": 1.26,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab53",
+   "night_index": 1,
+   "rec_start_et": "2022-05-05 02:00:48",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 1.28,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab53",
+   "night_index": 2,
+   "rec_start_et": "2022-05-10 01:44:04",
+   "status": "data quality issue",
+   "heart_rate_score": 0.22,
+   "sleep_score": 0.82,
+   "reason": "",
+   "quality_issue": "over 15% unknown sleep stage"
+  },
+  {
+   "subject_id": "Bidslab53",
+   "night_index": 3,
+   "rec_start_et": "2022-05-12 00:51:32",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 0.93,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab53",
+   "night_index": 4,
+   "rec_start_et": "2022-05-16 00:34:51",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 1.32,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab55",
+   "night_index": 1,
+   "rec_start_et": "2022-07-27 01:37:14",
+   "status": "normal",
+   "heart_rate_score": 1.69,
+   "sleep_score": 3.16,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab55",
+   "night_index": 2,
+   "rec_start_et": "2022-08-16 00:07:30",
+   "status": "normal",
+   "heart_rate_score": -0.9,
+   "sleep_score": 0.09,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab55",
+   "night_index": 3,
+   "rec_start_et": "2022-08-22 23:30:13",
+   "status": "normal",
+   "heart_rate_score": -2.02,
+   "sleep_score": 1.14,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab55",
+   "night_index": 4,
+   "rec_start_et": "2022-08-30 00:27:05",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": 0.81,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab56",
+   "night_index": 1,
+   "rec_start_et": "2022-05-26 00:09:11",
+   "status": "normal",
+   "heart_rate_score": -0.51,
+   "sleep_score": 0.08,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab56",
+   "night_index": 2,
+   "rec_start_et": "2022-06-01 00:01:11",
+   "status": "normal",
+   "heart_rate_score": -0.11,
+   "sleep_score": 2.26,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab56",
+   "night_index": 3,
+   "rec_start_et": "2022-06-20 23:38:53",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 0.37,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab56",
+   "night_index": 4,
+   "rec_start_et": "2022-06-25 00:20:46",
+   "status": "normal",
+   "heart_rate_score": -0.11,
+   "sleep_score": 2.19,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab56",
+   "night_index": 5,
+   "rec_start_et": "2022-07-02 00:45:23",
+   "status": "normal",
+   "heart_rate_score": 0.9,
+   "sleep_score": 1.21,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab60",
+   "night_index": 1,
+   "rec_start_et": "2022-06-23 00:37:47",
+   "status": "normal",
+   "heart_rate_score": 0.22,
+   "sleep_score": 0.82,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab60",
+   "night_index": 2,
+   "rec_start_et": "2022-06-29 00:27:44",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.54,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab60",
+   "night_index": 3,
+   "rec_start_et": "2022-07-01 00:44:42",
+   "status": "normal",
+   "heart_rate_score": -0.56,
+   "sleep_score": 0.76,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab60",
+   "night_index": 4,
+   "rec_start_et": "2022-07-02 00:29:15",
+   "status": "normal",
+   "heart_rate_score": -0.34,
+   "sleep_score": 0.75,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab60",
+   "night_index": 5,
+   "rec_start_et": "2022-07-02 23:52:01",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 0.94,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab60",
+   "night_index": 6,
+   "rec_start_et": "2022-07-05 23:15:46",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 0.51,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab60",
+   "night_index": 7,
+   "rec_start_et": "2022-07-07 22:27:50",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 0.3,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab62",
+   "night_index": 1,
+   "rec_start_et": "2022-07-12 23:48:22",
+   "status": "normal",
+   "heart_rate_score": -1.57,
+   "sleep_score": 3.21,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab62",
+   "night_index": 2,
+   "rec_start_et": "2022-07-14 00:28:32",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 0.96,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab62",
+   "night_index": 3,
+   "rec_start_et": "2022-07-15 00:54:08",
+   "status": "normal",
+   "heart_rate_score": 0.67,
+   "sleep_score": 1.27,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab62",
+   "night_index": 4,
+   "rec_start_et": "2022-07-16 01:37:25",
+   "status": "normal",
+   "heart_rate_score": 0.34,
+   "sleep_score": 1.36,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab62",
+   "night_index": 5,
+   "rec_start_et": "2022-08-09 23:35:42",
+   "status": "data quality issue",
+   "heart_rate_score": -0.79,
+   "sleep_score": 2.17,
+   "reason": "",
+   "quality_issue": "over 15% unknown sleep stage"
+  },
+  {
+   "subject_id": "Bidslab63",
+   "night_index": 1,
+   "rec_start_et": "2022-07-27 01:00:10",
+   "status": "not enough history",
+   "heart_rate_score": null,
+   "sleep_score": null,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab63",
+   "night_index": 2,
+   "rec_start_et": "2022-07-29 00:33:05",
+   "status": "not enough history",
+   "heart_rate_score": null,
+   "sleep_score": null,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab63",
+   "night_index": 3,
+   "rec_start_et": "2022-08-07 01:00:14",
+   "status": "data quality issue",
+   "heart_rate_score": -0.34,
+   "sleep_score": 1.48,
+   "reason": "",
+   "quality_issue": "over 15% unknown sleep stage"
+  },
+  {
+   "subject_id": "Bidslab64",
+   "night_index": 1,
+   "rec_start_et": "2022-07-19 21:59:39",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 0.89,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab64",
+   "night_index": 2,
+   "rec_start_et": "2022-07-20 22:08:01",
+   "status": "normal",
+   "heart_rate_score": 0.0,
+   "sleep_score": 0.77,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab64",
+   "night_index": 3,
+   "rec_start_et": "2022-07-21 22:39:41",
+   "status": "normal",
+   "heart_rate_score": 0.17,
+   "sleep_score": 1.53,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab64",
+   "night_index": 4,
+   "rec_start_et": "2022-07-24 01:02:17",
+   "status": "normal",
+   "heart_rate_score": 1.52,
+   "sleep_score": 0.69,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab64",
+   "night_index": 5,
+   "rec_start_et": "2022-07-24 22:56:11",
+   "status": "normal",
+   "heart_rate_score": -0.45,
+   "sleep_score": 0.06,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab65",
+   "night_index": 1,
+   "rec_start_et": "2022-07-24 01:08:45",
+   "status": "normal",
+   "heart_rate_score": 2.02,
+   "sleep_score": 0.93,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab65",
+   "night_index": 2,
+   "rec_start_et": "2022-07-25 22:15:07",
+   "status": "normal",
+   "heart_rate_score": -0.22,
+   "sleep_score": 2.55,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab65",
+   "night_index": 3,
+   "rec_start_et": "2022-07-27 22:57:04",
+   "status": "normal",
+   "heart_rate_score": 1.01,
+   "sleep_score": -0.1,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab65",
+   "night_index": 4,
+   "rec_start_et": "2022-07-28 23:24:33",
+   "status": "normal",
+   "heart_rate_score": -1.12,
+   "sleep_score": 0.15,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab66",
+   "night_index": 1,
+   "rec_start_et": "2022-08-22 22:54:09",
+   "status": "normal",
+   "heart_rate_score": -1.8,
+   "sleep_score": 1.77,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab66",
+   "night_index": 2,
+   "rec_start_et": "2022-08-24 00:42:13",
+   "status": "normal",
+   "heart_rate_score": -2.02,
+   "sleep_score": 0.48,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab66",
+   "night_index": 3,
+   "rec_start_et": "2022-09-06 23:37:33",
+   "status": "normal",
+   "heart_rate_score": 1.69,
+   "sleep_score": 1.0,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab66",
+   "night_index": 4,
+   "rec_start_et": "2022-09-07 23:58:44",
+   "status": "normal",
+   "heart_rate_score": 2.02,
+   "sleep_score": 1.12,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab66",
+   "night_index": 5,
+   "rec_start_et": "2022-09-08 22:48:48",
+   "status": "normal",
+   "heart_rate_score": 1.18,
+   "sleep_score": -0.5,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab68",
+   "night_index": 1,
+   "rec_start_et": "2022-08-30 00:18:11",
+   "status": "normal",
+   "heart_rate_score": 1.35,
+   "sleep_score": 0.48,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab68",
+   "night_index": 2,
+   "rec_start_et": "2022-08-31 23:08:31",
+   "status": "alert",
+   "heart_rate_score": 4.38,
+   "sleep_score": -0.12,
+   "reason": "Lowest sleeping heart rate (5th pct) 72 bpm is 13 bpm above your usual (4.4x a typical night-to-night change); Sleeping heart rate 78 bpm is 15 bpm above your usual (3.4x a typical night-to-night change)",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab68",
+   "night_index": 3,
+   "rec_start_et": "2022-09-03 23:43:39",
+   "status": "normal",
+   "heart_rate_score": -1.12,
+   "sleep_score": 0.12,
+   "reason": "",
+   "quality_issue": ""
+  },
+  {
+   "subject_id": "Bidslab68",
+   "night_index": 4,
+   "rec_start_et": "2022-09-05 23:26:47",
+   "status": "normal",
+   "heart_rate_score": -1.12,
+   "sleep_score": 3.42,
+   "reason": "",
+   "quality_issue": ""
+  }
+ ]
+}

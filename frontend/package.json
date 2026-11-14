@@ -1,25 +1,19 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "crew-health-monitor-frontend",
   "private": true,
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "vitest run"
+    "test": "node --test \"src/**/*.test.js\""
   },
   "dependencies": {
-    "next": "16.4.6",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "recharts": "^3.10.1"
-  },
-  "devDependencies": {
-    "@testing-library/react": "^16.3.3",
-    "eslint": "^9",
-    "eslint-config-next": "16.4.6",
-    "jsdom": "^31.0.1",
-    "vitest": "^5.1.0"
+    "next": "15.5.29",
+    "react": "19.1.10",
+    "react-dom": "19.1.10",
+    "react-is": "19.1.10",
+    "recharts": "3.10.1"
   }
 }

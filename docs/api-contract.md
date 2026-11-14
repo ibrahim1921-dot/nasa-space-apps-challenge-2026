@@ -37,3 +37,12 @@ Request: see [samples/checkin-request.json](samples/checkin-request.json). Respo
 ### GET /api/crew/{crewId}/summary
 
 Response: [samples/summary-response.json](samples/summary-response.json).
+
+## Notes from the frontend (2026-11-14)
+
+- **Crew ids.** The demo uses `crew-01` Maya Okafor (flight engineer), `crew-02` Tomas Reyes (commander), `crew-03` Lena Kowalski (crew medical officer), `crew-04` Kwame Asante (mission specialist). The backend should use the same ids and names (`frontend/src/data/crew.json`).
+- **Idempotency.** The frontend's outbox may resend a check-in after a lost response. Every `POST /checkins` carries an `Idempotency-Key` header (the record's UUID). Store it, and return the same result for a repeated key instead of saving twice.
+- **Errors.** `400`, `403`, `409` and `422` are treated as final (the check-in stays on the device, marked "Not accepted"). Anything else, or no answer, is retried with backoff.
+- **Check-ins.** Readings can be partial: an indicator the crew member skipped is left out of `readings`, not sent as `null`.
+- **Radiation.** The frontend expects `{ source, note, unit: "mGy", days: [{ date, gcr, saa, total, accumulated }] }` (see `frontend/src/data/rr1_radiation.json`).
+- **Not in the contract yet.** Region detail indicators, stand tests, logging a night (`POST /api/nights/score`) and the whole-crew view. The frontend serves these from its mock API for now; shapes are in `frontend/src/app/api/*/route.js`.
