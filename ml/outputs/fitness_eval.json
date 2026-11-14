@@ -1,0 +1,89 @@
+{
+ "cleaning": {
+  "rows_raw": 13393,
+  "duplicates_removed": 1,
+  "zero_values_set_missing": {
+   "grip_force": 3,
+   "broad_jump": 10
+  },
+  "rows_clean": 13392,
+  "by_sex": {
+   "male": 8467,
+   "female": 4925
+  }
+ },
+ "evaluation": {
+  "grip_force": {
+   "train_rows": 10711,
+   "test_rows": 2678,
+   "cv5_coverage_error_by_bandwidth": {
+    "1.5": 0.0111,
+    "3.0": 0.0106,
+    "5.0": 0.0102,
+    "8.0": 0.011
+   },
+   "chosen_bandwidth_years": 5.0,
+   "coverage_on_test": {
+    "p5": 0.05,
+    "p10": 0.104,
+    "p25": 0.264,
+    "p50": 0.516,
+    "p75": 0.783,
+    "p90": 0.914,
+    "p95": 0.957
+   },
+   "coverage_error_on_test": 0.0155,
+   "pinball_loss_model": 1.252,
+   "pinball_loss_sex_only_baseline": 1.323,
+   "improvement_pct": 5.3
+  },
+  "broad_jump": {
+   "train_rows": 10705,
+   "test_rows": 2677,
+   "cv5_coverage_error_by_bandwidth": {
+    "1.5": 0.0081,
+    "3.0": 0.0075,
+    "5.0": 0.0077,
+    "8.0": 0.0105
+   },
+   "chosen_bandwidth_years": 3.0,
+   "coverage_on_test": {
+    "p5": 0.049,
+    "p10": 0.095,
+    "p25": 0.244,
+    "p50": 0.498,
+    "p75": 0.755,
+    "p90": 0.902,
+    "p95": 0.954
+   },
+   "coverage_error_on_test": 0.0095,
+   "pinball_loss_model": 5.017,
+   "pinball_loss_sex_only_baseline": 6.319,
+   "improvement_pct": 20.6
+  },
+  "sit_ups": {
+   "train_rows": 10713,
+   "test_rows": 2679,
+   "cv5_coverage_error_by_bandwidth": {
+    "1.5": 0.0124,
+    "3.0": 0.012,
+    "5.0": 0.0103,
+    "8.0": 0.0102
+   },
+   "chosen_bandwidth_years": 8.0,
+   "coverage_on_test": {
+    "p5": 0.042,
+    "p10": 0.088,
+    "p25": 0.232,
+    "p50": 0.505,
+    "p75": 0.774,
+    "p90": 0.909,
+    "p95": 0.954
+   },
+   "coverage_error_on_test": 0.0121,
+   "pinball_loss_model": 2.321,
+   "pinball_loss_sex_only_baseline": 2.898,
+   "improvement_pct": 19.9
+  }
+ }
+}

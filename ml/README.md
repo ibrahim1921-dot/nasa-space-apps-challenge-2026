@@ -16,11 +16,13 @@ Personal-baseline anomaly detection and the data pipeline behind the app.
 
 ## Rebuild the data
 
-List the scripts here in the order they run, e.g.:
+Run from the `ml/` folder with the virtual environment active. Each script writes its JSON to `outputs/`.
 
-1. `python -m crewhealth_ml.fetch_physionet` downloads into `data/raw/`
-2. `python -m crewhealth_ml.build_nights` writes `data/interim/bidsleep_nights.csv`
-3. `python -m crewhealth_ml.export_outputs` writes `outputs/*.json`
+| # | Piece | Raw data needed in `data/raw/` | Command | Notebook |
+| --- | --- | --- | --- | --- |
+| 3 | Muscle and fitness baseline | `bodyPerformance.csv` | `python -m crewhealth_ml.fitness` (with `PYTHONPATH=src`) | `notebooks/03_fitness_baseline.ipynb` |
+
+Run the tests with `pytest -q`. Tests that need raw data are skipped when it is missing.
 
 ## Rules
 
