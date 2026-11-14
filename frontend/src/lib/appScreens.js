@@ -1,6 +1,14 @@
-// Which screen and which tabs a visitor gets. Pure, so the rules are tested in node:test and App.jsx
-// only renders what these return.
 
+/**
+ * Defines the screens and navigation tabs available
+ * to each account type.
+ *
+ * Regular crew members keep their existing navigation.
+ * Medical officers get a crew-wide Dashboard and
+ * an expandable My Data section.
+ */
+
+// Regular crew member navigation.
 export const TABS = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'sleep', label: 'Sleep & recovery' },
@@ -10,22 +18,81 @@ export const TABS = [
   { id: 'about', label: 'About' },
 ];
 
-export const CMO_TAB = { id: 'cmo', label: 'Crew Medical Officer' };
+// Medical officer personal health screens.
+// These appear INSIDE the expandable My Data section.
+export const MY_DATA_SCREENS = [
+  { id: 'mydata', label: 'Health Overview' },
+  { id: 'sleep', label: 'Sleep & Recovery' },
+  { id: 'labs', label: 'Lab Baseline' },
+  { id: 'standtest', label: 'Stand Test' },
+];
+
+// Main navigation for medical officers.
+export const MEDICAL_OFFICER_TABS = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'mydata', label: 'My Data' },
+  { id: 'environment', label: 'Environment' },
+  { id: 'about', label: 'About' },
+];
 
 /**
- * 'loading' until the stored identity has been read (avoids flashing the landing screen for someone
- * already signed in), then 'landing' with no identity, else 'app'.
+ * Determines whether to show the loading screen,
+ * landing screen, or main application.
  */
 export function screenFor({ ready, who }) {
   if (!ready) return 'loading';
   return who ? 'app' : 'landing';
 }
 
-/** Everyone gets the personal tabs; only the Crew Medical Officer also gets the whole-crew CMO tab. */
+/**
+ * Returns the MAIN navigation for an account.
+ *
+ * Medical officer:
+ * Dashboard | My Data | Environment | About
+ *
+ * Crew member:
+ * Original personal navigation.
+ */
 export function tabsFor(account) {
   if (!account) return [];
-  return account.role === 'cmo' ? [...TABS.slice(0, -1), CMO_TAB, TABS.at(-1)] : [...TABS];
+
+  if (account.role === 'cmo') {
+    return [...MEDICAL_OFFICER_TABS];
+  }
+
+  return [...TABS];
 }
 
-/** May this account open this view? (The backend must enforce the same rule for whole-crew data.) */
-export const canOpen = (account, viewId) => viewId === 'checkin' || tabsFor(account).some((t) => t.id === viewId);
+/**
+ * Checks whether the account may open a screen.
+ *
+ * Medical officers can access the screens
+ * nested inside My Data.
+ *
+ * Regular crew members retain their original access.
+ *
+ * The backend must separately enforce permissions
+ * for whole-crew medical information.
+ */
+export function canOpen(account, viewId) {
+  if (!account) return false;
+
+  if (viewId === 'checkin') {
+    return true;
+  }
+
+  if (account.role === 'cmo') {
+    return (
+      MEDICAL_OFFICER_TABS.some(
+        (tab) => tab.id === viewId
+      ) ||
+      MY_DATA_SCREENS.some(
+        (screen) => screen.id === viewId
+      )
+    );
+  }
+
+  return TABS.some(
+    (tab) => tab.id === viewId
+  );
+}
