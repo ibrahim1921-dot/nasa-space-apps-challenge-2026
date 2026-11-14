@@ -17,3 +17,12 @@ Every value shown in the app carries one of these labels. Sources are kept separ
 - [CSA: Monitoring Radiation for Astronaut Health](https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp)
 
 Add every other source used (papers, guidelines, libraries, images) here as you use it. The submission's References field is copied from this file.
+
+## Frontend implementation references
+
+- [Next.js](https://nextjs.org/docs), [React](https://react.dev/): application framework and UI.
+- [Recharts](https://recharts.org/): time series, bloodwork and environment charts.
+- [Vitest](https://vitest.dev/), [Testing Library](https://testing-library.com/docs/react-testing-library/intro/), [jsdom](https://github.com/jsdom/jsdom): automated verification.
+- [Barlow](https://fonts.google.com/specimen/Barlow) and [Barlow Semi Condensed](https://fonts.google.com/specimen/Barlow+Semi+Condensed): interface fonts, loaded with `next/font/google`.
+- Body figure and application icon are original SVG code in `frontend/src/`; no external artwork, NASA logos, mission patches or astronaut photos are used.
+- All frontend mock observations are synthetic demonstrations, including the contextual sleep, lab and environment charts; they are not downloaded source observations.
