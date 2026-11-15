@@ -1,4 +1,5 @@
 export const STATUS_LABELS = {
+  unknown: 'No data',
   normal: 'Normal',
   watch: 'Watch',
   alert: 'Alert',

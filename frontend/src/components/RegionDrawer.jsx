@@ -1,9 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useHealthData } from '../hooks/useHealthData.js';
 import { useFocusTrap } from '../hooks/useFocusTrap.js';
-import { getRegionIndicators } from '../services/healthService.js';
 import { REGIONS_BY_ID } from '../constants/regions.js';
 import { bySeverity } from '../constants/status.js';
 import StatusChip from './StatusChip.jsx';
@@ -19,6 +17,7 @@ const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 function summarize(items) {
+  if (!items.length) return 'No recorded indicators for this region';
   const flagged = items.filter((i) => i.status !== 'normal').length;
   if (flagged === 0) return `All ${items.length} indicators are in the normal range`;
   return `${flagged} of ${items.length} indicators need attention`;
@@ -84,17 +83,13 @@ export default function RegionDrawer({
   const region = REGIONS_BY_ID[regionId];
   const panelRef = useRef(null);
   const [closing, setClosing] = useState(false);
-  const { data, loading, error, reload } = useHealthData(() => getRegionIndicators(regionId), [regionId]);
-  const pinnedIds = new Set(pinned.map((p) => p.id));
-  const items = data
-    ? [
-        ...pinned,
-        ...data
-          .filter((i) => !pinnedIds.has(i.id))
-          .map((i) => personal[i.id] ?? applyReaction(applyVitals(i, latestVitals, usual), crewRecord))
-          .sort(bySeverity),
-      ]
-    : [];
+  const loading = false;
+  const error = null;
+  const reload = () => {};
+  const ids = { head: ['sleep', 'mood', 'reaction-time'], chest: ['blood-pressure', 'heart-rate'], abdomen: ['fasting-glucose'], limbs: [] }[regionId] ?? [];
+  const glucose = applyVitals({ id: 'fasting-glucose', name: 'Blood glucose', unit: 'mg/dL', limitKey: 'fasting_glucose' }, latestVitals);
+  const candidates = [...pinned, ...ids.map((id) => personal[id] ?? (id === 'fasting-glucose' ? glucose : null))].filter((item) => item && !item.missing && !item.sample && item.value != null);
+  const items = [...new Map(candidates.map((item) => [item.id, item])).values()].sort(bySeverity);
 
   // Play the slide-out first, unless motion is reduced (then there is no animation to wait for).
   const requestClose = useCallback(() => {
@@ -153,6 +148,7 @@ export default function RegionDrawer({
             </ul>
           )}
           {!loading && error && <ErrorPanel onRetry={reload} />}
+          {!loading && !error && items.length === 0 && <p className="muted">No recorded measurements available for this region.</p>}
           {!loading && !error && (
             <ul className="rows">
               {items.map((indicator) => (

@@ -83,10 +83,12 @@ export function overallReason(statuses) {
 }
 
 /** Status per reading from a scored record, plus reaction time from a crew record. */
-export function statusesOf(record, reactionRecord) {
+export function statusesOf(record, reactionRecord, pressureRecord = record) {
   const rows = record?.payload?.result?.indicators ?? {};
   const out = {};
   for (const k of READINGS) if (rows[k]) out[k] = rows[k].status;
+  const pressure = pressureRecord?.payload?.result?.indicators?.blood_pressure;
+  if (!out.blood_pressure && pressure) out.blood_pressure = pressure.status;
   if (reactionRecord?.reaction) out.reaction = reactionRecord.reaction.status;
   return out;
 }
@@ -119,6 +121,8 @@ export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved =
     .filter((r) => r?.payload?.reading && Date.parse(r.recorded_at) > crewAt)
     .sort((a, b) => Date.parse(a.recorded_at) - Date.parse(b.recorded_at));
   const latest = latestVitalsFor(crewRecord, newer.at(-1) ?? null);
+  const latestPressure = (records) => [...records].reverse().find((r) => r?.payload?.result?.indicators?.blood_pressure) ?? crewRecord;
+  const pressureRecord = latestPressure(newer);
 
   const points = [...days.map((d) => ({ day: d })), ...newer.map((r) => ({ reading: r.payload.reading }))];
   const series = (def) =>
@@ -130,7 +134,7 @@ export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved =
   const sleepPre = preflightAverage(preflight, 'sleepHours');
   const cards = CARD_DEFS.map((def) => {
     const base = { id: def.id, name: def.name, unit: def.unit, limitKey: def.limitKey, status: 'normal', trend: 'flat', trendText: '' };
-    const shown = def.id === 'reaction-time' ? applyReaction({ ...base, sample: true }, crewRecord) : applyVitals(base, latest, null);
+    const shown = def.id === 'reaction-time' ? applyReaction({ ...base, sample: true }, crewRecord) : applyVitals(base, def.id === 'blood-pressure' ? pressureRecord : latest, null);
     const card = { ...shown, area: def.area, history: series(def) };
     if (def.id === 'sleep' && sleepPre !== null) {
       card.preflightAverage = { value: Number(sleepPre.toFixed(1)), text: `Preflight average: ${sleepPre.toFixed(1)} h` };
@@ -138,10 +142,10 @@ export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved =
     return card;
   });
 
-  const statuses = statusesOf(latest, crewRecord);
+  const statuses = statusesOf(latest, crewRecord, pressureRecord);
   // "Since yesterday": the same rule on the reading before the latest one.
   const previous = newer.length
-    ? statusesOf(newer.at(-2) ?? crewRecord, crewRecord)
+    ? statusesOf(newer.at(-2) ?? crewRecord, crewRecord, latestPressure(newer.slice(0, -1)))
     : (() => {
         const prev = crewRecordLatest(crewId, days.slice(0, -1));
         return statusesOf(prev, prev);
@@ -157,6 +161,7 @@ export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved =
   };
 
   return {
+    observationHistory: saved.filter((record) => record.crew_id === crewId).slice().sort((a, b) => Date.parse(b.recorded_at) - Date.parse(a.recorded_at)),
     crewRecord,
     latest,
     cards,

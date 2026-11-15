@@ -37,7 +37,7 @@ export default function Environment() {
             Station environment
           </h2>
           <p className="muted">
-            Daily station radiation and cumulative exposure from NASA RR-1 (ISS, 2014).
+            Recorded station radiation and cumulative exposure.
           </p>
         </div>
         {last && (
@@ -49,6 +49,7 @@ export default function Environment() {
 
       {radiation.loading && <span className="skel" style={{ width: '100%', height: 340 }} />}
       {!radiation.loading && radiation.error && <ErrorPanel onRetry={radiation.reload} />}
+      {!radiation.loading && !radiation.error && days.length === 0 && <p className="muted">No environmental readings connected.</p>}
       {!radiation.loading && !radiation.error && days.length > 0 && (
         <>
           <h3 className="card__title labs__chart-title">

@@ -11,10 +11,7 @@
 // Regular crew member navigation.
 export const TABS = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'sleep', label: 'Sleep & recovery' },
-  { id: 'labs', label: 'Lab baseline' },
   { id: 'environment', label: 'Environment' },
-  { id: 'standtest', label: 'Stand test' },
   { id: 'about', label: 'About' },
 ];
 
@@ -22,9 +19,6 @@ export const TABS = [
 // These appear INSIDE the expandable My Data section.
 export const MY_DATA_SCREENS = [
   { id: 'mydata', label: 'Health Overview' },
-  { id: 'sleep', label: 'Sleep & Recovery' },
-  { id: 'labs', label: 'Lab Baseline' },
-  { id: 'standtest', label: 'Stand Test' },
 ];
 
 // Main navigation for medical officers.

@@ -63,6 +63,8 @@ export function validateReading(reading, label = 'reading') {
     return `${label} must be an object with ${READING_KEYS.join(', ')}.`;
   }
   for (const key of READING_KEYS) {
+    // Device blood pressure is optional for a manual check-in; when supplied, require both values.
+    if (['systolic', 'diastolic'].includes(key) && reading.systolic === undefined && reading.diastolic === undefined) continue;
     const error = validateField(key, reading[key], label);
     if (error) return error;
   }
@@ -94,7 +96,7 @@ export function validateExtraHistory(list) {
 }
 
 /** Keep only the reading fields, so the echo and any later sync carry no extra input. */
-export const cleanReading = (reading) => Object.fromEntries(READING_KEYS.map((k) => [k, reading[k]]));
+export const cleanReading = (reading) => Object.fromEntries(READING_KEYS.filter((k) => reading[k] !== undefined).map((k) => [k, reading[k]]));
 
 // ---------- History ----------
 
@@ -196,7 +198,7 @@ export function evaluateCheckin(reading, history = []) {
   const lastDay = history.at(-1)?.day ?? 0;
   const series = evaluateSeries([...history, toBaselineDay(reading, { day: lastDay + 1 })]);
   const today = series.at(-1);
-  const rows = VITALS_ROWS.map((row) => rowResult(row, today, reading));
+  const rows = VITALS_ROWS.filter((row) => row.parts.every((key) => Number.isFinite(reading[key]))).map((row) => rowResult(row, today, reading));
   const indicators = Object.fromEntries(rows.map((r) => [r.id, r]));
   const status = worst(rows.map((r) => r.status));
   const crisis = rows.some((r) => r.crisis);

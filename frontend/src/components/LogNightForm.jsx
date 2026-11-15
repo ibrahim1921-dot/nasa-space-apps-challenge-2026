@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FEATURES, SANE_RANGES, validateNight } from '../lib/nightlyScore.js';
+import ObservationContextFields from './ObservationContextFields.jsx';
+import { captureObservationContext } from '../lib/observationContext.js';
 
 const HOW_TO = {
   sleep_hr_median: "Middle value of your heart rate while asleep, from the watch's overnight report.",
@@ -24,9 +26,12 @@ export default function LogNightForm({ subjectId, onSubmit, onDateChange }) {
   const [date, setDate] = useState(today);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [observationContext, setObservationContext] = useState({});
+  const submittingRef = useRef(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (submittingRef.current) return;
     const night = Object.fromEntries(
       FEATURES.map((f) => [f.key, values[f.key] === '' ? undefined : Number(values[f.key])]),
     );
@@ -37,12 +42,14 @@ export default function LogNightForm({ subjectId, onSubmit, onDateChange }) {
     }
     setError(null);
     setSubmitting(true);
+    submittingRef.current = true;
     try {
-      await onSubmit({ night, date });
+      await onSubmit({ night, date, observationContext: captureObservationContext(observationContext, 'sleep_hours') });
       setValues(EMPTY);
     } catch (err) {
       setError(err.message || 'Could not score the night. Please try again.');
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   }
@@ -100,6 +107,7 @@ export default function LogNightForm({ subjectId, onSubmit, onDateChange }) {
         })}
       </div>
 
+      <ObservationContextFields indicator="sleep_hours" value={observationContext} onChange={setObservationContext} />
       {error && (
         <p className="field__error" role="alert">
           {error}

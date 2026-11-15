@@ -7,6 +7,7 @@ import LimitsInfo from './LimitsInfo.jsx';
 import SourceLabel from './SourceLabel.jsx';
 import SyncBadge, { useFreshRecord } from './SyncBadge.jsx';
 import { formatRowValue } from '../lib/vitalsCheckin.js';
+import RecordObservationContexts from './RecordObservationContexts.jsx';
 
 /** Which check fired, as a short tag before each reason. */
 function checkTag(reason) {
@@ -131,6 +132,7 @@ export default function CheckinResult({ record, result, profile, stored, crewNam
           <ResultRow key={row.id} row={row} profile={profile} />
         ))}
       </ul>
+      <RecordObservationContexts record={record} />
 
       <p className="muted vresult__note">
         Each reading is checked two ways: against the published or team-set limits, and against your own last{' '}

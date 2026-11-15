@@ -54,13 +54,13 @@ export function writeVitalsCheckin(record) {
   }
 }
 
-export function makeVitalsRecord({ crewId, reading, context, result, recordedAt }) {
+export function makeVitalsRecord({ crewId, reading, context, observationContexts, result, recordedAt }) {
   return {
     id: newRecordId(),
     crew_id: crewId,
     kind: RECORD_KIND,
     recorded_at: recordedAt ?? new Date().toISOString(),
-    payload: { reading, context, result },
+    payload: { reading, context, result, ...(observationContexts ? { observationContexts: JSON.parse(JSON.stringify(observationContexts)) } : {}) },
     status: result.status,
     reasons: result.reasons,
     engine_version: result.engine_version,

@@ -3,25 +3,12 @@
 
 export const VITALS_SCREENS = [
   {
-    id: 'blood_pressure',
-    title: 'Blood pressure',
-    fields: [
-      { key: 'systolic', label: 'Systolic (top number)', unit: 'mmHg', step: '1', inputMode: 'numeric' },
-      { key: 'diastolic', label: 'Diastolic (bottom number)', unit: 'mmHg', step: '1', inputMode: 'numeric' },
-    ],
-    howTo: {
-      posture: 'Sit with your back supported and feet flat (or in foot loops) for 5 minutes first. Cuff on the bare upper arm, at heart height, arm resting.',
-      timing: 'Morning, before coffee and exercise. Stay still and quiet during the reading.',
-      skew: 'Caffeine, exercise or a full bladder in the last 30 minutes, talking, or a cuff over clothing.',
-    },
-  },
-  {
     id: 'heart_rate',
     title: 'Resting heart rate',
     fields: [{ key: 'heart_rate', label: 'Resting heart rate', unit: 'bpm', step: '1', inputMode: 'numeric' }],
     howTo: {
       posture: 'Still seated after the BP reading. Use the cuff’s pulse reading, or count for 30 seconds and double it.',
-      timing: 'Right after blood pressure, before you get up.',
+      timing: 'Morning, before coffee and exercise.',
       skew: 'Caffeine, standing up just before, stress, a hot cabin, or exercise in the last hour.',
     },
   },

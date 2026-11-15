@@ -16,8 +16,7 @@ export default function About() {
         </h2>
         <p className="muted about__lead">
           Each reading gets one of three statuses. Fixed limits come from the published sources below. Where no
-          published line fits, the team set one, and the app labels it as team-set. Sleep nights and the stand test
-          are also compared with the same person&apos;s own history.
+          published line fits, the team set one, and the app labels it as team-set. Recorded measurements may also be compared with the same person&apos;s own history.
         </p>
         <ul className="about__statuses" aria-label="Statuses">
           {['normal', 'watch', 'alert'].map((s) => (

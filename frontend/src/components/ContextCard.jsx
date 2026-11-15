@@ -2,6 +2,9 @@
 
 import { ISOLATION_OPTIONS, WORKLOAD_OPTIONS, labelFor } from '../constants/checkin.js';
 import { formatTime } from '../utils/format.js';
+import { WellnessAnswers } from './CheckinForm.jsx';
+import { hasSymptoms, needsUrgentHelp } from '../lib/wellnessCheckin.js';
+import WellnessAttention from './WellnessAttention.jsx';
 
 const isToday = (iso) => new Date(iso).toDateString() === new Date().toDateString();
 const when = (iso) =>
@@ -13,9 +16,15 @@ const when = (iso) =>
 export default function ContextCard({ latestCheckin, onLogCheckin, buttonRef }) {
   return (
     <section className="card card--lg" aria-labelledby="context-title">
-      <h2 id="context-title" className="card__title">Crew context</h2>
+      <h2 id="context-title" className="card__title">Wellness check-in</h2>
 
-      {latestCheckin ? (
+      {latestCheckin?.wellness ? (
+        <div className="context__body">
+          <p>{needsUrgentHelp(latestCheckin.wellness) ? 'Urgent symptoms reported. Contact the medical officer now.' : hasSymptoms(latestCheckin.wellness) ? 'Symptoms reported in your last check-in.' : 'No symptoms reported in your last check-in.'}</p>
+          <p className="muted">Saved <time dateTime={latestCheckin.savedAt}>{when(latestCheckin.savedAt)}</time> on this device.</p>
+          <WellnessAttention answers={latestCheckin.wellness} />
+        </div>
+      ) : latestCheckin ? (
         <div className="context__body">
           <p className="context__score">
             Isolation <span className="num">{latestCheckin.isolation}</span> / 5
@@ -30,13 +39,14 @@ export default function ContextCard({ latestCheckin, onLogCheckin, buttonRef }) 
       ) : (
         <div className="context__body">
           <p>No check-in recorded yet.</p>
-          <p className="muted">Isolation, sleep and workload help explain changes in stress and sleep readings.</p>
+          <p className="muted">Share symptoms, sleep quality, mood, and how you are managing today.</p>
         </div>
       )}
 
       <button ref={buttonRef} type="button" className="btn btn--primary" onClick={onLogCheckin}>
         Log check-in
       </button>
+      {latestCheckin?.wellness && <details className="wellness-review"><summary>Review your answers</summary><WellnessAnswers answers={latestCheckin.wellness} /></details>}
     </section>
   );
 }

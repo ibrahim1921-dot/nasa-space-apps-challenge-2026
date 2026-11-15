@@ -6,11 +6,11 @@
 // search functionality, individual medical profiles,
 // and the latest watch and alert readings.
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { useOnboard } from '../hooks/useOnboard.jsx';
-import { crewFile, standFile } from '../data/bundled.js';
-import { seedAll } from '../lib/seedRows.js';
+import { crewRoster } from '../lib/crewRoster.js';
+import { isRecordedHealth } from '../lib/recordedHealth.js';
 
 import {
   buildCrewCards,
@@ -20,28 +20,32 @@ import {
   vitalsOf,
 } from '../lib/cmoSummary.js';
 
-import { readAllStandTests } from '../lib/standTestStore.js';
 import { readAllVitals } from '../lib/vitalsCheckinStore.js';
+import { readWellnessCheckins, needsUrgentHelp } from '../lib/wellnessCheckin.js';
+import { WellnessAnswers } from '../components/CheckinForm.jsx';
 import { STATUS_LABELS } from '../constants/status.js';
 
 import StatusChip from '../components/StatusChip.jsx';
 import StatusIcon from '../components/StatusIcon.jsx';
 import SourceLabel from '../components/SourceLabel.jsx';
 import SyncBadge from '../components/SyncBadge.jsx';
+import RecordObservationContexts from '../components/RecordObservationContexts.jsx';
+import PersistedObservationHistory from '../components/PersistedObservationHistory.jsx';
+import CrewBodyDashboard from '../components/CrewBodyDashboard.jsx';
 
 // DATA SOURCE INFORMATION
 
 const SOURCE_SERVER =
-  'Sample crew records and recorded check-ins';
+  'Recorded health readings';
 
 const SOURCE_DEVICE =
-  'Sample crew records and saved check-ins';
+  'Locally recorded health readings';
 
 const BASELINE_SERVER =
-  'Preflight averages (sample data)';
+  'No preflight baseline connected';
 
 const BASELINE_DEVICE =
-  'Preflight averages (sample data)';
+  'No preflight baseline connected';
 
 const KIND = {
   daily_vitals: 'Daily vitals',
@@ -66,62 +70,10 @@ const isSeed = (record) =>
 // SECTION 1: LOAD EXISTING CREW DATA
 // --------------------------------------------------
 
-let deviceSeed = null;
-
-function getDeviceSeed() {
-  if (!deviceSeed) {
-    const seeded = seedAll(crewFile, standFile);
-
-    deviceSeed = {
-      crew: seeded.crew,
-      baselines: seeded.baselines,
-      readings: seeded.readings.map(
-        ({ key, ...record }) => ({
-          id: key,
-          ...record,
-        })
-      ),
-    };
-  }
-
-  return deviceSeed;
-}
-
-/**
- * Combines bundled synthetic data with locally
- * stored health readings.
- *
- * Existing data functionality is preserved.
- *
- * Future backend integration can replace the
- * device-only source when the API is ready.
- */
 function useCmoData() {
   const { version } = useOnboard();
-
-  const local = useMemo(
-    () => [
-      ...readAllVitals(),
-      ...readAllStandTests(),
-    ],
-    [version]
-  );
-
-  const base = getDeviceSeed();
-
-  const readings = useMemo(
-    () => mergeReadings(base.readings, local),
-    [base, local]
-  );
-
-  return {
-    fromServer: false,
-    live: false,
-    error: null,
-    crew: base.crew,
-    baselines: base.baselines,
-    readings,
-  };
+  const readings = useMemo(() => readAllVitals().filter(isRecordedHealth), [version]);
+  return { fromServer: false, live: false, error: null, crew: crewRoster, baselines: [], readings };
 }
 
 // --------------------------------------------------
@@ -244,6 +196,7 @@ function ReadingLine({ label, row, note }) {
       {!isSeed(row) && (
         <SyncBadge record={row} />
       )}
+      <RecordObservationContexts record={row} />
 
       {row.status !== 'normal' &&
         row.reasons?.[0] && (
@@ -259,10 +212,12 @@ function ReadingLine({ label, row, note }) {
 // SECTION 4: CREW MEMBER CARD
 // --------------------------------------------------
 
-function CrewCard({ card, onOpenProfile }) {
+function CrewCard({ card, onOpenProfile, expanded, readings, fromServer, profileId, onClose }) {
+  const buttonRef = useRef(null);
+  const close = () => { onClose(); buttonRef.current?.focus(); };
   return (
     <li
-      className={`cmo-card cmo-card--${card.status}`}
+      className={`cmo-card cmo-card--${card.status}${expanded ? ' cmo-card--expanded' : ''}`}
     >
       <div className="cmo-card__head">
         <div>
@@ -291,37 +246,18 @@ function CrewCard({ card, onOpenProfile }) {
         </span>
       </div>
 
-      <ReadingLine
-        label="Vitals"
-        row={card.vitals}
-      />
-
-      <ReadingLine
-        label="Stand test"
-        row={card.stand}
-        note={
-          card.standIsPreflight
-            ? `Preflight ${
-                card.stand.payload?.timepoint ?? ''
-              }`.trim()
-            : null
-        }
-      />
-
-      <h4 className="cmo-card__sub">
-        Preflight vs now
-      </h4>
-
-      <Comparison rows={card.comparison} />
-
       {/* NEW: OPEN CREW MEDICAL PROFILE */}
       <button
         type="button"
         className="cmo-profile-button"
-        onClick={() => onOpenProfile(card.id)}
+        ref={buttonRef}
+        aria-expanded={expanded}
+        aria-controls={`medical-profile-${card.id}`}
+        onClick={() => expanded ? close() : onOpenProfile(card.id)}
       >
-        View Medical Profile
+        {expanded ? 'Hide Medical Profile' : 'View Medical Profile'}
       </button>
+      {expanded && <MedicalProfile crewMember={card} readings={readings} fromServer={fromServer} profileId={profileId} onClose={close} />}
     </li>
   );
 }
@@ -331,11 +267,14 @@ function CrewCard({ card, onOpenProfile }) {
 // --------------------------------------------------
 
 function MedicalProfile({
+  profileId,
   crewMember,
   readings,
   fromServer,
   onClose,
 }) {
+  const { version } = useOnboard();
+  const wellness = useMemo(() => readWellnessCheckins(crewMember.id), [crewMember.id, version]);
   // Get the most recent readings belonging to
   // the selected astronaut.
   const history = useMemo(
@@ -359,7 +298,8 @@ function MedicalProfile({
   return (
     <section
       className="card card--lg cmo-profile"
-      aria-labelledby="medical-profile-title"
+      id={`medical-profile-${crewMember.id}`}
+      aria-labelledby={`medical-profile-title-${crewMember.id}`}
     >
       {/* PROFILE HEADER */}
 
@@ -369,7 +309,7 @@ function MedicalProfile({
             Crew Medical Profile
           </p>
 
-          <h2 id="medical-profile-title">
+          <h2 id={`medical-profile-title-${crewMember.id}`}>
             {crewMember.name}
           </h2>
 
@@ -382,14 +322,10 @@ function MedicalProfile({
           </p>
         </div>
 
-        <button
-          type="button"
-          className="cmo-profile-button"
-          onClick={onClose}
-        >
-          Close Profile
-        </button>
+
       </div>
+
+      <CrewBodyDashboard key={crewMember.id} crewId={crewMember.id} readings={readings} profileId={profileId} />
 
       {/* OVERALL HEALTH STATUS */}
 
@@ -403,8 +339,17 @@ function MedicalProfile({
 
         <p className="muted">
           Based on the latest available vitals
-          and in-flight stand test.
+          only; missing data is not marked normal.
         </p>
+      </div>
+
+      <div className="cmo-profile__section">
+        <h3>Wellness answers</h3>
+        <p className="muted">Self-reported check-ins saved on this browser. Separate from measured vitals.</p>
+        {wellness.length ? wellness.slice(0, 5).map((record) => <details key={record.id}>
+          <summary>{new Date(record.recorded_at).toLocaleString()}{needsUrgentHelp(record.answers) ? ' — Urgent symptoms reported' : ''}</summary>
+          <WellnessAnswers answers={record.answers} />
+        </details>) : <p className="muted">No wellness check-ins saved here.</p>}
       </div>
 
       {/* LATEST VITAL SIGNS */}
@@ -427,7 +372,7 @@ function MedicalProfile({
             </div>
 
             <div>
-              <dt>Resting Heart Rate</dt>
+              <dt>Heart Rate</dt>
 
               <dd>
                 {vitals.heartRate ?? '—'}
@@ -465,32 +410,6 @@ function MedicalProfile({
             No vital measurements are available.
           </p>
         )}
-      </div>
-
-      {/* PREFLIGHT COMPARISON */}
-
-      <div className="cmo-profile__section">
-        <h3>Preflight vs Current Health</h3>
-
-        <Comparison
-          rows={crewMember.comparison}
-        />
-      </div>
-
-      {/* STAND TEST INFORMATION */}
-
-      <div className="cmo-profile__section">
-        <h3>Latest Stand Test</h3>
-
-        <ReadingLine
-          label="Stand Test"
-          row={crewMember.stand}
-          note={
-            crewMember.standIsPreflight
-              ? 'Preflight reference only'
-              : null
-          }
-        />
       </div>
 
       {/* RECENT HEALTH HISTORY */}
@@ -543,12 +462,14 @@ function MedicalProfile({
                   {!isSeed(record) && (
                     <SyncBadge record={record} />
                   )}
+                  <RecordObservationContexts record={record} />
                 </li>
               ))}
           </ol>
         )}
       </div>
 
+      <PersistedObservationHistory crewCode={crewMember.id} />
       <SourceLabel
         source={
           fromServer
@@ -564,7 +485,7 @@ function MedicalProfile({
 // SECTION 6: MAIN MEDICAL OFFICER DASHBOARD
 // --------------------------------------------------
 
-export default function CrewMedicalOfficer() {
+export default function CrewMedicalOfficer({ profileId }) {
   const {
     fromServer,
     live,
@@ -638,11 +559,6 @@ export default function CrewMedicalOfficer() {
     );
   }, [cards, searchQuery]);
 
-  // NEW: Find the crew member selected by the officer.
-  const selectedCrew = cards.find(
-    (card) => card.id === selectedCrewId
-  );
-
   // Open a crew member's medical profile.
   function openMedicalProfile(crewId) {
     setSelectedCrewId(crewId);
@@ -663,10 +579,7 @@ export default function CrewMedicalOfficer() {
         aria-labelledby="cmo-title"
       >
         <div className="cmo__bar-main">
-          <p className="cmo__eyebrow">
-            Mission control ·{' '}
-            {crew[0]?.mission ?? 'Demo mission'}
-          </p>
+          <p className="cmo__eyebrow">Crew Medical Officer</p>
 
           <h2
             id="cmo-title"
@@ -688,7 +601,7 @@ export default function CrewMedicalOfficer() {
           className="cmo__counts"
           aria-label="Crew by status"
         >
-          {['alert', 'watch', 'normal'].map(
+          {['alert', 'watch', 'normal', 'unknown'].map(
             (status) => (
               <li
                 key={status}
@@ -740,17 +653,6 @@ export default function CrewMedicalOfficer() {
           </p>
         )}
       </section>
-
-      {/* NEW: SELECTED CREW MEMBER PROFILE */}
-
-      {selectedCrew && (
-        <MedicalProfile
-          crewMember={selectedCrew}
-          readings={readings}
-          fromServer={fromServer}
-          onClose={closeMedicalProfile}
-        />
-      )}
 
       {/* MAIN DASHBOARD LAYOUT */}
 
@@ -809,6 +711,11 @@ export default function CrewMedicalOfficer() {
                   key={card.id}
                   card={card}
                   onOpenProfile={openMedicalProfile}
+                  expanded={selectedCrewId === card.id}
+                  readings={readings}
+                  fromServer={fromServer}
+                  profileId={profileId}
+                  onClose={closeMedicalProfile}
                 />
               ))}
             </ol>

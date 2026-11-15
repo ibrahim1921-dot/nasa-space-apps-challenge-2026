@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { CRISIS_ACTION } from '../content/limits.js';
 import { baselineAfter } from './baseline.js';
+import { VITALS_SCREENS } from '../constants/vitals.js';
 import {
   READING_FIELDS,
   buildHistory,
@@ -30,6 +31,19 @@ const usualReading = () => ({
   temperature: usual.temperature.mean,
   sleep_hours: usual.sleep_hours.mean,
   mood: Math.round(usual.mood.mean),
+});
+
+test('manual check-in omits device blood pressure and still validates and scores', () => {
+  const { systolic, diastolic, ...reading } = usualReading();
+  assert.ok(VITALS_SCREENS.every((screen) => screen.fields.every(({ key }) => !['systolic', 'diastolic'].includes(key))));
+  assert.equal(validateReading(reading), null);
+  assert.equal(validateExtraHistory([{ ...reading, recorded_at: '2026-11-15T08:00:00Z' }]), null);
+  const result = evaluateCheckin(reading, history);
+  assert.equal(result.indicators.blood_pressure, undefined);
+  assert.equal(result.order.includes('blood_pressure'), false);
+  assert.equal(result.order.length, 5);
+  assert.match(validateReading({ ...reading, systolic }), /diastolic.*missing/);
+  assert.match(validateReading({ ...reading, diastolic }), /systolic.*missing/);
 });
 
 test('crew-01’s sleep has drifted down in crew.json: the drift check flags it at their usual value', () => {

@@ -38,7 +38,7 @@ export default function Header({ crew, profileId, onProfileChange, updatedAt }) 
             ))}
           </select>
           <p id="mission-delay" className="muted header__profile-delay">
-            Signal delay to Earth: {profile.delayText}
+            Mission setting: {profile.label}
           </p>
         </div>
 
@@ -63,12 +63,12 @@ export default function Header({ crew, profileId, onProfileChange, updatedAt }) 
             <p className="header__signed-in">
               <span className="muted">Signed in as</span>{' '}
               <strong className="header__name">{data.name}</strong>
-              <span className="muted"> · {data.role}</span>
+              <span className="muted"> · {data.title ?? data.role}</span>
             </p>
             <div className="header__meta">
-              <p>
+              {data.missionDay != null && <p>
                 Mission day <strong className="num">{data.missionDay}</strong> of {data.totalMissionDays}
-              </p>
+              </p>}
               {updatedAt && (
                 <p className="muted">
                   Latest reading <time dateTime={updatedAt}>{updatedText(updatedAt)}</time>

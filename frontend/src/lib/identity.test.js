@@ -38,15 +38,21 @@ test('landing until the identity is read, then landing or app', () => {
   assert.equal(screenFor({ ready: true, who: 'lena' }), 'app');
 });
 
-test('Maya never sees the CMO tab; Lena sees her personal tabs plus the CMO tab', () => {
+test('personal pages remain grouped under the medical officer My Data navigation', () => {
   const maya = tabsFor(DEMO_ACCOUNTS.maya).map((t) => t.id);
   const lena = tabsFor(DEMO_ACCOUNTS.lena).map((t) => t.id);
   assert.equal(maya.includes('cmo'), false);
   assert.ok(maya.includes('environment'));
   assert.equal(canOpen(DEMO_ACCOUNTS.maya, 'cmo'), false);
-  assert.deepEqual(lena, [...maya.slice(0, -1), 'cmo', maya.at(-1)]);
-  assert.equal(canOpen(DEMO_ACCOUNTS.lena, 'cmo'), true);
-  for (const id of ['dashboard', 'standtest', 'checkin', 'environment']) {
+  assert.deepEqual(lena, ['dashboard', 'mydata', 'environment', 'about']);
+  assert.equal(canOpen(DEMO_ACCOUNTS.lena, 'mydata'), true);
+  assert.equal(canOpen(DEMO_ACCOUNTS.maya, 'mydata'), false);
+  assert.equal(canOpen(DEMO_ACCOUNTS.lena, 'checkin'), true);
+  for (const id of ['sleep', 'labs', 'standtest']) {
+    assert.equal(canOpen(DEMO_ACCOUNTS.lena, id), false);
+    assert.equal(canOpen(DEMO_ACCOUNTS.maya, id), false);
+  }
+  for (const id of ['dashboard', 'checkin', 'environment']) {
     assert.equal(canOpen(DEMO_ACCOUNTS.maya, id), true);
   }
 });

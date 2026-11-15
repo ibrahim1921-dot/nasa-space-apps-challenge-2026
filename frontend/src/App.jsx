@@ -26,6 +26,8 @@ import {
 } from './hooks/useOnboard.jsx';
 
 import { readVitalsCheckins } from './lib/vitalsCheckinStore.js';
+import { readWellnessCheckins } from './lib/wellnessCheckin.js';
+import { clearAdminHealthOnce } from './lib/clearAdminHealth.js';
 
 import {
   canOpen,
@@ -34,12 +36,7 @@ import {
   MY_DATA_SCREENS,
 } from './lib/appScreens.js';
 
-import { buildPersonDashboard } from './lib/personCards.js';
-
-import {
-  crewDaysOf,
-  preflightDaysOf,
-} from './data/bundled.js';
+import { buildRecordedDashboard } from './lib/recordedHealth.js';
 
 import Landing from './components/Landing.jsx';
 import Header from './components/Header.jsx';
@@ -47,7 +44,6 @@ import Banner from './components/Banner.jsx';
 import CheckinForm from './components/CheckinForm.jsx';
 
 import Dashboard from './views/Dashboard.jsx';
-import SleepRecovery from './views/SleepRecovery.jsx';
 import About from './views/About.jsx';
 import CrewMedicalOfficer from './views/CrewMedicalOfficer.jsx';
 
@@ -55,44 +51,8 @@ import CrewMedicalOfficer from './views/CrewMedicalOfficer.jsx';
 // LOAD CHART-HEAVY SCREENS ON DEMAND
 // ---------------------------------------------
 
-const LabBaseline = dynamic(
-  () => import('./views/LabBaseline.jsx'),
-  {
-    ssr: false,
-    loading: () => (
-      <section
-        className="card card--lg"
-        aria-busy="true"
-      >
-        <span
-          className="skel"
-          style={{ width: '100%', height: 340 }}
-        />
-      </section>
-    ),
-  }
-);
-
 const Environment = dynamic(
   () => import('./views/Environment.jsx'),
-  {
-    ssr: false,
-    loading: () => (
-      <section
-        className="card card--lg"
-        aria-busy="true"
-      >
-        <span
-          className="skel"
-          style={{ width: '100%', height: 340 }}
-        />
-      </section>
-    ),
-  }
-);
-
-const StandTest = dynamic(
-  () => import('./views/StandTest.jsx'),
   {
     ssr: false,
     loading: () => (
@@ -200,8 +160,6 @@ function AppShell() {
   );
 
   // Keep stand tests mounted after the first visit.
-  const [standVisited, setStandVisited] = useState(false);
-  const [standFocus, setStandFocus] = useState(0);
 
   // Personal check-ins saved on this device.
   const [saved, setSaved] = useState([]);
@@ -238,27 +196,20 @@ function AppShell() {
   // STAND TEST STATE
   // ---------------------------------------------
 
-  useEffect(() => {
-    if (view === 'standtest') {
-      setStandVisited(true);
-    }
-  }, [view]);
-
   // ---------------------------------------------
   // LOAD PERSONAL CHECK-INS
   // ---------------------------------------------
 
   useEffect(() => {
+    if (isMedicalOfficer) clearAdminHealthOnce(crewId, window.localStorage);
     setSaved(readVitalsCheckins(crewId));
-  }, [crewId, onboard.version]);
+  }, [crewId, onboard.version, isMedicalOfficer]);
 
   // Build health information for the signed-in user.
   const person = useMemo(
     () =>
-      buildPersonDashboard({
+      buildRecordedDashboard({
         crewId,
-        crewDays: crewDaysOf(crewId),
-        preflight: preflightDaysOf(crewId),
         saved,
       }),
     [crewId, saved]
@@ -267,8 +218,11 @@ function AppShell() {
   const latestVitals = person.latest;
 
   const savedLatest = saved[0] ?? null;
+  const wellnessLatest = useMemo(() => readWellnessCheckins(crewId)[0] ?? null, [crewId, onboard.version]);
 
-  const latestCheckin = savedLatest?.payload?.context
+  const latestCheckin = wellnessLatest && (!savedLatest || Date.parse(wellnessLatest.recorded_at) >= Date.parse(savedLatest.recorded_at))
+    ? { wellness: wellnessLatest.answers, savedAt: wellnessLatest.recorded_at }
+    : savedLatest?.payload?.context
     ? {
         ...savedLatest.payload.context,
         savedAt: savedLatest.recorded_at,
@@ -337,19 +291,6 @@ function openMyDataScreen(screenId) {
   // ---------------------------------------------
   // STAND TEST
   // ---------------------------------------------
-
-  function openStandTest() {
-    // Ensure My Data is expanded for medical officers.
-    if (isMedicalOfficer) {
-      setMyDataOpen(true);
-    }
-
-    setView('standtest');
-
-    setStandFocus((number) => number + 1);
-
-    window.scrollTo(0, 0);
-  }
 
   // ---------------------------------------------
   // CHECK-IN
@@ -540,13 +481,9 @@ function openMyDataScreen(screenId) {
             SHARED SCREENS
            ------------------------------------ */}
 
-        {view === 'sleep' && (
-          <SleepRecovery />
-        )}
 
-        {view === 'labs' && (
-          <LabBaseline />
-        )}
+
+
 
         {view === 'environment' && (
           <Environment />
@@ -563,7 +500,7 @@ function openMyDataScreen(screenId) {
 
         {view === 'dashboard' &&
           isMedicalOfficer && (
-            <CrewMedicalOfficer />
+            <CrewMedicalOfficer profileId={profileId} />
           )}
 
         {/* ------------------------------------
@@ -571,16 +508,6 @@ function openMyDataScreen(screenId) {
             Preserves active test state.
            ------------------------------------ */}
 
-        {(standVisited || view === 'standtest') && (
-          <div hidden={view !== 'standtest'}>
-            <StandTest
-              profileId={profileId}
-              crewId={crewId}
-              crewName={crew.data?.name}
-              focusSignal={standFocus}
-            />
-          </div>
-        )}
 
         {/* ------------------------------------
             PERSONAL HEALTH DASHBOARD
@@ -611,7 +538,6 @@ function openMyDataScreen(screenId) {
             onLogCheckin={openCheckin}
             checkinButtonRef={checkinButtonRef}
             profileId={profileId}
-            onStartStandTest={openStandTest}
             person={person}
           />
         </div>

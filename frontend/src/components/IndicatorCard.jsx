@@ -3,6 +3,7 @@ import TrendIndicator from './TrendIndicator.jsx';
 import Sparkline from './Sparkline.jsx';
 import LimitsInfo from './LimitsInfo.jsx';
 import ActionCard, { CRISIS_STEPS } from './ActionCard.jsx';
+import ObservationContext from './ObservationContext.jsx';
 
 /** The crisis action card for an indicator whose reading crossed a crisis line (see content/limits.js). */
 export function IndicatorAction({ indicator, profile }) {
@@ -21,6 +22,7 @@ export function IndicatorAction({ indicator, profile }) {
 
 export default function IndicatorCard({ indicator, profile }) {
   const { name, value, unit, status, trend, trendText, history, limitKey, sample, usual } = indicator;
+  if (indicator.missing) return <article className="card indicator"><h3 className="indicator__name">{name}</h3><p className="muted">No recorded data</p></article>;
   return (
     <article className="card indicator">
       <div className="indicator__top">
@@ -37,6 +39,7 @@ export default function IndicatorCard({ indicator, profile }) {
         {unit && <span className="indicator__unit">{unit}</span>}
       </p>
       {indicator.preflightAverage && <p className="indicator__preflight">{indicator.preflightAverage.text}</p>}
+      {indicator.observationContext && <ObservationContext context={indicator.observationContext} />}
       <IndicatorAction indicator={indicator} profile={profile} />
       <div className="indicator__foot">
         <TrendIndicator trend={trend} text={trendText} />

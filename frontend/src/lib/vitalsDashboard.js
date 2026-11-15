@@ -4,6 +4,7 @@
 
 import { formatRowValue } from './vitalsCheckin.js';
 import { sourceNoteFor } from './personDashboard.js';
+import { contextForRecord, indicatorCode } from './observationContext.js';
 
 /** Dashboard indicator id → daily-vitals result row id. */
 export const DASHBOARD_VITALS = {
@@ -46,8 +47,10 @@ export function applyVitals(indicator, record, usual = null) {
     return { ...indicator, sample: true, usual: usual?.[rowId] ?? null };
   }
   const flagged = row.status !== 'normal';
+  const observationContext = contextForRecord(record, indicatorCode(rowId));
   return {
     ...indicator,
+    ...(rowId === 'heart_rate' && observationContext.activityContext !== 'RESTING' ? { name: 'Heart rate' } : {}),
     value: formatRowValue(row),
     status: row.status,
     crisis: row.crisis,
@@ -57,6 +60,7 @@ export function applyVitals(indicator, record, usual = null) {
     sample: false,
     sourceNote: sourceNoteFor(record),
     checkedAt: record.recorded_at,
+    observationContext,
     trend: trendVsUsual(row),
     trendText: flagged
       ? row.reasons[0]
