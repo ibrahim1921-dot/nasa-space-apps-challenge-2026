@@ -29,7 +29,7 @@ export default function ContextCard({ latestCheckin, onLogCheckin, buttonRef }) 
         </div>
       ) : (
         <div className="context__body">
-          <p>No check-in on this device yet.</p>
+          <p>No check-in recorded yet.</p>
           <p className="muted">Isolation, sleep and workload help explain changes in stress and sleep readings.</p>
         </div>
       )}

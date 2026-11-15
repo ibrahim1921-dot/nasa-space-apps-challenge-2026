@@ -37,9 +37,7 @@ export default function Environment() {
             Station environment
           </h2>
           <p className="muted">
-            Space radiation is invisible and one of the most hazardous parts of spaceflight. These are the daily doses
-            measured inside the ISS during a 2014 mission, split into galactic cosmic rays (GCR) and passes through the
-            South Atlantic Anomaly (SAA).
+            Daily station radiation and cumulative exposure from NASA RR-1 (ISS, 2014).
           </p>
         </div>
         {last && (
@@ -75,17 +73,17 @@ export default function Environment() {
               </ComposedChart>
             </ResponsiveContainer>
           </div>
-          <p className="labs__note">{data.note}</p>
+          <details><summary>Measurement details</summary><p className="labs__note">{data.note}</p></details>
         </>
       )}
-      <p className="muted env__why">
+      <details><summary>About radiation exposure</summary><p className="muted env__why">
         Why it matters: exposure may raise cancer risk, and on the ISS neutrons make up about 30% of total radiation.{' '}
         <a href="https://www.nasa.gov/hrp/hazards/" target="_blank" rel="noreferrer">NASA: 5 hazards of human spaceflight</a>
         {' · '}
         <a href="https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp" target="_blank" rel="noreferrer">
           CSA: monitoring radiation
         </a>
-      </p>
+      </p></details>
       <SourceLabel source={data?.source ?? 'Environment (NASA RR-1)'} />
     </section>
   );

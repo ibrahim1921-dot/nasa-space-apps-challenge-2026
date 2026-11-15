@@ -19,7 +19,7 @@ const EMPTY = Object.fromEntries(FEATURES.map((f) => [f.key, '']));
 const today = () => new Date().toISOString().slice(0, 10);
 
 /** "Log tonight": the 6 features, validated here and again by the API. */
-export default function LogNightForm({ subjectId, onSubmit }) {
+export default function LogNightForm({ subjectId, onSubmit, onDateChange }) {
   const [values, setValues] = useState(EMPTY);
   const [date, setDate] = useState(today);
   const [error, setError] = useState(null);
@@ -65,7 +65,7 @@ export default function LogNightForm({ subjectId, onSubmit }) {
           type="date"
           className="input input--short"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={(e) => { setDate(e.target.value); if (e.target.value) onDateChange?.(e.target.value); }}
           required
         />
       </div>

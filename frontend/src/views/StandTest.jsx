@@ -597,7 +597,7 @@ export default function StandTest({ profileId, crewId, crewName: nameProp, focus
               )}
               <p className="muted stand__saved-note">
                 {outcome.stored
-                  ? 'Saved on this device first. It is copied to the onboard server when that is reachable, and the server re-checks it with the same rules.'
+                  ? 'Stand test saved.'
                   : 'This browser could not save the result, so it will be gone after a reload.'}
               </p>
               <div className="checkin__actions">
