@@ -1,0 +1,1637 @@
+{
+  "manifest": {
+    "schema_version": "astrohealth.simulation.run.v1",
+    "engine_version": "0.1.0",
+    "synthetic": true,
+    "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+    "configuration": {
+      "seed": 42,
+      "start_at": "2026-01-01T08:00:00Z",
+      "scenario": "normal",
+      "tick_minutes": 15,
+      "time_scale": 86400,
+      "stress": 0.1,
+      "activity": 0.7,
+      "sleep_hours": 8,
+      "radiation_mgy_per_day": 0.25,
+      "radiation_multiplier": 1,
+      "cadences": {
+        "heart_rate": 15,
+        "blood_pressure": 60,
+        "blood_sugar": 360,
+        "body_temperature": 60,
+        "sleep_hours": 1440,
+        "mood": 720,
+        "muscle": 10080,
+        "bone_mineral_density": 40320,
+        "cumulative_absorbed_radiation_dose": 60
+      },
+      "profiles": [
+        {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "crew_code": "sim-crew-01",
+          "original": {
+            "heart_rate.value": {
+              "reference_value": 64,
+              "noise_sd": 2
+            },
+            "blood_pressure.systolic": {
+              "reference_value": 116,
+              "noise_sd": 3
+            },
+            "blood_pressure.diastolic": {
+              "reference_value": 74,
+              "noise_sd": 2
+            },
+            "blood_sugar.value": {
+              "reference_value": 4.9,
+              "noise_sd": 0.12
+            },
+            "body_temperature.value": {
+              "reference_value": 36.7,
+              "noise_sd": 0.05
+            },
+            "sleep_hours.duration": {
+              "reference_value": 7.6,
+              "noise_sd": 0.25
+            },
+            "mood.score": {
+              "reference_value": 4,
+              "noise_sd": 0.2
+            },
+            "muscle.grip_strength": {
+              "reference_value": 36,
+              "noise_sd": 0.4
+            },
+            "muscle.muscle_mass": {
+              "reference_value": 28,
+              "noise_sd": 0.05
+            },
+            "bone_mineral_density.areal_density": {
+              "reference_value": 1.08,
+              "noise_sd": 0.001
+            },
+            "cumulative_absorbed_radiation_dose.value": {
+              "reference_value": 0,
+              "noise_sd": 0
+            }
+          },
+          "contexts": {
+            "RESTING": {
+              "heart_rate.value": {
+                "reference_value": 64,
+                "noise_sd": 2
+              },
+              "blood_pressure.systolic": {
+                "reference_value": 116,
+                "noise_sd": 3
+              },
+              "blood_pressure.diastolic": {
+                "reference_value": 74,
+                "noise_sd": 2
+              },
+              "blood_sugar.value": {
+                "reference_value": 4.9,
+                "noise_sd": 0.12
+              },
+              "body_temperature.value": {
+                "reference_value": 36.7,
+                "noise_sd": 0.05
+              },
+              "sleep_hours.duration": {
+                "reference_value": 7.6,
+                "noise_sd": 0.25
+              },
+              "mood.score": {
+                "reference_value": 4,
+                "noise_sd": 0.2
+              },
+              "muscle.grip_strength": {
+                "reference_value": 36,
+                "noise_sd": 0.4
+              },
+              "muscle.muscle_mass": {
+                "reference_value": 28,
+                "noise_sd": 0.05
+              },
+              "bone_mineral_density.areal_density": {
+                "reference_value": 1.08,
+                "noise_sd": 0.001
+              },
+              "cumulative_absorbed_radiation_dose.value": {
+                "reference_value": 0,
+                "noise_sd": 0
+              }
+            },
+            "EXERCISING": {
+              "heart_rate.value": {
+                "reference_value": 124,
+                "noise_sd": 2
+              },
+              "blood_pressure.systolic": {
+                "reference_value": 141,
+                "noise_sd": 3
+              },
+              "blood_pressure.diastolic": {
+                "reference_value": 79,
+                "noise_sd": 2
+              },
+              "blood_sugar.value": {
+                "reference_value": 5.300000000000001,
+                "noise_sd": 0.12
+              },
+              "body_temperature.value": {
+                "reference_value": 37.050000000000004,
+                "noise_sd": 0.05
+              },
+              "sleep_hours.duration": {
+                "reference_value": 7.6,
+                "noise_sd": 0.25
+              },
+              "mood.score": {
+                "reference_value": 4,
+                "noise_sd": 0.2
+              },
+              "muscle.grip_strength": {
+                "reference_value": 36,
+                "noise_sd": 0.4
+              },
+              "muscle.muscle_mass": {
+                "reference_value": 28,
+                "noise_sd": 0.05
+              },
+              "bone_mineral_density.areal_density": {
+                "reference_value": 1.08,
+                "noise_sd": 0.001
+              },
+              "cumulative_absorbed_radiation_dose.value": {
+                "reference_value": 0,
+                "noise_sd": 0
+              }
+            },
+            "SLEEPING": {
+              "heart_rate.value": {
+                "reference_value": 55,
+                "noise_sd": 2
+              },
+              "blood_pressure.systolic": {
+                "reference_value": 106,
+                "noise_sd": 3
+              },
+              "blood_pressure.diastolic": {
+                "reference_value": 69,
+                "noise_sd": 2
+              },
+              "blood_sugar.value": {
+                "reference_value": 4.75,
+                "noise_sd": 0.12
+              },
+              "body_temperature.value": {
+                "reference_value": 36.5,
+                "noise_sd": 0.05
+              },
+              "sleep_hours.duration": {
+                "reference_value": 7.6,
+                "noise_sd": 0.25
+              },
+              "mood.score": {
+                "reference_value": 4,
+                "noise_sd": 0.2
+              },
+              "muscle.grip_strength": {
+                "reference_value": 36,
+                "noise_sd": 0.4
+              },
+              "muscle.muscle_mass": {
+                "reference_value": 28,
+                "noise_sd": 0.05
+              },
+              "bone_mineral_density.areal_density": {
+                "reference_value": 1.08,
+                "noise_sd": 0.001
+              },
+              "cumulative_absorbed_radiation_dose.value": {
+                "reference_value": 0,
+                "noise_sd": 0
+              }
+            },
+            "OTHER": {
+              "heart_rate.value": {
+                "reference_value": 76,
+                "noise_sd": 2
+              },
+              "blood_pressure.systolic": {
+                "reference_value": 122,
+                "noise_sd": 3
+              },
+              "blood_pressure.diastolic": {
+                "reference_value": 76,
+                "noise_sd": 2
+              },
+              "blood_sugar.value": {
+                "reference_value": 4.9,
+                "noise_sd": 0.12
+              },
+              "body_temperature.value": {
+                "reference_value": 36.85,
+                "noise_sd": 0.05
+              },
+              "sleep_hours.duration": {
+                "reference_value": 7.6,
+                "noise_sd": 0.25
+              },
+              "mood.score": {
+                "reference_value": 4,
+                "noise_sd": 0.2
+              },
+              "muscle.grip_strength": {
+                "reference_value": 36,
+                "noise_sd": 0.4
+              },
+              "muscle.muscle_mass": {
+                "reference_value": 28,
+                "noise_sd": 0.05
+              },
+              "bone_mineral_density.areal_density": {
+                "reference_value": 1.08,
+                "noise_sd": 0.001
+              },
+              "cumulative_absorbed_radiation_dose.value": {
+                "reference_value": 0,
+                "noise_sd": 0
+              }
+            },
+            "UNKNOWN": {
+              "heart_rate.value": {
+                "reference_value": 64,
+                "noise_sd": 2
+              },
+              "blood_pressure.systolic": {
+                "reference_value": 116,
+                "noise_sd": 3
+              },
+              "blood_pressure.diastolic": {
+                "reference_value": 74,
+                "noise_sd": 2
+              },
+              "blood_sugar.value": {
+                "reference_value": 4.9,
+                "noise_sd": 0.12
+              },
+              "body_temperature.value": {
+                "reference_value": 36.7,
+                "noise_sd": 0.05
+              },
+              "sleep_hours.duration": {
+                "reference_value": 7.6,
+                "noise_sd": 0.25
+              },
+              "mood.score": {
+                "reference_value": 4,
+                "noise_sd": 0.2
+              },
+              "muscle.grip_strength": {
+                "reference_value": 36,
+                "noise_sd": 0.4
+              },
+              "muscle.muscle_mass": {
+                "reference_value": 28,
+                "noise_sd": 0.05
+              },
+              "bone_mineral_density.areal_density": {
+                "reference_value": 1.08,
+                "noise_sd": 0.001
+              },
+              "cumulative_absorbed_radiation_dose.value": {
+                "reference_value": 0,
+                "noise_sd": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "warning": "Synthetic demo parameters, not clinical guidance, a trained model, or an ingestion API."
+  },
+  "items": [
+    {
+      "sequence": 1,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "heart_rate",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T08:15:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "194acf81-06d0-535c-8e0f-3f8791704f2f",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 1,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "heart_rate",
+          "storage_kind": "SCALAR",
+          "scope_code": "default"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 62.944463,
+          "unit": "beats/min"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 62.944463,
+            "unit": "beats/min"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "beats/min",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 64,
+              "simulation_noise_sd": 2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "beats/min",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 64,
+              "simulation_noise_sd": 2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "beats/min",
+            "from_original": -1.055537,
+            "from_activity": -1.055537
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 2,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "heart_rate",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T08:30:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "5b5af534-63b1-5ceb-93a0-c1226bebd596",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 2,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "heart_rate",
+          "storage_kind": "SCALAR",
+          "scope_code": "default"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 62.782493,
+          "unit": "beats/min"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 62.782493,
+            "unit": "beats/min"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "beats/min",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 64,
+              "simulation_noise_sd": 2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "beats/min",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 64,
+              "simulation_noise_sd": 2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "beats/min",
+            "from_original": -1.217507,
+            "from_activity": -1.217507
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 5,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "blood_pressure",
+          "storage_kind": "BLOOD_PRESSURE",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T09:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "b9f4b907-bc9a-59e0-b72e-d7323d08a697",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 4,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "blood_pressure",
+          "storage_kind": "BLOOD_PRESSURE",
+          "scope_code": "default"
+        },
+        "value_table": "blood_pressure_observations",
+        "values": {
+          "systolic": 115.027,
+          "diastolic": 74.77,
+          "unit": "mmHg",
+          "method": "SYNTHETIC_DEMO"
+        },
+        "metrics": [
+          {
+            "metric_code": "systolic",
+            "value": 115.027,
+            "unit": "mmHg"
+          },
+          {
+            "metric_code": "diastolic",
+            "value": 74.77,
+            "unit": "mmHg"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "systolic",
+              "unit": "mmHg",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 116,
+              "simulation_noise_sd": 3,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            },
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "diastolic",
+              "unit": "mmHg",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 74,
+              "simulation_noise_sd": 2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "systolic",
+              "unit": "mmHg",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 116,
+              "simulation_noise_sd": 3,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            },
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "diastolic",
+              "unit": "mmHg",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 74,
+              "simulation_noise_sd": 2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "systolic",
+            "unit": "mmHg",
+            "from_original": -0.973,
+            "from_activity": -0.973
+          },
+          {
+            "metric_code": "diastolic",
+            "unit": "mmHg",
+            "from_original": 0.77,
+            "from_activity": 0.77
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 6,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "body_temperature",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T09:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "c005b41d-a44d-5069-8a09-7e0f6da2f82e",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 4,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "body_temperature",
+          "storage_kind": "SCALAR",
+          "scope_code": "default"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 36.733176,
+          "unit": "Cel"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 36.733176,
+            "unit": "Cel"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "Cel",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 36.7,
+              "simulation_noise_sd": 0.05,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "Cel",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 36.7,
+              "simulation_noise_sd": 0.05,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "Cel",
+            "from_original": 0.033176,
+            "from_activity": 0.033176
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 7,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "cumulative_absorbed_radiation_dose",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T09:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "7e803a29-a193-5e8e-a904-dc0ab67fe769",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 4,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "cumulative_absorbed_radiation_dose",
+          "storage_kind": "SCALAR",
+          "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "body_site": "WHOLE_BODY",
+          "radiation_astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "accumulation_started_at": "2026-01-01T08:00:00Z",
+          "dosimetry_method": "SYNTHETIC_DEMO_ABSORBED_DOSE"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 0.009981,
+          "unit": "mGy"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 0.009981,
+            "unit": "mGy"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mGy",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+              "reference_value": 0,
+              "simulation_noise_sd": 0,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mGy",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+              "reference_value": 0,
+              "simulation_noise_sd": 0,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "mGy",
+            "from_original": 0.009981,
+            "from_activity": 0.009981
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 14,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "cumulative_absorbed_radiation_dose",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T10:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "5fa8ef1d-53ec-5260-9e4b-c92ee8bd3ba5",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 8,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "cumulative_absorbed_radiation_dose",
+          "storage_kind": "SCALAR",
+          "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "body_site": "WHOLE_BODY",
+          "radiation_astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "accumulation_started_at": "2026-01-01T08:00:00Z",
+          "dosimetry_method": "SYNTHETIC_DEMO_ABSORBED_DOSE"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 0.0204,
+          "unit": "mGy"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 0.0204,
+            "unit": "mGy"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mGy",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+              "reference_value": 0,
+              "simulation_noise_sd": 0,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mGy",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+              "reference_value": 0,
+              "simulation_noise_sd": 0,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "mGy",
+            "from_original": 0.0204,
+            "from_activity": 0.0204
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 21,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "cumulative_absorbed_radiation_dose",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T11:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "7c93cc0c-a56f-5a11-9cb7-dbc49f4f2375",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 12,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "cumulative_absorbed_radiation_dose",
+          "storage_kind": "SCALAR",
+          "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "body_site": "WHOLE_BODY",
+          "radiation_astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "accumulation_started_at": "2026-01-01T08:00:00Z",
+          "dosimetry_method": "SYNTHETIC_DEMO_ABSORBED_DOSE"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 0.030915,
+          "unit": "mGy"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 0.030915,
+            "unit": "mGy"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mGy",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+              "reference_value": 0,
+              "simulation_noise_sd": 0,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mGy",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-dose-14721900-a8d9-5b83-96c7-4822526c1cf8-ca827cda-f984-5b43-8f48-cfcc5a2093da",
+              "reference_value": 0,
+              "simulation_noise_sd": 0,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "mGy",
+            "from_original": 0.030915,
+            "from_activity": 0.030915
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 41,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "blood_sugar",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T14:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "2cd1b51d-1816-58d9-b141-5db1add1fff9",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 24,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "blood_sugar",
+          "storage_kind": "SCALAR",
+          "scope_code": "default"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 5.124988,
+          "unit": "mmol/L"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 5.124988,
+            "unit": "mmol/L"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mmol/L",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 4.9,
+              "simulation_noise_sd": 0.12,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "mmol/L",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 4.9,
+              "simulation_noise_sd": 0.12,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "mmol/L",
+            "from_original": 0.224988,
+            "from_activity": 0.224988
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 86,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "mood",
+          "storage_kind": "MOOD",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T20:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "c509a3fa-df2b-5112-835c-83691cbdf580",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 48,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "mood",
+          "storage_kind": "MOOD",
+          "scope_code": "simulation-mood-v1",
+          "scale_name": "SYNTHETIC_DEMO_MOOD",
+          "scale_version": "1",
+          "scale_min": 1,
+          "scale_max": 5
+        },
+        "value_table": "mood_assessments",
+        "values": {
+          "score": 4.3853,
+          "unit": "score",
+          "notes": "Synthetic demonstration only"
+        },
+        "metrics": [
+          {
+            "metric_code": "score",
+            "value": 4.3853,
+            "unit": "score"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "score",
+              "unit": "score",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-mood-v1",
+              "reference_value": 4,
+              "simulation_noise_sd": 0.2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "score",
+              "unit": "score",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-mood-v1",
+              "reference_value": 4,
+              "simulation_noise_sd": 0.2,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "score",
+            "unit": "score",
+            "from_original": 0.3853,
+            "from_activity": 0.3853
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 173,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "sleep_hours",
+          "storage_kind": "SLEEP",
+          "comparison_scope_id": null,
+          "activity_context": "SLEEPING",
+          "measured_at": "2026-01-02T08:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "5edbb939-4fc0-50dd-88d1-d54bca32c2e9",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 96,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "sleep_hours",
+          "storage_kind": "SLEEP",
+          "scope_code": "default"
+        },
+        "value_table": "sleep_sessions",
+        "values": {
+          "started_at": "2026-01-01T23:00:00Z",
+          "ended_at": "2026-01-02T08:00:00Z",
+          "asleep_seconds": 28489
+        },
+        "metrics": [
+          {
+            "metric_code": "duration",
+            "value": 7.913611,
+            "unit": "h"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "duration",
+              "unit": "h",
+              "activity_context": "SLEEPING",
+              "scope_code": "default",
+              "reference_value": 7.6,
+              "simulation_noise_sd": 0.25,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "duration",
+              "unit": "h",
+              "activity_context": "SLEEPING",
+              "scope_code": "default",
+              "reference_value": 7.6,
+              "simulation_noise_sd": 0.25,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "duration",
+            "unit": "h",
+            "from_original": 0.313611,
+            "from_activity": 0.313611
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 1225,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "muscle",
+          "storage_kind": "MUSCLE",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-08T08:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "e0c5de4c-e331-5b08-b1cc-a678ac3e2de2",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 672,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "muscle",
+          "storage_kind": "MUSCLE",
+          "scope_code": "simulation-grip_strength-v1",
+          "body_site": "DOMINANT_HAND",
+          "protocol_code": "SYNTHETIC_DEMO_GRIP",
+          "protocol_version": "1"
+        },
+        "value_table": "muscle_assessments",
+        "values": {
+          "grip_strength_kgf": 36.0396
+        },
+        "metrics": [
+          {
+            "metric_code": "grip_strength",
+            "value": 36.0396,
+            "unit": "kgf"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "grip_strength",
+              "unit": "kgf",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-grip_strength-v1",
+              "reference_value": 36,
+              "simulation_noise_sd": 0.4,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "grip_strength",
+              "unit": "kgf",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-grip_strength-v1",
+              "reference_value": 36,
+              "simulation_noise_sd": 0.4,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "grip_strength",
+            "unit": "kgf",
+            "from_original": 0.0396,
+            "from_activity": 0.0396
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 1226,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "muscle",
+          "storage_kind": "MUSCLE",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-08T08:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "51603853-72d6-5d43-8485-e52019293daf",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 672,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "muscle",
+          "storage_kind": "MUSCLE",
+          "scope_code": "simulation-muscle_mass-v1",
+          "body_site": "WHOLE_BODY",
+          "protocol_code": "SYNTHETIC_DEMO_MUSCLE_MASS",
+          "protocol_version": "1"
+        },
+        "value_table": "muscle_assessments",
+        "values": {
+          "muscle_mass_kg": 27.9783
+        },
+        "metrics": [
+          {
+            "metric_code": "muscle_mass",
+            "value": 27.9783,
+            "unit": "kg"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "muscle_mass",
+              "unit": "kg",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-muscle_mass-v1",
+              "reference_value": 28,
+              "simulation_noise_sd": 0.05,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "muscle_mass",
+              "unit": "kg",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-muscle_mass-v1",
+              "reference_value": 28,
+              "simulation_noise_sd": 0.05,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "muscle_mass",
+            "unit": "kg",
+            "from_original": -0.0217,
+            "from_activity": -0.0217
+          }
+        ]
+      }
+    },
+    {
+      "sequence": 4908,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-01",
+        "observation": {
+          "astronaut_id": "ca827cda-f984-5b43-8f48-cfcc5a2093da",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "bone_mineral_density",
+          "storage_kind": "BONE",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-29T08:00:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "e8b6f51d-7760-5b14-9cc9-db5c8982f95a",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 2688,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "bone_mineral_density",
+          "storage_kind": "BONE",
+          "scope_code": "simulation-bone-v1",
+          "body_site": "LUMBAR_SPINE",
+          "protocol_code": "SYNTHETIC_DEMO_AREAL_DENSITY",
+          "protocol_version": "1"
+        },
+        "value_table": "bone_density_examinations",
+        "values": {
+          "areal_density": 1.076345,
+          "unit": "g/cm2"
+        },
+        "metrics": [
+          {
+            "metric_code": "areal_density",
+            "value": 1.076345,
+            "unit": "g/cm2"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "areal_density",
+              "unit": "g/cm2",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-bone-v1",
+              "reference_value": 1.08,
+              "simulation_noise_sd": 0.001,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "areal_density",
+              "unit": "g/cm2",
+              "activity_context": "RESTING",
+              "scope_code": "simulation-bone-v1",
+              "reference_value": 1.08,
+              "simulation_noise_sd": 0.001,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "areal_density",
+            "unit": "g/cm2",
+            "from_original": -0.003655,
+            "from_activity": -0.003655
+          }
+        ]
+      }
+    }
+  ]
+}

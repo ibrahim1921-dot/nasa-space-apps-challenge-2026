@@ -1,6 +1,40 @@
 spring:
   application:
     name: Nasa_Space_App_Backend
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
+    open-in-view: false
     hibernate:
-      ddl-auto=validate:
+      ddl-auto: validate
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+
+server:
+  servlet:
+    session:
+      timeout: 30m
+      tracking-modes: cookie
+      cookie:
+        http-only: true
+        secure: ${SESSION_COOKIE_SECURE:true}
+        same-site: lax
+
+astrohealth:
+  environment: ${ASTROHEALTH_ENV:disabled}
+  simulation:
+    capture-registration-enabled: ${SIMULATION_CAPTURE_REGISTRATION_ENABLED:false}
+  security:
+    allowed-origins: ${FRONTEND_ORIGINS:http://localhost:3000}
+
+# SQL errors can include failing row data, including password/credential hashes.
+logging:
+  level:
+    org.hibernate.SQL: OFF
+    org.hibernate.orm.jdbc.bind: OFF
+    org.hibernate.orm.jdbc.extract: OFF
+    org.hibernate.orm.jdbc.error: OFF
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: OFF
