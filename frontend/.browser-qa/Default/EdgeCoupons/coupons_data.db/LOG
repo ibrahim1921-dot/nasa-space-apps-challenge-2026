@@ -1,5 +1,0 @@
-2026/11/14-12:45:17.290 4fc4 Creating DB C:\Users\aphyi\Desktop\nasa-space-apps-challenge-2026\frontend\.browser-qa\Default\EdgeCoupons/coupons_data.db since it was missing.
-2026/11/14-12:45:17.320 4fc4 Reusing MANIFEST C:\Users\aphyi\Desktop\nasa-space-apps-challenge-2026\frontend\.browser-qa\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
-2026/11/14-12:46:51.640 5fc Level-0 table #5: started
-2026/11/14-12:46:51.668 5fc Level-0 table #5: 683284 bytes OK
-2026/11/14-12:46:51.675 5fc Delete type=0 #3
