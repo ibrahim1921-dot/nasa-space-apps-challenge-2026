@@ -2,8 +2,9 @@
 export default function SourceLabel({ source }) {
   if (!source) return null;
   return (
-    <p className="source-label">
-      <span className="source-label__key">Data source:</span> {source}
-    </p>
+    <details className="source-label">
+      <summary className="source-label__key">Data source</summary>
+      <p>{source}</p>
+    </details>
   );
 }

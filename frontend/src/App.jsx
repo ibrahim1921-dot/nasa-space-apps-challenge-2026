@@ -633,65 +633,7 @@ function openMyDataScreen(screenId) {
 
       </main>
 
-      {/* ------------------------------------
-          FOOTER AND DATA DISCLAIMERS
-         ------------------------------------ */}
 
-      <footer className="container footer">
-        {view === 'sleep' || view === 'labs' ? (
-          <p>
-            Sleep nights are general human data from
-            PhysioNet (adults on Earth, not astronauts).
-            Lab values are from NASA&apos;s Inspiration4
-            mission. Each panel names its source.
-          </p>
-
-        ) : view === 'environment' ? (
-          <p>
-            Radiation doses are environment data from
-            NASA&apos;s Rodent Research-1 mission
-            (ISS, 2014): the station&apos;s dose,
-            not any crew member&apos;s personal dose.
-          </p>
-
-        ) : view === 'standtest' ? (
-          <p>
-            Seeded stand tests are synthetic data for a
-            fictional crew. Tests you run are saved on
-            this device. Alert lines follow the 2011
-            consensus definition of orthostatic
-            hypotension; watch lines are team-set.
-          </p>
-
-        ) : view === 'dashboard' &&
-          isMedicalOfficer ? (
-          <p>
-            Crew readings are synthetic data for a
-            fictional crew, plus readings entered in
-            this demo. Statuses come from the same
-            checks the crew see; the Crew Medical
-            Officer decides what happens next.
-          </p>
-
-        ) : view === 'about' ? (
-          <p>
-            Every limit and its source is listed in
-            one place in the app, so this page always
-            matches the checks.
-          </p>
-
-        ) : (
-          <p>
-            Every card is your own: your latest check-in
-            on this device, or until then your latest
-            synthetic crew record, scored against the
-            limits listed under About and your own last
-            14 days; sparklines show your last 14 days.
-            Only Bones and muscles is sample: there is
-            no per-person bone or muscle data yet.
-          </p>
-        )}
-      </footer>
     </>
   );
 }

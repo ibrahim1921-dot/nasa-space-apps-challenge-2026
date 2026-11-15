@@ -9,14 +9,16 @@ import LogNightForm from '../components/LogNightForm.jsx';
 import SourceLabel from '../components/SourceLabel.jsx';
 import ErrorPanel from '../components/ErrorPanel.jsx';
 import LimitsInfo, { LimitGuidance } from '../components/LimitsInfo.jsx';
+import { sleepSummary } from '../lib/sleepSummary.js';
 
-const COUNTED = ['normal', 'watch', 'alert'];
 
 export default function SleepRecovery() {
   const nights = useHealthData(() => getNights());
   const [subject, setSubject] = useState('');
   const [local, setLocal] = useState([]); // this browser's logged nights for `subject`
-  const [newestId, setNewestId] = useState(null);
+  const [recordingDate, setRecordingDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [period, setPeriod] = useState('7');
+  const [saved, setSaved] = useState(false);
   const [storageWarning, setStorageWarning] = useState(false);
 
   const subjects = nights.data?.subjects ?? [];
@@ -28,7 +30,7 @@ export default function SleepRecovery() {
 
   useEffect(() => {
     if (subject) setLocal(readLoggedNights(subject));
-    setNewestId(null);
+    setSaved(false);
   }, [subject]);
 
   const list = useMemo(() => {
@@ -40,11 +42,7 @@ export default function SleepRecovery() {
     return [...local, ...serverLogged, ...stored];
   }, [nights.data, subject, local]);
 
-  const counts = useMemo(() => {
-    const c = { normal: 0, watch: 0, alert: 0, other: 0 };
-    for (const n of list) c[COUNTED.includes(n.status) ? n.status : 'other'] += 1;
-    return c;
-  }, [list]);
+  const summary = useMemo(() => sleepSummary(list, recordingDate, period), [list, recordingDate, period]);
 
   async function handleLog({ night, date }) {
     const id = newNightId();
@@ -70,7 +68,7 @@ export default function SleepRecovery() {
     };
     setStorageWarning(!writeLoggedNight(subject, entry));
     setLocal((prev) => [entry, ...prev.filter((e) => e.id !== entry.id)]);
-    setNewestId(entry.id);
+    setSaved(true);
   }
 
   if (nights.loading) {
@@ -90,10 +88,7 @@ export default function SleepRecovery() {
             <h2 id="sleep-title" className="view-title">
               Sleep &amp; recovery
             </h2>
-            <p className="muted">
-              Each night is compared with the same person&apos;s other clean nights. Scores above 0 mean worse than
-              usual; watch and alert start at the thresholds below.
-            </p>
+            <p className="muted">Log your sleep and review your recent averages.</p>
           </div>
           <div className="field sleep__picker">
             <label htmlFor="subject" className="field__label">
@@ -109,26 +104,8 @@ export default function SleepRecovery() {
           </div>
         </div>
 
-        <ul className="sleep__summary" aria-label="Nights by status">
-          <li>
-            <span className="num">{list.length}</span> nights
-          </li>
-          <li className="status-text--normal">
-            <span className="num">{counts.normal}</span> normal
-          </li>
-          <li className="status-text--watch">
-            <span className="num">{counts.watch}</span> watch
-          </li>
-          <li className="status-text--alert">
-            <span className="num">{counts.alert}</span> alert
-          </li>
-          {counts.other > 0 && (
-            <li className="muted">
-              <span className="num">{counts.other}</span> not scored
-            </li>
-          )}
-        </ul>
-        {nights.data?.thresholds && (
+
+        <details className="sleep__details"><summary>Scoring and data source</summary>{nights.data?.thresholds && (
           <p className="muted sleep__thresholds">
             Heart rate: watch ≥ {nights.data.thresholds.heart_rate.watch}, alert ≥ {nights.data.thresholds.heart_rate.alert}{' '}
             · Sleep: watch ≥ {nights.data.thresholds.sleep.watch}, alert ≥ {nights.data.thresholds.sleep.alert}
@@ -142,27 +119,40 @@ export default function SleepRecovery() {
           <LimitGuidance limitKey="sleep_hours" />
           <LimitsInfo limitKey="sleep_hours" showGuidance={false} />
         </div>
-        <SourceLabel source={source} />
+        <SourceLabel source={source} /></details>
       </section>
 
       <div className="sleep__layout">
         <section className="card card--lg sleep__form" aria-label="Log tonight">
-          {subject && <LogNightForm subjectId={subject} onSubmit={handleLog} />}
+          {subject && <LogNightForm subjectId={subject} onSubmit={handleLog} onDateChange={setRecordingDate} />}
           {storageWarning && (
             <p className="muted">This browser could not save the night, so it will be gone after a reload.</p>
           )}
-          <SourceLabel source={source} />
+          {saved && <p role="status">Night saved.</p>}
         </section>
 
-        <section className="sleep__list" aria-label={`Nights for ${subject}`}>
-          {list.map((n) => (
-            <NightCard
-              key={n.id ?? `${n.subject_id}-${n.night_index}`}
-              night={n}
-              source={source}
-              isNew={n.id === newestId}
-            />
-          ))}
+        <section className="sleep__list" aria-label="Sleep summary">
+          <div className="card card--lg">
+            <div className="sleep__head">
+              <h3 className="card__title">Averages</h3>
+              <div className="field">
+                <label htmlFor="sleep-period" className="field__label">Period before {recordingDate}</label>
+                <select id="sleep-period" className="input" value={period} onChange={(event) => setPeriod(event.target.value)}>
+                  <option value="7">Previous 7 days</option>
+                  <option value="30">Previous 30 days</option>
+                  <option value="all">All earlier records</option>
+                </select>
+              </div>
+            </div>
+            <dl className="night__scores">
+              {[['Sleep', summary.hours, 'h'], ['Sleeping heart rate', summary.heartRate, 'bpm'], ['Time awake', summary.awake, '%']].map(([label, metric, unit]) => (
+                <div key={label}><dt>{label}</dt><dd className="num">{metric.value === null ? 'No data' : `${metric.value.toFixed(1)} ${unit}`}</dd><small className="muted">{metric.count} nights</small></div>
+              ))}
+            </dl>
+            <p className="muted">{summary.count} recorded nights; missing days and quality issues excluded.</p>
+          </div>
+          <h3 className="card__title">Previous day: {summary.previousDate}</h3>
+          {summary.previous ? <NightCard night={summary.previous} /> : <p className="card muted">No sleep recorded for this day.</p>}
         </section>
       </div>
     </div>

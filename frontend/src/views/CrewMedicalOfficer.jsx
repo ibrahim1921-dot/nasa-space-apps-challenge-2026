@@ -32,16 +32,16 @@ import SyncBadge from '../components/SyncBadge.jsx';
 // DATA SOURCE INFORMATION
 
 const SOURCE_SERVER =
-  'Onboard server (synthetic crew data + readings synced from crew devices)';
+  'Sample crew records and recorded check-ins';
 
 const SOURCE_DEVICE =
-  'This device: bundled synthetic crew data + readings saved on this device (onboard server offline)';
+  'Sample crew records and saved check-ins';
 
 const BASELINE_SERVER =
-  'Preflight baselines table (synthetic preflight average, crew.json)';
+  'Preflight averages (sample data)';
 
 const BASELINE_DEVICE =
-  'Synthetic preflight average (crew.json, bundled)';
+  'Preflight averages (sample data)';
 
 const KIND = {
   daily_vitals: 'Daily vitals',
@@ -728,7 +728,7 @@ export default function CrewMedicalOfficer() {
             ? 'Live: updates as crew log readings'
             : fromServer
               ? 'Connecting to live updates…'
-              : 'Device copy: live updates resume when the onboard server is back'}
+              : 'Showing saved readings'}
         </p>
 
         {error && (
@@ -736,8 +736,7 @@ export default function CrewMedicalOfficer() {
             className="field__error"
             role="alert"
           >
-            Onboard server: {error}.
-            Showing this device's copy.
+            Live updates unavailable. Showing saved readings.
           </p>
         )}
       </section>

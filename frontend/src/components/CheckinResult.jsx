@@ -7,7 +7,6 @@ import LimitsInfo from './LimitsInfo.jsx';
 import SourceLabel from './SourceLabel.jsx';
 import SyncBadge, { useFreshRecord } from './SyncBadge.jsx';
 import { formatRowValue } from '../lib/vitalsCheckin.js';
-import { SCORED_LABEL } from '../lib/scoring.js';
 
 /** Which check fired, as a short tag before each reason. */
 function checkTag(reason) {
@@ -82,7 +81,6 @@ function ResultRow({ row, profile }) {
 export default function CheckinResult({ record, result, profile, stored, crewName, onDone }) {
   const headingRef = useRef(null);
   const fresh = useFreshRecord(record);
-  const scoredOn = fresh?.scored_on ?? result.scored_on ?? 'device';
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
@@ -138,10 +136,10 @@ export default function CheckinResult({ record, result, profile, stored, crewNam
         Each reading is checked two ways: against the published or team-set limits, and against your own last{' '}
         {result.baseline_window_days} days. The status is the worse of the two.{' '}
         {stored
-          ? 'Saved on this device first. It is copied to the onboard server when that is reachable, and the server re-checks it with the same rules.'
+          ? 'Check-in saved.'
           : 'This browser could not save the result, so it will be gone after a reload.'}
         {fresh?.server_differs &&
-          ' The onboard server knew readings this device did not, so its result replaced the one shown when you saved.'}
+          ' Updated with your latest readings.'}
       </p>
 
       <div className="checkin__actions">
@@ -150,7 +148,7 @@ export default function CheckinResult({ record, result, profile, stored, crewNam
         </button>
       </div>
       <SourceLabel
-        source={`Readings: entered on this device · Baseline: ${result.history_source} · ${SCORED_LABEL[scoredOn]}`}
+        source="Your check-in and personal baseline"
       />
     </div>
   );

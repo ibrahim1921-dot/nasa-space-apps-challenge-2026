@@ -165,6 +165,8 @@ textarea {
 
 /* ---------- Header ---------- */
 .header {
+  position: relative;
+  z-index: 20;
   border-bottom: 1px solid var(--glass-border);
 }
 
@@ -3566,7 +3568,7 @@ a.limits__source:hover {
 /* Keep navigation above dashboard content */
 .viewtabs {
   position: relative;
-  z-index: 100;
+  z-index: 10;
   overflow: visible;
 }
 
@@ -3712,3 +3714,29 @@ a.limits__source:hover {
   .landing__icon img { visibility: hidden; }
   .landing__door { transition: none; }
 }
+
+/* Crew card and PIN mock login */
+.landing__panel:has(.crew-login) { max-width: 720px; }
+.crew-login__heading { margin: 0; color: #f2f6ff; font-size: 1.35rem; font-weight: 600; }
+.crew-login__intro { margin: 8px 0 24px; color: #b8c9df; }
+.crew-login__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.crew-login__card { display: grid; justify-items: center; align-content: start; gap: 10px; padding: 20px 14px; border: 1px solid #b9d5ff30; border-radius: 18px; background: #d1e5ff08; color: #f2f6ff; font: inherit; cursor: pointer; transition: background 150ms ease, border-color 150ms ease; }
+.crew-login__card:hover { background: #b1e5ed18; border-color: #b1e5ed; }
+.crew-login__card:focus-visible, .crew-login__back:focus-visible { outline: 2px solid #b1e5ed; outline-offset: 4px; }
+.crew-login__card svg { width: min(100%, 132px); height: auto; }
+.crew-login__name { font-weight: 600; }
+.crew-login__role { font-size: 0.8rem; color: #b8c9df; }
+.crew-login__back { justify-self: start; padding: 4px 0; border: 0; background: transparent; color: #b1e5ed; font: inherit; cursor: pointer; }
+.crew-login__selected { text-align: center; }
+.crew-login__selected svg { width: 120px; height: 120px; margin-bottom: 16px; }
+.crew-login__selected .crew-login__intro { margin-bottom: 0; }
+.crew-login__pin input { text-align: center; letter-spacing: 0.6em; font-size: 1.5rem; }
+.crew-login__hint { margin: -10px 0 0; color: #b8c9df; font-size: 0.85rem; }
+@media (max-width: 380px) {
+  .crew-login__grid { gap: 10px; }
+  .crew-login__card { padding: 12px 8px; }
+  .crew-login__name { font-size: 0.85rem; }
+  .landing__brand { gap: 4px; }
+  .landing__icon { flex-basis: 76px; width: 76px; height: 76px; }
+}
+@media (prefers-reduced-motion: reduce) { .crew-login__card { transition: none; } }
