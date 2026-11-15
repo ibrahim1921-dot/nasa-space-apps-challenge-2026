@@ -74,7 +74,7 @@ public class SecurityConfig {
         cors.setAllowedOrigins(origins);
         cors.setAllowCredentials(true);
         cors.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
-        cors.setAllowedHeaders(List.of("Content-Type", "X-CSRF-TOKEN"));
+        cors.setAllowedHeaders(List.of("Content-Type", "X-CSRF-TOKEN", "Idempotency-Key"));
         cors.setExposedHeaders(List.of("Retry-After"));
         cors.setMaxAge(600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -103,6 +103,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/logout").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me").hasAnyRole("ASTRONAUT", "NASA_OFFICER")
+                        .requestMatchers(HttpMethod.POST, "/api/crew/*/checkins", "/api/crew/*/sleep-logs", "/api/crew/*/stand-tests")
+                        .hasRole("ASTRONAUT")
+                        .requestMatchers(HttpMethod.GET, "/api/crew/*/checkins", "/api/crew/*/checkins/*",
+                                "/api/crew/*/sleep-logs", "/api/crew/*/sleep-logs/*", "/api/crew/*/stand-tests", "/api/crew/*/stand-tests/*")
+                        .hasAnyRole("ASTRONAUT", "NASA_OFFICER")
+                        .requestMatchers(HttpMethod.POST, "/api/crew/*/ml-assessments").hasRole("NASA_OFFICER")
+                        .requestMatchers(HttpMethod.GET, "/api/crew/*/ml-assessments", "/api/ml-assessments/*").hasAnyRole("ASTRONAUT", "NASA_OFFICER")
+                        .requestMatchers(HttpMethod.GET, "/api/knowledge/topics", "/api/knowledge/topics/*",
+                                "/api/knowledge/topics/*/sections", "/api/knowledge/topics/*/sections/*",
+                                "/api/knowledge/countermeasures", "/api/knowledge/countermeasures/*", "/api/knowledge/findings")
+                        .hasAnyRole("ASTRONAUT", "NASA_OFFICER")
                         .requestMatchers(HttpMethod.GET, "/api/crew/me").hasRole("ASTRONAUT")
                         .requestMatchers(HttpMethod.GET, "/api/crew/*/baselines", "/api/crew/*/baselines/selection", "/api/crew/*/baselines/versions")
                         .hasAnyRole("ASTRONAUT", "NASA_OFFICER")

@@ -171,8 +171,8 @@ class DemoProvisioningTests extends PostgreSqlIntegrationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"30", "31"})
-    void verifiedAccountSchemaAcceptsV30AndV31WithoutMigrating(String version) {
+    @ValueSource(strings = {"30", "31", "38"})
+    void verifiedAccountSchemaAcceptsKnownVersionsWithoutMigrating(String version) {
         DataSource target = migrationFixture(version);
         JdbcTemplate jdbc = new JdbcTemplate(target);
         // Stop at the first prompt; the transaction rolls back without creating demo data.
@@ -185,7 +185,7 @@ class DemoProvisioningTests extends PostgreSqlIntegrationTest {
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM accounts", Integer.class)).isZero();
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM astronauts", Integer.class)).isZero();
         assertThat(jdbc.queryForObject("SELECT to_regclass('simulation_captures')::text", String.class))
-                .isEqualTo(version.equals("31") ? "simulation_captures" : null);
+                .isEqualTo(!version.equals("30") ? "simulation_captures" : null);
     }
 
     @ParameterizedTest
@@ -206,6 +206,35 @@ class DemoProvisioningTests extends PostgreSqlIntegrationTest {
         assertThatThrownBy(() -> new DemoAccountProvisioner(target, passwords).provision(login -> {
             throw new AssertionError("Invalid migration state must fail before password entry");
         })).isInstanceOf(DemoAccountProvisioner.ProvisioningException.class);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM accounts", Integer.class)).isZero();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM astronauts", Integer.class)).isZero();
+    }
+
+    @Test
+    void wrongDatabaseCredentialReportsAuthenticationFailureBeforePasswordsOrWrites() {
+        String wrongPassword = "incorrect-database-credential-" + UUID.randomUUID();
+        DataSource wrongCredential = new DriverManagerDataSource(
+                environment.getRequiredProperty("spring.datasource.url"),
+                environment.getRequiredProperty("spring.datasource.username"), wrongPassword);
+        assertThatThrownBy(() -> new DemoAccountProvisioner(wrongCredential, passwords).provision(login -> {
+            throw new AssertionError("Database authentication must succeed before password entry");
+        })).isInstanceOf(DemoAccountProvisioner.ProvisioningException.class)
+                .hasMessage("Database authentication failed. Check DB_USER and DB_PASSWORD for the approved local database.")
+                .hasNoCause();
+        assertThat(new JdbcTemplate(dataSource).queryForObject(
+                "SELECT COUNT(*) FROM accounts WHERE login_name IN ('maya.demo','tomas.demo','lena.demo','kwame.demo','officer.demo')",
+                Integer.class)).isZero();
+    }
+
+    @Test
+    void v38ChecksumMismatchIsRejectedBeforePasswordsOrWrites() {
+        DataSource target = migrationFixture("38");
+        JdbcTemplate jdbc = new JdbcTemplate(target);
+        jdbc.update("UPDATE flyway_schema_history SET checksum = checksum + 1 WHERE version = '38'");
+        assertThatThrownBy(() -> new DemoAccountProvisioner(target, passwords).provision(login -> {
+            throw new AssertionError("Checksum mismatch must fail before password entry");
+        })).isInstanceOf(DemoAccountProvisioner.ProvisioningException.class)
+                .hasMessage("Apply and verify migrations through at least V30 separately before provisioning.");
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM accounts", Integer.class)).isZero();
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM astronauts", Integer.class)).isZero();
     }
