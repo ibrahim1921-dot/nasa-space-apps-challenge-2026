@@ -1,16 +1,17 @@
-// Activities: Reaction Run, Calm Orbit and Crew Journey. Pure functions only, so node:test runs exactly
+// Activities: Reaction Run, Calm Orbit, Crew Journey and Dock Pilot (physics in lib/dockPilot.js). Pure functions only, so node:test runs exactly
 // what the screens show. Every game record is "Logged · not scored": nothing here returns a status, and
 // no game record is ever passed to the scoring engines (lib/personCards.js, lib/baseline.js …).
 //
 // Record (lib/activityStore.js, localStorage `ahm.activities.v1`):
-//   { id, crew_id, kind: 'reaction_run'|'calm_orbit'|'crew_journey', recorded_at, data }
+//   { id, crew_id, kind: 'reaction_run'|'calm_orbit'|'crew_journey'|'dock_pilot', recorded_at, data }
 //   reaction_run: { median_ms: number|null, lapses, false_starts, trials }
 //   calm_orbit:   { minutes: 2, feeling: 'calmer'|'same'|'worse' }
 //   crew_journey: { type: 'treadmill'|'bike'|'resistance', minutes: 5..120 }
+//   dock_pilot:   { level: 1|2|3, docked, time_s: 0..60, final_offset_px, final_speed, hard_contacts, fuel_used: 0..100 }
 // recorded_at is the demo date with the real time of day (lib/demoState.js stampOnDemoDate), and records
 // dated after the demo's today are ignored, as everywhere else in the app.
 
-import { ACTIVITY_KINDS, ACTIVITY_SETTINGS, EXERCISE_TYPES, FEELINGS, LOGGED_NOT_SCORED, ROUTES, ROUTE_BY_PROFILE } from '../content/activities.js';
+import { ACTIVITY_KINDS, ACTIVITY_SETTINGS, GAME_KINDS, EXERCISE_TYPES, FEELINGS, LOGGED_NOT_SCORED, ROUTES, ROUTE_BY_PROFILE } from '../content/activities.js';
 import { onOrBefore } from './demoState.js';
 import { addDays } from './sensorFeed.js';
 import { inQuietHours } from './reminders.js';
@@ -18,6 +19,7 @@ import { inQuietHours } from './reminders.js';
 const S = ACTIVITY_SETTINGS;
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const isCount = (v) => Number.isInteger(v) && v >= 0;
+const isNum = (v, min, max = Infinity) => typeof v === 'number' && Number.isFinite(v) && v >= min && v <= max;
 export const dateOf = (r) => (typeof r?.recorded_at === 'string' ? r.recorded_at.slice(0, 10) : null);
 const byTime = (a, b) => Date.parse(a.recorded_at) - Date.parse(b.recorded_at);
 
@@ -38,12 +40,17 @@ function validData(kind, d) {
     return (d.median_ms === null || (typeof d.median_ms === 'number' && d.median_ms >= 0)) && isCount(d.lapses) && isCount(d.false_starts) && isCount(d.trials);
   if (kind === 'calm_orbit') return d.minutes === S.calm.minutes && FEELINGS.some((f) => f.value === d.feeling);
   if (kind === 'crew_journey') return validateJourney(d) === null;
+  if (kind === 'dock_pilot')
+    return (
+      Object.hasOwn(S.dock.levels, d.level) && Number.isInteger(d.level) && typeof d.docked === 'boolean' && isNum(d.time_s, 0, S.dock.roundS) &&
+      isNum(d.final_offset_px, 0) && isNum(d.final_speed, 0) && isCount(d.hard_contacts) && isNum(d.fuel_used, 0, S.dock.fuelMax)
+    );
   return false;
 }
 
 /** A well-formed activity record? */
 export const isActivity = (r) =>
-  isObj(r) && typeof r.id === 'string' && typeof r.crew_id === 'string' && r.crew_id !== '' && ACTIVITY_KINDS.includes(r.kind) &&
+  isObj(r) && typeof r.id === 'string' && typeof r.crew_id === 'string' && r.crew_id !== '' && GAME_KINDS.includes(r.kind) &&
   typeof r.recorded_at === 'string' && !Number.isNaN(Date.parse(r.recorded_at)) && validData(r.kind, r.data);
 
 export const makeActivity = ({ id, crewId, kind, recordedAt, data }) => ({ id, crew_id: crewId, kind, recorded_at: recordedAt, data });
@@ -167,7 +174,7 @@ export const sessionsOn = (records, crewId, kind, date) => visible(records, { de
 
 /**
  * Can this game start now?
- *   'rest' — quiet hours (22:00–06:00 crew time, the reminder setting): Reaction Run and Crew Journey only;
+ *   'rest' — quiet hours (22:00–06:00 crew time, the reminder setting): every game but Calm Orbit;
  *            Calm Orbit stays open as a wind-down.
  *   'done' — 3 sessions of this game already on the demo's today.
  *   'open' — otherwise.
@@ -186,13 +193,14 @@ const weekFrom = (demoDate) => addDays(demoDate, -6);
 
 /**
  * One person's sessions over the last 7 demo days, per game: counts and dates only (the CMO's view of
- * someone else). Never a time, a feeling or a minute count.
+ * someone else). Never a time, a feeling or a minute count. `kinds` defaults to the first three games;
+ * pass GAME_KINDS to include Dock Pilot.
  */
-export function weekSessions(records, crewId, demoDate) {
+export function weekSessions(records, crewId, demoDate, kinds = ACTIVITY_KINDS) {
   const from = weekFrom(demoDate);
   const mine = visible(records, { demoDate, crewId }).filter((r) => dateOf(r) >= from);
   return Object.fromEntries(
-    ACTIVITY_KINDS.map((k) => {
+    kinds.map((k) => {
       const list = mine.filter((r) => r.kind === k);
       return [k, { count: list.length, dates: [...new Set(list.map(dateOf))] }];
     }),

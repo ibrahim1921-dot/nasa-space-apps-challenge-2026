@@ -10,7 +10,7 @@
 //   grace day — up to 2 per mission month (30 mission days), per run rule, team-set.
 // A run can only earn its patch on a day the person actually played.
 
-import { ACTIVITY_SETTINGS, PATCHES } from '../content/activities.js';
+import { ACTIVITY_SETTINGS, ALL_PATCHES } from '../content/activities.js';
 import { onOrBefore } from './demoState.js';
 import { addDays } from './sensorFeed.js';
 import { missionDayOn } from './reminders.js';
@@ -108,11 +108,17 @@ export function earnedFromRecords({ crewId, activities, checkins = [], emergency
   const rDates = playedDates(reactions);
   const cDates = playedDates(calms);
   const eDates = playedDates(exercise);
+  const docks = of('dock_pilot');
+  const dDates = playedDates(docks);
+  const docked = docks.filter((r) => r.data.docked);
 
-  const out = Object.fromEntries(PATCHES.map((p) => [p.id, null]));
+  const out = Object.fromEntries(ALL_PATCHES.map((p) => [p.id, null]));
   out.first_reaction = firstDate(reactions);
   out.first_calm = firstDate(calms);
   out.first_exercise = firstDate(exercise);
+  // Dock Pilot: a docking (any level), a level-3 docking, and playing 5 days in a row (docked or not).
+  out.first_dock = firstDate(docked);
+  out.dock_level3 = firstDate(docked.filter((r) => r.data.level === 3));
   out.calm_seven = calms.length >= P.calmCount ? dateOf(calms[P.calmCount - 1]) : null;
 
   const start = firstDate(mine);
@@ -120,6 +126,7 @@ export function earnedFromRecords({ crewId, activities, checkins = [], emergency
     const tough = toughDays({ checkins, emergencyDays, demoDate });
     const base = { from: start, to: demoDate, tough, crewDays, demoDate };
     out.reaction_streak = streakEarnedOn(walkDays({ ...base, isDone: (d) => rDates.has(d) }));
+    out.dock_streak = streakEarnedOn(walkDays({ ...base, isDone: (d) => dDates.has(d) }));
     out.full_week = weekEarnedOn(walkDays({ ...base, isDone: (d) => rDates.has(d) && cDates.has(d) && eDates.has(d) }));
   }
 
@@ -141,7 +148,7 @@ export function earnedFromRecords({ crewId, activities, checkins = [], emergency
  * @returns {{ id, name, earned: boolean, earnedOn: string|null }[]}
  */
 export function patchShelf(fromRecords, saved = {}) {
-  return PATCHES.map((p) => {
+  return ALL_PATCHES.map((p) => {
     const earnedOn = saved[p.id] ?? fromRecords[p.id] ?? null;
     return { id: p.id, name: p.name, earned: Boolean(earnedOn), earnedOn };
   });

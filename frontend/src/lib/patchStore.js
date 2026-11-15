@@ -4,10 +4,10 @@
 // emergencyDays: demo dates on which this person was the patient in an open emergency (emergency times
 //                are real-clock only, so the demo day is noted while it is open; an ended one keeps it).
 
-import { PATCHES } from '../content/activities.js';
+import { ALL_PATCHES } from '../content/activities.js';
 
 export const PATCHES_KEY = 'ahm.patches.v1';
-const PATCH_IDS = new Set(PATCHES.map((p) => p.id));
+const PATCH_IDS = new Set(ALL_PATCHES.map((p) => p.id));
 const MAX_DAYS = 120;
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const isDate = (v) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);

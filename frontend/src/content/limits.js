@@ -123,6 +123,14 @@ SRC.nasa_std_3001_v1 = {
   source_title: 'NASA-STD-3001 Volume 1, crew health, including the 600 mSv career effective dose limit',
   source_url: null,
 };
+// Activities source (Dock Pilot "Why it helps", content/activities.js). Not a health limit: no LIMITS entry uses it.
+SRC.nasa_hrp_sensorimotor = {
+  source_short: 'NASA HRP',
+  source_name: 'NASA Human Research Program',
+  source_title:
+    'Risk of Impaired Control of Spacecraft/Associated Systems and Decreased Mobility Due to Vestibular/Sensorimotor Alterations Associated with Space Flight',
+  source_url: null,
+};
 // Emergency guide sources (content/emergency.js). Not health limits: no LIMITS entry uses them.
 SRC.cpr_micro_2020 = {
   source_short: 'Microgravity CPR guideline 2020',

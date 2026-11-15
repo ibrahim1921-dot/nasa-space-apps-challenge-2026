@@ -1,4 +1,4 @@
-/* Activities: three short games, the shared Crew Journey and mission patches. Dark glass like the rest of
+/* Activities: four short games, the shared Crew Journey and mission patches. Dark glass like the rest of
    the app, with one calm accent (teal on a ~15% tint). Never the watch or alert colours, never red.
    Game chips are outlined, with no status dot, so they never read as a status chip. */
 
@@ -22,7 +22,7 @@
   font-weight: 700;
 }
 .act-btn:hover:not(:disabled) {
-  background: #5ee6ab;
+  background: #7dd3fc;
 }
 .act-btn:focus-visible,
 .act-choice:focus-visible,
@@ -370,6 +370,287 @@
   color: var(--activity);
 }
 
+/* ---------- Dock Pilot ----------
+   Capsule light grey with a sky-blue window, a warm orange flame, a sky-blue ring (drawn on the canvas).
+   Green appears only inside the canvas, on the ring once docked, and never beside a status chip. */
+.dock-why {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--activity-line);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+.dock-why--card {
+  margin: 4px 0;
+  padding: 8px 10px;
+  font-size: 0.875rem;
+}
+.dock-why__text {
+  margin: 0;
+}
+.dock-why .why__source {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+}
+.dock-levels {
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+}
+.dock-levels__hint {
+  margin: 8px 0 0;
+}
+.dock-levels .visually-hidden-input:disabled + .segmented__face {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.dock-lock {
+  font-weight: 400;
+}
+.dock-screen {
+  /* Height of everything around the canvas; measured by the game while a round is on screen. */
+  --dock-chrome: 260px;
+  scroll-margin-top: 8px;
+}
+.dock-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  margin: 6px 0 2px;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+.dock-hud > span {
+  white-space: nowrap;
+}
+.dock-hud b {
+  color: var(--color-text);
+  font-weight: 700;
+}
+.dock-hud b.dock-under {
+  color: var(--activity);
+}
+.dock-fuel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.dock-fuel__bar {
+  display: inline-block;
+  width: 72px;
+  height: 8px;
+  border: 1px solid var(--activity-line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dock-fuel__fill {
+  display: block;
+  height: 100%;
+  background: var(--activity);
+}
+/* One centred column, as wide as the canvas: the card, 960 px, or the window height left after the
+   header, HUD, status and controls (3:2). The 16 px leaves room for the scroll margin and rounding. */
+.dock-play {
+  --dock-h: 100vh;
+  --dock-w: min(100%, 960px, max(240px, calc((var(--dock-h) - var(--dock-chrome) - 16px) * 1.5)));
+  display: grid;
+  grid-template-columns: var(--dock-w);
+  justify-content: center;
+}
+@supports (height: 100dvh) {
+  .dock-play {
+    --dock-h: 100dvh;
+  }
+}
+.dock-play > .dock-pad {
+  justify-self: center;
+}
+/* Wide screens with the pad visible: the pad to the right of the canvas, vertically centred on it,
+   and the column narrower by the pad's 176 px + 16 px gap. The pad's height is then not in the budget. */
+@media (min-width: 900px) {
+  .dock-play.has-pad {
+    --dock-w: min(calc(100% - 192px), 960px, max(240px, calc((var(--dock-h) - var(--dock-chrome) - 16px) * 1.5)));
+    grid-template-columns: var(--dock-w) 176px;
+    grid-template-areas:
+      'hud .'
+      'live .'
+      'stage pad'
+      'hint .';
+    column-gap: 16px;
+  }
+  .dock-play.has-pad > .dock-hud {
+    grid-area: hud;
+  }
+  .dock-play.has-pad > .dock-live {
+    grid-area: live;
+  }
+  .dock-play.has-pad > .dock-stage {
+    grid-area: stage;
+  }
+  .dock-play.has-pad > .dock-controls {
+    grid-area: hint;
+  }
+  .dock-play.has-pad > .dock-pad {
+    grid-area: pad;
+    align-self: center;
+    margin: 0;
+  }
+}
+.dock-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  box-shadow: 0 0 0 1px var(--glass-border); /* not a border, so the 3:2 box is exactly the canvas */
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dock-stage.is-preview {
+  opacity: 0.85;
+}
+.dock-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #050b1a;
+  touch-action: none;
+}
+.dock-canvas:focus-visible {
+  outline: 3px solid var(--activity);
+  outline-offset: -3px;
+}
+.dock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--color-text);
+  font-weight: 800;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+.dock-count {
+  font-size: 3.5rem;
+  color: var(--activity);
+}
+.dock-moment {
+  font-size: 2.25rem;
+  animation: dock-pop 260ms ease-out;
+}
+.dock-moment.is-docked {
+  color: var(--color-text);
+}
+@keyframes dock-pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.dock-paused {
+  pointer-events: auto;
+  width: 100%;
+  border: 0;
+  padding: 16px;
+  background: rgba(3, 6, 16, 0.72);
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.dock-paused:focus-visible {
+  outline: 3px solid var(--activity);
+  outline-offset: -6px;
+}
+.dock-live {
+  min-height: 1.5em;
+  margin: 0 0 4px;
+}
+.dock-live.is-idle {
+  min-height: 0;
+  margin: 0;
+}
+/* Mouse and keyboard: one line of help and a toggle; the pad only when asked for. Touch: the pad. */
+.dock-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 16px;
+  margin-top: 6px;
+}
+.dock-controls__hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+.dock-pad-toggle {
+  font-size: 0.875rem;
+}
+.dock-pad-toggle:focus-visible {
+  outline: 3px solid var(--activity);
+  outline-offset: 2px;
+}
+.dock-of {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-muted);
+}
+.dock-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(3, 56px);
+  grid-template-areas:
+    '. up .'
+    'left . right'
+    '. down .';
+  gap: 4px;
+  justify-content: center;
+  margin: 6px auto 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dock-pad__btn {
+  min-width: 56px;
+  min-height: 56px;
+  border: 1px solid var(--activity-line);
+  border-radius: var(--radius-control);
+  background: var(--activity-tint);
+  color: var(--activity);
+  font-size: 1.25rem;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.dock-pad__btn:active {
+  background: var(--activity);
+  color: var(--activity-on);
+}
+.dock-pad__btn:focus-visible {
+  outline: 3px solid var(--activity);
+  outline-offset: 3px;
+}
+.dock-pad__btn--up {
+  grid-area: up;
+}
+.dock-pad__btn--down {
+  grid-area: down;
+}
+.dock-pad__btn--left {
+  grid-area: left;
+}
+.dock-pad__btn--right {
+  grid-area: right;
+}
+
 /* ---------- Patches ---------- */
 .patches__note {
   margin: 0 0 12px;
@@ -545,6 +826,16 @@
   .cj-row .btn {
     flex: 1 1 auto;
   }
+  .dock-screen {
+    --dock-chrome: 400px;
+  }
+  .dock-hud {
+    gap: 2px 12px;
+    font-size: 0.875rem;
+  }
+  .dock-fuel__bar {
+    width: 56px;
+  }
 }
 
 /* ---------- Reduced motion: no scaling, no pop; the shape just appears ---------- */
@@ -558,5 +849,8 @@
   .co-planet {
     animation: none;
     transform: none;
+  }
+  .dock-moment {
+    animation: none;
   }
 }

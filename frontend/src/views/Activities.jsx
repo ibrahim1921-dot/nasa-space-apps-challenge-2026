@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { GAMES, LOGGED_NOT_SCORED } from '../content/activities.js';
+import { GAME_KINDS, GAMES, LOGGED_NOT_SCORED } from '../content/activities.js';
 import { GATE_TEXT, gate, journeyProgress, myMinutes, reactionBaseline, sessionsOn, weekSessions } from '../lib/activities.js';
+import DockPilot from '../components/activities/DockPilot.jsx';
 import ReactionRun from '../components/activities/ReactionRun.jsx';
 import CalmOrbit from '../components/activities/CalmOrbit.jsx';
 import CrewJourney from '../components/activities/CrewJourney.jsx';
 import RouteLine from '../components/activities/RouteLine.jsx';
 import PatchShelf from '../components/activities/PatchShelf.jsx';
+import { WhySource } from '../components/WhyItMatters.jsx';
 
 const stamp = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 
@@ -22,7 +24,7 @@ function useNow() {
 }
 
 /**
- * More → Activities: three short games, the shared Crew Journey and "Your patches".
+ * More → Activities: four short games, the shared Crew Journey and "Your patches".
  * Viewing someone else (CMO): their sessions this week, counts and dates only, never results or patches.
  * @param {{ activities: { records, patches, save }, crewId: string, viewingOther: boolean, shownId: string, shownName?: string,
  *   ownerLabel?: string|null, profileId: string, today: string, launch?: { game: string, n: number } | null, onLaunchUsed?: () => void }} props
@@ -57,7 +59,7 @@ export default function Activities({ activities, crewId, viewingOther, shownId, 
   }
 
   if (viewingOther) {
-    const week = weekSessions(records, shownId, today);
+    const week = weekSessions(records, shownId, today, GAME_KINDS);
     return (
       <section className="card card--lg act-page" aria-labelledby="act-title">
         <h2 id="act-title" className="view-title">
@@ -88,6 +90,8 @@ export default function Activities({ activities, crewId, viewingOther, shownId, 
   const progress = journeyProgress(records, profileId, today);
   const saveAs = (kind) => (data) => save(kind, data);
 
+  if (screen === 'dock_pilot')
+    return <DockPilot onSave={saveAs('dock_pilot')} onExit={exit} records={records} crewId={crewId} today={today} gate={gateOf('dock_pilot')} />;
   if (screen === 'reaction_run')
     return <ReactionRun onSave={saveAs('reaction_run')} onExit={exit} usual={reactionBaseline(records, crewId, today)} gate={gateOf('reaction_run')} />;
   if (screen === 'calm_orbit') return <CalmOrbit onSave={saveAs('calm_orbit')} onExit={exit} />;
@@ -113,6 +117,14 @@ export default function Activities({ activities, crewId, viewingOther, shownId, 
                   <span className={`act-chip${doneToday ? ' is-done' : ''}`}>{doneToday ? 'Done today' : 'Due today'}</span>
                 </div>
                 <p className="act-game__helps">{g.helps}</p>
+                {g.why && (
+                  <div className="dock-why dock-why--card">
+                    <p className="dock-why__text">
+                      <strong>Why it helps:</strong> {g.why}
+                    </p>
+                    <WhySource source={g.whySource} />
+                  </div>
+                )}
                 <p className="muted act-game__time">{g.time}</p>
                 {st !== 'open' && <p className="act-gate">{GATE_TEXT[st]}</p>}
                 <button

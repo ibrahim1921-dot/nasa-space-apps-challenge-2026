@@ -53,6 +53,30 @@ const MOTIFS = {
       <path d="M16 46 H44" />
     </>
   ),
+  first_dock: (
+    <>
+      <circle cx="40" cy="32" r="10" />
+      <path d="M14 26 H24 Q29 27 29 32 Q29 37 24 38 H14 Z" className="fill" />
+    </>
+  ),
+  dock_level3: (
+    <>
+      <circle cx="32" cy="32" r="13" />
+      {[24, 32, 40].map((x) => (
+        <path key={x} d={`M${x - 3} 30 L${x} 25 L${x + 3} 30`} />
+      ))}
+      <circle cx="32" cy="38" r="3" className="fill" />
+    </>
+  ),
+  dock_streak: (
+    <>
+      <circle cx="46" cy="32" r="6" />
+      {[14, 22, 30, 38].map((x) => (
+        <circle key={x} cx={x - 2} cy="32" r="2.5" className="fill" />
+      ))}
+      <circle cx="46" cy="32" r="2.5" className="fill" />
+    </>
+  ),
   full_week: (
     <>
       {Array.from({ length: 7 }, (_, i) => {
