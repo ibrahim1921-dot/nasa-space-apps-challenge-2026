@@ -1,83 +1,102 @@
 'use client';
 
-// The onboard connection for the whole app: who is using it (demo identity), whether the onboard
-// server (the team's Java backend) is reachable, and the outbox loop that sends check-ins saved on
-// this device to POST /api/crew/{crewId}/checkins.
+// Who is signed in, for the whole app, and whether the backend is reachable.
 //
-// Everything works without the server: readings are always saved and scored on the device first.
-// With NEXT_PUBLIC_USE_MOCKS=true (default) there is no backend at all and the app runs on its own
-// mock API and bundled data.
+// Live mode (lib/session.js): the backend session cookie is the identity. On load, GET /api/auth/me
+// says who is signed in (if anyone); login is POST /api/auth/login, sign-out POST /api/auth/logout
+// (lib/api.js handles CSRF). Any 401 from an authenticated call signs the person out here and returns
+// to the login screen; a 401/403 is never treated as offline success.
+//
+// Demo mode: "Explore with demo data" opens the local demo crew without the backend. Labelled in the UI.
+//
+// Readings (check-ins, stand tests, sensor days, exams) stay local-first in both modes: saved and scored
+// on this device. The practice app's Supabase outbox sync is not part of the monorepo; the real backend
+// has no endpoint to receive them yet (see the integration report).
+//
+// The context keeps the keys the ported screens read (`supabase`, `signedIn`, `syncState`, ...): with
+// `supabase: null` every Supabase-backed panel uses its local path.
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { DEMO_ACCOUNTS, isDemoWho } from '../lib/demoAccounts.js';
-import { browserStorage, clearIdentity, readIdentity, writeIdentity } from '../lib/identity.js';
-import { OUTBOX_STATE_KEY, nextDueAt, syncOnce, syncStateOf } from '../lib/outbox.js';
+import { api } from '../lib/api.js';
+import { browserStorage, readIdentity, writeIdentity } from '../lib/identity.js';
+import { accountFromIdentity, demoAccountFor, signOutFlow } from '../lib/session.js';
+import { syncStateOf } from '../lib/outbox.js';
 import { RECORDS_CHANGED_EVENT, readAllStandTests } from '../lib/standTestStore.js';
-import { readAllVitals, writeVitalsCheckin } from '../lib/vitalsCheckinStore.js';
-import { USE_MOCKS, backend, backendHealthy } from '../lib/backend.js';
-import { makeBackendSender } from '../lib/backendSync.js';
+import { readAllVitals } from '../lib/vitalsCheckinStore.js';
 
-const HEALTH_EVERY_MS = 30_000;
-const LAST_COPY_KEY = 'ahm.lastCopyToGround.v1';
+const PING_EVERY_MS = 60_000;
 
 const OnboardContext = createContext(null);
 
-function readJson(key, fallback) {
-  try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-function writeJson(key, value) {
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // storage blocked: retry bookkeeping lasts for this page view only
-  }
-}
-
-/** Only daily check-ins go to the backend; the contract has no stand-test endpoint yet. */
-const outboxRecords = () => readAllVitals();
 const allRecords = () => [...readAllVitals(), ...readAllStandTests()];
 
-/** Sends a batch of check-ins to POST /api/crew/{crewId}/checkins (lib/backendSync.js). */
-const sendToBackend = makeBackendSender({ post: backend, savedRecords: readAllVitals });
-
 export function OnboardProvider({ children }) {
-  const [ready, setReady] = useState(false); // stored identity has been read
-  const [who, setWho] = useState(null); // 'maya' | 'lena' | null (signed out)
-  const account = who ? DEMO_ACCOUNTS[who] : null;
-
-  // 'mock' | 'checking' | 'connected' | 'offline'
-  const [server, setServer] = useState(USE_MOCKS ? 'mock' : 'checking');
-  const [lastCopy, setLastCopy] = useState(null);
-  const [outboxState, setOutboxState] = useState({});
+  const [ready, setReady] = useState(false); // the session (or stored demo person) has been read
+  const [account, setAccount] = useState(null); // lib/session.js account, or null (signed out)
+  const [identity, setIdentity] = useState(null); // backend AccountIdentity in live mode
+  // Backend reachability: 'checking' | 'connected' | 'offline'
+  const [server, setServer] = useState('checking');
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState(null); // e.g. "Your session has ended"
   const [version, setVersion] = useState(0); // bumps when saved records change
-  const running = useRef(false);
-  const timer = useRef(null);
-  const epoch = useRef(0); // bumped on sign-out / switch: an in-flight sync must not schedule more work
+  const accountRef = useRef(null);
+  accountRef.current = account;
 
-  useEffect(() => {
-    setWho(readIdentity(browserStorage()));
-    setLastCopy(readJson(LAST_COPY_KEY, null));
-    setOutboxState(readJson(OUTBOX_STATE_KEY, {}));
-    setReady(true);
+  const goLive = useCallback((id) => {
+    const next = accountFromIdentity(id);
+    setIdentity(next ? id : null);
+    setAccount(next);
+    return next;
   }, []);
 
-  // ---- Is the onboard server there? ----
+  // ---- On load: a live session first, else a stored demo person ----
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      let live = null;
+      try {
+        live = goLive(await api.me());
+        if (active) setServer('connected');
+      } catch (err) {
+        if (active) setServer(err?.kind === 'unreachable' ? 'offline' : 'connected');
+      }
+      if (!active) return;
+      if (!live) {
+        const demo = demoAccountFor(readIdentity(browserStorage()));
+        if (demo) setAccount(demo);
+      }
+      setReady(true);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [goLive]);
+
+  // ---- Session expiry: any authenticated 401 returns to the login screen ----
+  useEffect(() => {
+    api.setUnauthorizedHandler(() => {
+      if (accountRef.current?.mode !== 'live') return;
+      setAccount(null);
+      setIdentity(null);
+      setNotice('Your session has ended. Please sign in again.');
+    });
+    return () => api.setUnauthorizedHandler(null);
+  }, []);
+
+  // ---- Is the backend there? (public CSRF route; only while signed out or live) ----
   const checkServer = useCallback(async () => {
-    if (USE_MOCKS) return false;
-    const ok = typeof navigator !== 'undefined' && navigator.onLine === false ? false : await backendHealthy();
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      setServer('offline');
+      return false;
+    }
+    const ok = await api.ping();
     setServer(ok ? 'connected' : 'offline');
     return ok;
   }, []);
 
   useEffect(() => {
-    if (USE_MOCKS) return undefined;
-    checkServer();
-    const id = setInterval(checkServer, HEALTH_EVERY_MS);
+    if (account?.mode === 'demo') return undefined;
+    const id = setInterval(checkServer, PING_EVERY_MS);
     window.addEventListener('online', checkServer);
     window.addEventListener('offline', checkServer);
     return () => {
@@ -85,102 +104,92 @@ export function OnboardProvider({ children }) {
       window.removeEventListener('online', checkServer);
       window.removeEventListener('offline', checkServer);
     };
-  }, [checkServer]);
+  }, [checkServer, account?.mode]);
 
-  // ---- Outbox ----
-  const stopOutbox = useCallback(() => {
-    epoch.current += 1;
-    clearTimeout(timer.current);
-    timer.current = null;
+  useEffect(() => {
+    const onChange = () => setVersion((v) => v + 1);
+    window.addEventListener(RECORDS_CHANGED_EVENT, onChange);
+    return () => window.removeEventListener(RECORDS_CHANGED_EVENT, onChange);
   }, []);
 
-  const runSync = useCallback(async () => {
-    if (running.current || !account || server !== 'connected') return;
-    const myEpoch = epoch.current;
-    running.current = true;
-    clearTimeout(timer.current);
-    try {
-      const state = readJson(OUTBOX_STATE_KEY, {});
-      const out = await syncOnce({ records: outboxRecords(), crewId: account.crewId, state, now: Date.now(), send: sendToBackend });
-      for (const r of out.updated) writeVitalsCheckin(r);
-      writeJson(OUTBOX_STATE_KEY, out.state);
-      setOutboxState(out.state);
-      if (out.updated.length) {
-        const newest = out.updated.map((r) => r.synced_at).sort().at(-1);
-        writeJson(LAST_COPY_KEY, newest);
-        setLastCopy(newest);
-        setVersion((v) => v + 1);
+  // ---- Log in (live), explore (demo), sign out ----
+  /** POST /api/auth/login. Throws ApiError (wrong login, rate limited, unreachable...) for the form. */
+  const login = useCallback(
+    async (loginName, password) => {
+      setBusy(true);
+      try {
+        const id = await api.login(loginName.trim(), password);
+        setServer('connected');
+        setNotice(null);
+        const next = goLive(id);
+        if (!next) throw new Error('This account has no role this app can show.');
+        return next;
+      } finally {
+        setBusy(false);
       }
-      if (out.error) checkServer();
-      if (epoch.current !== myEpoch) return; // stopped: schedule nothing more
-      const due = nextDueAt(outboxRecords(), account.crewId, out.state);
-      if (due !== null) timer.current = setTimeout(() => runSync(), Math.max(1000, due - Date.now()));
-    } finally {
-      running.current = false;
-    }
-  }, [account, server, checkServer]);
-
-  useEffect(() => {
-    runSync();
-  }, [runSync]);
-
-  useEffect(() => {
-    const onChange = () => {
-      setVersion((v) => v + 1);
-      setTimeout(() => runSync(), 0);
-    };
-    window.addEventListener(RECORDS_CHANGED_EVENT, onChange);
-    window.addEventListener('online', onChange);
-    return () => {
-      window.removeEventListener(RECORDS_CHANGED_EVENT, onChange);
-      window.removeEventListener('online', onChange);
-      clearTimeout(timer.current);
-    };
-  }, [runSync]);
-
-  // ---- Enter, switch, sign out (readings saved on the device are never touched) ----
-  const enter = useCallback(
-    (next) => {
-      if (!isDemoWho(next) || next === who) return;
-      stopOutbox();
-      writeIdentity(browserStorage(), next);
-      setWho(next);
     },
-    [who, stopOutbox],
+    [goLive],
   );
 
-  const signOut = useCallback(() => {
-    stopOutbox();
-    clearIdentity(browserStorage());
-    setWho(null);
-  }, [stopOutbox]);
+  /** "Explore with demo data": local demo crew, no backend. */
+  const enter = useCallback(
+    (who) => {
+      const demo = demoAccountFor(who);
+      if (!demo || busy) return;
+      writeIdentity(browserStorage(), who);
+      setNotice(null);
+      setAccount(demo);
+    },
+    [busy],
+  );
+
+  const signOut = useCallback(async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await signOutFlow({ account: accountRef.current, api, storage: browserStorage() });
+      setAccount(null);
+      setIdentity(null);
+    } finally {
+      setBusy(false);
+    }
+  }, [busy]);
 
   const pendingCount = useMemo(
-    () => (typeof window === 'undefined' || USE_MOCKS ? 0 : outboxRecords().filter((r) => !r.synced_at).length),
+    () => (typeof window === 'undefined' ? 0 : allRecords().filter((r) => !r.synced_at).length),
     [version], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const value = useMemo(
     () => ({
       ready,
-      who,
       account,
+      identity,
+      mode: account?.mode ?? null,
+      isLive: account?.mode === 'live',
+      isDemo: account?.mode === 'demo',
+      isOfficer: account?.role === 'officer',
+      // `who` is the screen switch (signed in or not) and the key into the local demo records.
+      who: account ? (account.who ?? account.loginName ?? 'officer') : null,
       crewId: account?.crewId ?? null,
+      astronautId: account?.astronautId ?? null,
       isCmo: account?.role === 'cmo',
+      login,
       enter,
       signOut,
-      busy: false,
+      busy,
+      notice,
       server,
-      mock: USE_MOCKS,
       connected: server === 'connected',
-      signedIn: Boolean(account && server === 'connected'),
-      lastCopy,
+      signedIn: account?.mode === 'live',
+      signInError: null,
+      supabase: null,
+      lastCopy: null,
       version,
       pendingCount,
-      records: allRecords,
-      syncState: (record) => syncStateOf(record, outboxState),
+      syncState: (record) => syncStateOf(record, {}),
     }),
-    [ready, who, account, enter, signOut, server, lastCopy, version, pendingCount, outboxState],
+    [ready, account, identity, login, enter, signOut, busy, notice, server, version, pendingCount],
   );
 
   return <OnboardContext.Provider value={value}>{children}</OnboardContext.Provider>;

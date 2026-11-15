@@ -1,0 +1,222 @@
+/* StellarHealth entry screen. Look from teammate commits 38f6c67 "Login page altered" and 26f3be5
+   "Changes to sign in screen" (starry background, logo, glass panel, crew cards), now holding the real
+   backend login form and the labelled "Explore with demo data" path. Loaded after app.css. */
+
+.landing {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  padding: 24px 16px;
+  background:
+    radial-gradient(ellipse at 18% 18%, #24496380, transparent 48%),
+    radial-gradient(ellipse at 85% 85%, #40356670, transparent 50%),
+    #080e1b;
+  color: #f2f6ff;
+}
+.landing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #050c1b45, #050c1b95);
+  pointer-events: none;
+}
+.landing__background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.landing__topbar {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  justify-content: flex-end;
+}
+.landing__panel {
+  width: 100%;
+  max-width: 540px;
+  box-sizing: border-box;
+  padding: clamp(24px, 6vw, 56px);
+  border: 1px solid #c2d8ff26;
+  border-radius: 28px;
+  background: #101a2bbd;
+  backdrop-filter: blur(22px);
+  box-shadow: 0 32px 100px #0005, inset 0 1px #ffffff0d;
+}
+.landing__panel:has(.crew-login) { max-width: 720px; }
+.landing__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.landing__icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 100px;
+  width: 100px;
+  height: 100px;
+  color: #9edfe8;
+}
+.landing__icon img,
+.landing__icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.landing__icon img {
+  /* Convert black pixels to transparent pixels on every GIF frame. */
+  filter: url(#landing-logo-transparency);
+}
+.landing__filters { position: absolute; pointer-events: none; }
+.landing__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 5vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  color: #f2f6ff;
+}
+.landing__title:focus { outline: none; }
+.landing__title:focus-visible { outline: 2px solid #b1e5ed; outline-offset: 4px; }
+
+.landing__form { display: grid; gap: 18px; }
+.landing__field { display: grid; gap: 8px; font-size: 0.9375rem; color: #e2ebfa; }
+.landing__field input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 50px;
+  padding: 12px 16px;
+  border: 1px solid #b9d5ff30;
+  border-radius: 12px;
+  background: #080e1b80;
+  color: #f2f6ff;
+  font: inherit;
+}
+.landing__field input[aria-invalid='true'] { border-color: #ff9a9a; }
+.landing__field-error { margin: 0; color: #ffbaba; font-size: 0.875rem; }
+.landing__field input:focus-visible,
+.landing__submit:focus-visible,
+.landing__secondary:focus-visible { outline: 2px solid #b1e5ed; outline-offset: 3px; }
+.landing__submit {
+  min-height: 52px;
+  border: 1px solid #b1e5ed;
+  border-radius: 12px;
+  background: #b1e5ed;
+  color: #102b37;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.landing__submit:hover:not(:disabled) { background: #d2f3f7; }
+.landing__submit:disabled { opacity: 0.6; cursor: progress; }
+.landing__secondary {
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid #b9d5ff40;
+  border-radius: 12px;
+  background: #d1e5ff0d;
+  color: #eef4ff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.landing__secondary:hover:not(:disabled) { background: #b1e5ed18; border-color: #b1e5ed; }
+.landing__error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #ff5a5a1f;
+  color: #ffbaba;
+  font-size: 0.9rem;
+}
+.landing__offline {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #ffb02066;
+  border-radius: 14px;
+  background: #ffb02014;
+}
+.landing__offline-title { margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700; color: #ffd27a; }
+.landing__offline p { margin: 0; color: #d7e1f2; }
+.landing__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.landing__help { margin-top: 20px; color: #b8c9df; font-size: 0.9rem; }
+.landing__help summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: #b1e5ed; font-weight: 600; }
+.landing__help summary:focus-visible { outline: 2px solid #b1e5ed; outline-offset: 3px; border-radius: 6px; }
+.landing__help ul { margin: 8px 0; padding-left: 20px; }
+.landing__help code { font-size: 0.85em; color: #e2ebfa; }
+.landing__foot { max-width: 720px; margin: 0; font-size: 0.85rem; color: #b8c9df; text-align: center; }
+
+/* Demo crew cards (teammate 26f3be5), now without PINs: demo data only. */
+.demo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid #ffb020;
+  background: #ffb0201f;
+  color: #ffd27a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.crew-login__heading { margin: 0; color: #f2f6ff; font-size: 1.35rem; font-weight: 600; }
+.crew-login__intro { margin: 8px 0 20px; color: #b8c9df; }
+.crew-login__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.crew-login__card {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 8px;
+  min-height: 44px;
+  padding: 18px 12px;
+  border: 1px solid #b9d5ff30;
+  border-radius: 18px;
+  background: #d1e5ff08;
+  color: #f2f6ff;
+  font: inherit;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.crew-login__card:hover { background: #b1e5ed18; border-color: #b1e5ed; }
+.crew-login__card:focus-visible,
+.crew-login__back:focus-visible { outline: 2px solid #b1e5ed; outline-offset: 4px; }
+.crew-login__card svg { width: min(100%, 120px); height: auto; }
+.crew-login__name { font-weight: 600; }
+.crew-login__role { font-size: 0.8rem; color: #b8c9df; }
+.crew-login__back {
+  justify-self: start;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: #b1e5ed;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 380px) {
+  .crew-login__grid { gap: 10px; }
+  .crew-login__card { padding: 12px 8px; }
+  .crew-login__name { font-size: 0.85rem; }
+  .landing__brand { gap: 4px; }
+  .landing__icon { flex-basis: 76px; width: 76px; height: 76px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing__background { display: none; }
+  .landing__icon img { visibility: hidden; }
+  .crew-login__card { transition: none; }
+}

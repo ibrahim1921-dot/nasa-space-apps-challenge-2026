@@ -13,7 +13,7 @@ const TEXT = {
 };
 
 const TITLE = {
-  on_device: 'Saved on this device. It is copied to the onboard server when that is reachable.',
+  on_device: 'Saved on this device.',
   synced: 'Stored on the onboard server.',
   rejected: 'The onboard server did not accept this reading. It stays on this device.',
 };

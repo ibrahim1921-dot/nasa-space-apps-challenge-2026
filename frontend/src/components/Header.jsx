@@ -1,45 +1,32 @@
 'use client';
 
-import { MISSION_PROFILES, getProfile } from '../constants/mission.js';
+import { getProfile } from '../constants/mission.js';
 import { formatTime } from '../utils/format.js';
 import AccountMenu from './AccountMenu.jsx';
 import OnboardStatus from './OnboardStatus.jsx';
+import EmergencyButton from './EmergencyButton.jsx';
+import EnvironmentChip from './EnvironmentChip.jsx';
 
 const updatedText = (iso) =>
   new Date(iso).toDateString() === new Date().toDateString()
     ? formatTime(iso)
     : new Date(iso).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
-/** @param {{ updatedAt?: string }} props  the signed-in person's newest reading time */
-export default function Header({ crew, profileId, onProfileChange, updatedAt }) {
+/**
+ * @param {{ updatedAt?: string, viewMenu?: object }} props  updatedAt: the signed-in person's newest reading time; viewMenu: CMO only, see AccountMenu
+ * The mission environment is the chip next to the account menu (components/EnvironmentChip.jsx); only the CMO changes it there.
+ * reminderBell: the reminders bell (components/ReminderBell.jsx), shown just before the environment chip.
+ */
+export default function Header({ crew, profileId, updatedAt, missionDay = null, viewMenu = null, reminderBell = null }) {
   const { data, loading, error, reload } = crew;
   const profile = getProfile(profileId);
 
   return (
     <header className="header">
       <div className="container header__inner">
-        <h1 className="header__title">Crew health monitor</h1>
-
-        <div className="header__profile">
-          <label htmlFor="mission-profile" className="header__profile-label">
-            Mission profile
-          </label>
-          <select
-            id="mission-profile"
-            className="input header__profile-select"
-            value={profile.id}
-            onChange={(e) => onProfileChange(e.target.value)}
-            aria-describedby="mission-delay"
-          >
-            {MISSION_PROFILES.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.label}
-              </option>
-            ))}
-          </select>
-          <p id="mission-delay" className="muted header__profile-delay">
-            Signal delay to Earth: {profile.delayText}
-          </p>
+        <div className="header__brand">
+          <h1 className="header__title">Crew health monitor</h1>
+          <EmergencyButton />
         </div>
 
         {loading && (
@@ -67,7 +54,7 @@ export default function Header({ crew, profileId, onProfileChange, updatedAt }) 
             </p>
             <div className="header__meta">
               <p>
-                Mission day <strong className="num">{data.missionDay}</strong> of {data.totalMissionDays}
+                Mission day <strong className="num">{missionDay ?? data.missionDay}</strong> of {data.totalMissionDays}
               </p>
               {updatedAt && (
                 <p className="muted">
@@ -80,7 +67,11 @@ export default function Header({ crew, profileId, onProfileChange, updatedAt }) 
       </div>
       <div className="container header__onboard">
         <OnboardStatus profileId={profile.id} />
-        <AccountMenu />
+        <div className="header__controls">
+          {reminderBell}
+          <EnvironmentChip />
+          <AccountMenu viewMenu={viewMenu} />
+        </div>
       </div>
     </header>
   );

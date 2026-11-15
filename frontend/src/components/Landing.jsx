@@ -1,9 +1,19 @@
 'use client';
 
+// Signed-out screen. Real login against the backend (POST /api/auth/login via lib/api.js): login name
+// and password only, as docs/demo-account-provisioning.md says. The backend decides the role; nothing
+// here can pick it. If the backend is not reachable, "Explore with demo data" opens the local demo crew,
+// labelled as demo data. Look: teammate commits 38f6c67 / 26f3be5 (StellarHealth).
+
 import { useEffect, useRef, useState } from 'react';
 import { useOnboard } from '../hooks/useOnboard.jsx';
+import { api, validateLogin } from '../lib/api.js';
 import { LOGIN_MEDIA } from '../lib/loginMedia.js';
-import { MOCK_CREW, matchesMockPin } from '../lib/mockCrewLogin.js';
+import { MOCK_CREW } from '../lib/mockCrewLogin.js';
+import EmergencyButton from './EmergencyButton.jsx';
+
+const PROVISIONING_DOC = 'docs/demo-account-provisioning.md';
+const DEMO_LOGIN_NAMES = ['maya.demo', 'tomas.demo', 'lena.demo', 'kwame.demo', 'officer.demo'];
 
 function CrewPortrait({ person }) {
   return (
@@ -16,7 +26,8 @@ function CrewPortrait({ person }) {
       <circle cx="80" cy="73" r="39" fill="#172538" />
       <ellipse cx="80" cy="76" rx="25" ry="29" fill={person.skin} />
       <path d="M55 66c0-30 50-34 50 0-12-3-23-9-30-17-4 9-10 14-20 17" fill="#27232b" />
-      <circle cx="71" cy="76" r="2" fill="#172538" /><circle cx="89" cy="76" r="2" fill="#172538" />
+      <circle cx="71" cy="76" r="2" fill="#172538" />
+      <circle cx="89" cy="76" r="2" fill="#172538" />
       <path d="M74 89q6 5 12 0" fill="none" stroke="#392b31" strokeWidth="2" strokeLinecap="round" />
       <path d="M45 47q-13 25 0 49" stroke="white" strokeOpacity="0.5" strokeWidth="4" fill="none" strokeLinecap="round" />
       <rect x="59" y="128" width="42" height="23" rx="5" fill="#172538" />
@@ -25,45 +36,188 @@ function CrewPortrait({ person }) {
   );
 }
 
-export default function Landing() {
+function WarningIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M10 2 19 18H1z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M10 8v4M10 14.5v.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function DemoPicker({ onBack }) {
   const { enter, busy } = useOnboard();
   const headingRef = useRef(null);
-  const [selected, setSelected] = useState(null);
-  const [pin, setPin] = useState('');
-  const pinRef = useRef(null);
-  const cardRefs = useRef({});
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  useEffect(() => headingRef.current?.focus(), []);
+  return (
+    <div className="crew-login">
+      <button type="button" className="crew-login__back" onClick={onBack}>
+        <span aria-hidden="true">←</span> Back to sign in
+      </button>
+      <p>
+        <span className="demo-tag">Demo data</span>
+      </p>
+      <h2 className="crew-login__heading" ref={headingRef} tabIndex={-1}>
+        Explore with demo data
+      </h2>
+      <p className="crew-login__intro">
+        A fictional crew with synthetic records, on this device only. No backend, no alerts from the server. Pick a person to
+        explore as.
+      </p>
+      <div className="crew-login__grid">
+        {MOCK_CREW.map((person) => (
+          <button key={person.who} type="button" className="crew-login__card" onClick={() => enter(person.who)} disabled={busy}>
+            <CrewPortrait person={person} />
+            <span className="crew-login__name">{person.name}</span>
+            <span className="crew-login__role">{person.role}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-  async function handleLogin(event) {
+function LoginForm({ onExplore }) {
+  const { login, busy, server, notice } = useOnboard();
+  const [loginName, setLoginName] = useState('');
+  const [password, setPassword] = useState('');
+  const [fields, setFields] = useState({});
+  const [error, setError] = useState(notice);
+  const [checking, setChecking] = useState(false);
+  const [reachable, setReachable] = useState(server !== 'offline');
+  const nameRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  useEffect(() => setReachable(server !== 'offline'), [server]);
+
+  async function retry() {
+    setChecking(true);
+    const ok = await api.ping();
+    setReachable(ok);
+    setChecking(false);
+    if (ok) setError(null);
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
-    if (submitting || busy) return;
-    if (!selected || !matchesMockPin(selected.who, pin)) {
-      setError('Incorrect PIN. Please try again.');
-      setPin('');
-      pinRef.current?.focus();
-      return;
-    }
-    setError('');
-    setSubmitting(true);
+    if (busy) return;
+    const problems = validateLogin({ loginName, password });
+    setFields(problems);
+    if (problems.loginName) return nameRef.current?.focus();
+    if (problems.password) return passwordRef.current?.focus();
+    setError(null);
     try {
-      // Frontend preview only; credentials are not authenticated or persisted.
-      enter(selected.who);
-      setPin('');
-    } catch {
-      setError('Unable to open your profile. Please try again.');
-    } finally {
-      setSubmitting(false);
+      await login(loginName, password);
+      setPassword('');
+    } catch (err) {
+      setPassword('');
+      if (err?.kind === 'unreachable') setReachable(false);
+      setError(err?.message ?? 'Sign-in failed. Try again.');
+      passwordRef.current?.focus();
     }
   }
+
+  return (
+    <>
+      <form className="landing__form" onSubmit={handleSubmit} noValidate aria-busy={busy}>
+        <label className="landing__field" htmlFor="login-name">
+          Login name
+          <input
+            ref={nameRef}
+            id="login-name"
+            name="username"
+            type="text"
+            autoComplete="username"
+            autoCapitalize="none"
+            spellCheck={false}
+            value={loginName}
+            onChange={(e) => setLoginName(e.target.value)}
+            aria-invalid={Boolean(fields.loginName)}
+            aria-describedby={fields.loginName ? 'login-name-error' : undefined}
+            disabled={busy}
+            required
+          />
+          {fields.loginName && (
+            <p id="login-name-error" className="landing__field-error">
+              {fields.loginName}
+            </p>
+          )}
+        </label>
+        <label className="landing__field" htmlFor="login-password">
+          Password
+          <input
+            ref={passwordRef}
+            id="login-password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-invalid={Boolean(fields.password)}
+            aria-describedby={fields.password ? 'login-password-error' : undefined}
+            disabled={busy}
+            required
+          />
+          {fields.password && (
+            <p id="login-password-error" className="landing__field-error">
+              {fields.password}
+            </p>
+          )}
+        </label>
+        {error && (
+          <p className="landing__error" role="alert">
+            {error}
+          </p>
+        )}
+        <button className="landing__submit" type="submit" disabled={busy}>
+          {busy ? 'Signing in…' : 'Sign in'}
+        </button>
+      </form>
+
+      {!reachable && (
+        <div className="landing__offline" role="status">
+          <p className="landing__offline-title">
+            <WarningIcon /> Backend not reachable
+          </p>
+          <p>Sign-in needs the team&apos;s backend. You can still explore the app with local demo data.</p>
+          <div className="landing__actions">
+            <button type="button" className="landing__secondary" onClick={onExplore}>
+              Explore with demo data
+            </button>
+            <button type="button" className="landing__secondary" onClick={retry} disabled={checking}>
+              {checking ? 'Checking…' : 'Try again'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <details className="landing__help">
+        <summary>How to get demo accounts</summary>
+        <p>
+          Accounts are created by the team&apos;s administrator with the backend&apos;s provisioning command, described in{' '}
+          <code>{PROVISIONING_DOC}</code>. There is no sign-up. The fictional demo login names are:
+        </p>
+        <ul>
+          {DEMO_LOGIN_NAMES.map((n) => (
+            <li key={n}>
+              <code>{n}</code>
+              {n === 'officer.demo' ? ' (ground medical officer)' : ' (astronaut)'}
+            </li>
+          ))}
+        </ul>
+        <p>Passwords are chosen when the accounts are created and are delivered privately. They are never stored in this app.</p>
+      </details>
+    </>
+  );
+}
+
+export default function Landing() {
+  const headingRef = useRef(null);
+  const [exploring, setExploring] = useState(false);
 
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
-
-  useEffect(() => {
-    if (selected) pinRef.current?.focus();
-  }, [selected]);
 
   return (
     <main className="landing">
@@ -74,9 +228,10 @@ export default function Landing() {
           </filter>
         </defs>
       </svg>
-      {LOGIN_MEDIA.background && (
-        <img className="landing__background" src={LOGIN_MEDIA.background} alt="" aria-hidden="true" />
-      )}
+      {LOGIN_MEDIA.background && <img className="landing__background" src={LOGIN_MEDIA.background} alt="" aria-hidden="true" />}
+      <div className="landing__topbar">
+        <EmergencyButton />
+      </div>
       <section className="landing__panel" aria-labelledby="landing-title">
         <div className="landing__brand">
           <span className="landing__icon" aria-hidden="true">
@@ -94,44 +249,11 @@ export default function Landing() {
             StellarHealth
           </h1>
         </div>
-        {!selected ? (
-          <div className="crew-login">
-            <h2 className="crew-login__heading">Welcome aboard</h2>
-            <p className="crew-login__intro">Select your card to sign in.</p>
-            <div className="crew-login__grid">
-              {MOCK_CREW.map((person) => (
-                <button key={person.who} ref={(node) => { cardRefs.current[person.who] = node; }} type="button" className="crew-login__card" onClick={() => { setSelected(person); setPin(''); setError(''); }} disabled={busy}>
-                  <CrewPortrait person={person} />
-                  <span className="crew-login__name">{person.name}</span>
-                  <span className="crew-login__role">{person.role}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <form className="landing__form crew-login__pin" onSubmit={handleLogin} aria-busy={submitting}>
-            <button type="button" className="crew-login__back" onClick={() => {
-              const who = selected.who;
-              setSelected(null); setPin(''); setError('');
-              requestAnimationFrame(() => cardRefs.current[who]?.focus());
-            }} disabled={submitting}>Back to crew</button>
-            <div className="crew-login__selected">
-              <CrewPortrait person={selected} />
-              <h2 className="crew-login__heading">{selected.name}</h2>
-              <p className="crew-login__intro">{selected.role}</p>
-            </div>
-            <label className="landing__field" htmlFor="login-pin">
-              Enter your 4-digit PIN
-              <input ref={pinRef} id="login-pin" name="pin" type="password" inputMode="numeric" autoComplete="off" pattern="[0-9]{4}" minLength={4} maxLength={4} value={pin} onChange={(event) => { setPin(event.target.value.replace(/[^0-9]/g, '').slice(0, 4)); setError(''); }} required disabled={submitting} aria-describedby="mock-pin-hint" aria-invalid={Boolean(error)} />
-            </label>
-            <p id="mock-pin-hint" className="crew-login__hint">Mock preview PIN: <strong>{selected.pin}</strong></p>
-            {error && <p className="landing__error" role="alert">{error}</p>}
-            <button className="landing__submit" type="submit" disabled={busy || submitting || pin.length !== 4}>
-              {submitting ? 'Logging in...' : 'Login'}
-            </button>
-          </form>
-        )}
+        {exploring ? <DemoPicker onBack={() => setExploring(false)} /> : <LoginForm onExplore={() => setExploring(true)} />}
       </section>
+      <p className="landing__foot">
+        Crew data is synthetic, for a fictional crew. Prototype for decision support: not a medical device and not a diagnosis.
+      </p>
     </main>
   );
 }

@@ -26,6 +26,9 @@ export function preflightVsNow(baseline, latestVitalsRow) {
   if (!before || !now) return [];
   const one = (v) => Number(v).toFixed(1);
   const whole = (v) => String(Math.round(v));
+  // A sensor gap leaves a value null: that row is left out rather than shown as 0.
+  const has = (v) => typeof v === 'number' && Number.isFinite(v);
+  const shown = { sleep: has(now.sleepHours), heart_rate: has(now.heartRate), blood_pressure: has(now.systolic) && has(now.diastolic) };
   return [
     {
       id: 'sleep',
@@ -54,7 +57,7 @@ export function preflightVsNow(baseline, latestVitalsRow) {
       change: Math.round(now.systolic - before.systolic),
       worseWhen: 'higher',
     },
-  ];
+  ].filter((row) => shown[row.id]);
 }
 
 /**

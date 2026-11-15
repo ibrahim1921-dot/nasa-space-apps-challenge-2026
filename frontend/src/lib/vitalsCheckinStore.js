@@ -2,8 +2,10 @@
 //   { id, crew_id, kind: 'daily_vitals', recorded_at, payload, status, reasons, engine_version, synced_at: null,
 //     scored_on: 'device' | 'server', server_differs?, device_result? }
 // synced_at stays null until the onboard server has stored it (see lib/outbox.js).
-// `payload` is { reading, context, result }: the reading exactly as evaluated, the context answers,
-// and the evaluate result (so the dashboard can show it without asking the server again).
+// `payload` is { reading, context, result, provenance?, devices?, entered_by?, demo_events? }: the reading
+// exactly as evaluated, the context answers, the evaluate result (so the dashboard can show it without
+// asking the server again), where each value came from (sensor or typed by hand), the state of each
+// worn device, who entered it, and the demo events the simulated sensor days were built with.
 // Every access is guarded: storage can be blocked, full or empty.
 
 import { newRecordId, notifyRecordsChanged } from './standTestStore.js';
@@ -39,7 +41,7 @@ export const latestVitalsCheckin = (crewId) => readVitalsCheckins(crewId)[0] ?? 
 export function extraHistoryFor(crewId) {
   return readVitalsCheckins(crewId)
     .reverse()
-    .map((r) => ({ recorded_at: r.recorded_at, ...r.payload.reading }));
+    .map((r) => ({ recorded_at: r.recorded_at, ...(r.payload.kind_detail === 'cmo_exam' ? { kind_detail: 'cmo_exam' } : {}), ...r.payload.reading }));
 }
 
 /** @returns {boolean} false when the browser would not store it. */
@@ -54,13 +56,36 @@ export function writeVitalsCheckin(record) {
   }
 }
 
-export function makeVitalsRecord({ crewId, reading, context, result, recordedAt }) {
+/**
+ * Remove every daily check-in saved in this browser (all crew members). Never touches the onboard server.
+ * @returns {{ removed: number, ok: boolean }}
+ */
+export function clearVitalsCheckins() {
+  const removed = readAll().length;
+  try {
+    window.localStorage.removeItem(KEY);
+    notifyRecordsChanged();
+    return { removed, ok: true };
+  } catch {
+    return { removed: 0, ok: false };
+  }
+}
+
+export function makeVitalsRecord({ crewId, reading, context, result, recordedAt, provenance, devices, enteredBy, demoEvents, kindDetail, note }) {
+  const payload = { reading, context, result };
+  // A CMO exam for a crew member: crew_id is the patient, entered_by the Crew Medical Officer.
+  if (kindDetail) payload.kind_detail = kindDetail;
+  if (kindDetail && note) payload.note = note;
+  if (provenance) payload.provenance = provenance;
+  if (devices) payload.devices = devices;
+  if (enteredBy) payload.entered_by = enteredBy;
+  if (demoEvents) payload.demo_events = demoEvents;
   return {
     id: newRecordId(),
     crew_id: crewId,
     kind: RECORD_KIND,
     recorded_at: recordedAt ?? new Date().toISOString(),
-    payload: { reading, context, result },
+    payload,
     status: result.status,
     reasons: result.reasons,
     engine_version: result.engine_version,

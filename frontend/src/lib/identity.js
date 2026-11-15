@@ -1,12 +1,12 @@
-// Which demo person this browser is signed in as. No default: with nothing (valid) stored, the app
-// shows the landing screen and waits for "Enter as Maya (crew)" or "Enter as Lena (CMO)".
+// Which local demo person this browser is exploring as ("Explore with demo data"). A real backend
+// session is never stored here: it lives in the HttpOnly session cookie and is read back from /api/auth/me.
 // Storage is passed in, so the same code runs in the browser and in node:test.
 
 import { isDemoWho } from './demoAccounts.js';
 
 export const IDENTITY_KEY = 'ahm.demoIdentity.v1';
 
-/** 'maya' | 'lena' | null. Stored as JSON, as useStoredSetting wrote it before. */
+/** A demo account key ('maya', 'tomas', 'lena', 'kwame') or null. Stored as JSON, as useStoredSetting wrote it before. */
 export function readIdentity(storage) {
   try {
     const raw = storage?.getItem(IDENTITY_KEY);

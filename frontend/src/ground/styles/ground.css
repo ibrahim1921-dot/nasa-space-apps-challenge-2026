@@ -1,0 +1,742 @@
+/* Ground console (/ground). Every class is prefixed .gr- so nothing here reaches the crew app.
+   Builds on the crew app's theme tokens (theme.css); the ground accent is teal. Desktop-first:
+   comfortable at 1280–1920 px, usable at 1024 px. */
+
+.gr-console {
+  --gr-accent: #3ddc97;
+  --gr-accent-tint: rgba(61, 220, 151, 0.15);
+  --gr-real: #ff5a5a;
+  --gr-real-tint: rgba(255, 90, 90, 0.15);
+  --gr-drill: #ffb020;
+  --gr-drill-tint: rgba(255, 176, 32, 0.15);
+  --gr-line: var(--glass-border);
+  --gr-focus: 3px solid var(--gr-accent);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+.gr-console :focus-visible {
+  outline: var(--gr-focus);
+  outline-offset: 2px;
+}
+
+.gr-muted {
+  color: var(--color-muted);
+}
+
+.gr-skip {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 10;
+  padding: 8px 14px;
+  border-radius: var(--radius-control);
+  background: var(--gr-accent);
+  color: #04130c;
+  font-weight: 700;
+}
+.gr-skip:focus {
+  left: 12px;
+}
+
+/* ---------- Header ---------- */
+
+.gr-header {
+  padding: 14px 24px 10px;
+  border-bottom: 1px solid var(--gr-line);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+}
+.gr-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+.gr-header__title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.gr-header__meta {
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+  align-items: baseline;
+}
+.gr-header__delay {
+  font-weight: 600;
+}
+.gr-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--gr-accent-tint);
+  color: var(--gr-accent);
+  border: 1px solid rgba(61, 220, 151, 0.45);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+.gr-demo-note {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+/* ---------- Emergency band ---------- */
+
+.gr-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 24px;
+  border-bottom: 2px solid currentColor;
+  font-weight: 600;
+}
+.gr-band--real {
+  color: var(--gr-real);
+  background: var(--gr-real-tint);
+}
+.gr-band--drill {
+  color: var(--gr-drill);
+  background: var(--gr-drill-tint);
+}
+.gr-band__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  font-weight: 800;
+}
+.gr-band__text {
+  flex: 1;
+  color: var(--color-text);
+}
+.gr-band__more {
+  color: var(--color-muted);
+}
+
+/* ---------- Shell ---------- */
+
+.gr-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  min-height: calc(100vh - 90px);
+}
+.gr-nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 12px;
+  border-right: 1px solid var(--gr-line);
+  background: rgba(10, 18, 40, 0.55);
+}
+.gr-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.gr-nav__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 12px;
+  border-radius: var(--radius-control);
+  border-left: 3px solid transparent;
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: 600;
+}
+.gr-nav__link:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.gr-nav__link.is-active {
+  background: var(--gr-accent-tint);
+  border-left-color: var(--gr-accent);
+  color: var(--gr-accent);
+}
+.gr-nav__foot {
+  margin: 0;
+  padding: 0 12px;
+  font-size: 0.8rem;
+}
+.gr-count {
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.gr-count--alert {
+  background: var(--gr-real-tint);
+  color: var(--gr-real);
+}
+.gr-main {
+  padding: 20px 24px 40px;
+  max-width: 1920px;
+  min-width: 0;
+}
+.gr-main:focus {
+  outline: none;
+}
+
+/* ---------- Common blocks ---------- */
+
+.gr-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+.gr-section-head h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.gr-section-head p {
+  margin: 0;
+}
+.gr-subhead {
+  margin: 24px 0 10px;
+  font-size: 1rem;
+  color: var(--color-muted);
+}
+.gr-card {
+  border: 1px solid var(--gr-line);
+  border-radius: var(--radius-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+}
+.gr-panel {
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.gr-panel h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+.gr-panel__note {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+}
+.gr-rule {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+.gr-source {
+  margin-top: 14px;
+  font-size: 0.8rem;
+}
+.gr-loading,
+.gr-error {
+  padding: 16px 0;
+}
+.gr-error {
+  color: var(--status-alert);
+}
+.gr-ok {
+  color: var(--gr-accent);
+}
+.gr-two {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---------- Buttons, inputs, tags ---------- */
+
+.gr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius-control);
+  border: 1px solid rgba(232, 237, 247, 0.35);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gr-btn:hover {
+  border-color: var(--color-text);
+}
+.gr-btn--primary {
+  background: var(--gr-accent);
+  border-color: var(--gr-accent);
+  color: #04130c;
+}
+.gr-btn--primary:hover {
+  background: #66e6ae;
+}
+.gr-btn--ghost {
+  border-color: transparent;
+  color: var(--gr-accent);
+  padding: 0 8px;
+}
+.gr-btn--ghost:hover {
+  border-color: rgba(61, 220, 151, 0.45);
+}
+.gr-btn--band {
+  border-color: currentColor;
+  color: inherit;
+}
+
+.gr-input {
+  width: 100%;
+  min-height: 38px;
+  padding: 6px 10px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+.gr-input:focus-visible {
+  outline: var(--gr-focus);
+  outline-offset: 1px;
+}
+select.gr-input {
+  background: #0e1830;
+}
+.gr-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.gr-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--color-muted);
+}
+.gr-tag--fresh,
+.gr-tag--delivered,
+.gr-tag--read {
+  background: var(--gr-accent-tint);
+  color: var(--gr-accent);
+}
+.gr-tag--stale,
+.gr-tag--drill,
+.gr-tag--transit {
+  background: var(--gr-drill-tint);
+  color: var(--gr-drill);
+}
+.gr-tag--no-data {
+  background: rgba(163, 176, 200, 0.14);
+  color: var(--color-muted);
+}
+.gr-tag--real,
+.gr-tag--urgent {
+  background: var(--gr-real-tint);
+  color: var(--gr-real);
+}
+.gr-fresh {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 0.85rem;
+}
+.gr-times {
+  font-size: 0.85rem;
+}
+
+/* ---------- Crew overview ---------- */
+
+.gr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.gr-crew {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+}
+.gr-crew--emergency {
+  border-color: var(--gr-real);
+  box-shadow: inset 0 0 0 1px var(--gr-real);
+}
+.gr-crew--drill {
+  border-color: var(--gr-drill);
+}
+.gr-crew__head {
+  display: flex;
+  flex-direction: column;
+}
+.gr-crew__name {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.gr-crew__em {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.gr-crew__em--real {
+  color: var(--gr-real);
+}
+.gr-crew__em--drill {
+  color: var(--gr-drill);
+}
+.gr-crew__reasons {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.875rem;
+}
+p.gr-crew__reasons {
+  padding-left: 0;
+}
+.gr-crew__times {
+  margin: 0;
+  color: var(--color-muted);
+}
+.gr-crew__open {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* ---------- Crew detail ---------- */
+
+.gr-detail__actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.gr-detail__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.gr-detail__status p {
+  margin: 8px 0 0;
+}
+.gr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.gr-table th,
+.gr-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--gr-line);
+  text-align: left;
+  vertical-align: middle;
+}
+.gr-table thead th {
+  color: var(--color-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.gr-records {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.gr-record {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gr-line);
+}
+.gr-record p {
+  margin: 4px 0;
+}
+.gr-record__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.gr-record__reasons {
+  margin: 4px 0;
+  padding-left: 18px;
+  font-size: 0.85rem;
+}
+.gr-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 6px 0;
+}
+.gr-values dt {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+.gr-values dd {
+  margin: 0;
+}
+
+/* ---------- Emergencies ---------- */
+
+.gr-em {
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.gr-em--real {
+  border-color: var(--gr-real);
+}
+.gr-em--drill {
+  border-color: var(--gr-drill);
+}
+.gr-em__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.gr-em__head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.gr-em h4 {
+  margin: 12px 0 6px;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+.gr-em > p {
+  margin: 4px 0;
+}
+.gr-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.gr-timeline li {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--gr-line);
+  font-size: 0.9rem;
+}
+.gr-timeline__since {
+  color: var(--color-muted);
+}
+.gr-em__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 12px;
+}
+.gr-em__summary {
+  margin-top: 10px;
+}
+.gr-em__summary summary {
+  cursor: pointer;
+  color: var(--gr-accent);
+  font-weight: 600;
+}
+.gr-em__summary pre,
+.gr-print pre {
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* ---------- Messages ---------- */
+
+.gr-composer {
+  display: grid;
+  gap: 6px;
+}
+.gr-composer label,
+.gr-priority legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+.gr-form-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+}
+.gr-priority {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.gr-priority legend {
+  float: left;
+  margin-right: 8px;
+}
+.gr-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text) !important;
+}
+.gr-radio input:focus-visible {
+  outline: var(--gr-focus);
+}
+.gr-templates {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 4px 0;
+  font-size: 0.85rem;
+}
+.gr-templates__note {
+  flex-basis: 100%;
+  font-size: 0.8rem;
+}
+.gr-count-line {
+  margin: 0;
+  text-align: right;
+  font-size: 0.8rem;
+}
+.gr-related {
+  margin: 0;
+  font-size: 0.85rem;
+}
+.gr-composer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.gr-sent {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.gr-sent__item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gr-line);
+}
+.gr-sent__item p {
+  margin: 4px 0;
+  font-size: 0.875rem;
+}
+.gr-sent__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.gr-sent__body {
+  white-space: pre-wrap;
+}
+
+/* ---------- Print (white page, black text, no navigation) ---------- */
+
+.gr-print {
+  display: none;
+}
+
+@media print {
+  body:has(.gr-console) {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body:has(.gr-console)::before,
+  body:has(.gr-console)::after {
+    display: none !important;
+  }
+  .gr-console .gr-screen {
+    display: none !important;
+  }
+  .gr-console .gr-print {
+    display: block;
+    color: #000;
+    background: #fff;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+  .gr-print h1 {
+    font-size: 16pt;
+    margin: 0 0 4pt;
+  }
+  .gr-print h2 {
+    font-size: 12pt;
+    margin: 14pt 0 4pt;
+    border-bottom: 1px solid #000;
+  }
+  .gr-print table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .gr-print th,
+  .gr-print td {
+    border-bottom: 1px solid #999;
+    padding: 2pt 4pt;
+    text-align: left;
+    font-size: 9.5pt;
+  }
+  .gr-print pre {
+    font-size: 9pt;
+    border: 1px solid #999;
+    padding: 6pt;
+    break-inside: avoid;
+  }
+  .gr-print__foot {
+    margin-top: 14pt;
+    font-size: 9pt;
+  }
+}
+
+/* ---------- Narrower desktops (usable at 1024 px) ---------- */
+
+@media (max-width: 1279px) {
+  .gr-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gr-two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .gr-shell {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+  .gr-main {
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gr-console *,
+  .gr-console *::before,
+  .gr-console *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

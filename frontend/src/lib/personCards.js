@@ -4,10 +4,12 @@
 //   - their crew.json `preflight` list (preflight averages),
 //   - their check-ins saved on this device (a newer one overrides the crew record).
 // Pure: data is passed in, so node:test runs exactly what the dashboard shows.
-// Only "Bones and muscles" stays sample: there is no per-person bone or muscle data.
+// Bones and muscles is not built here: views/Dashboard.jsx takes it from lib/fitness.js (grip strength).
 
 import { applyVitals } from './vitalsDashboard.js';
 import { applyReaction, crewRecordLatest, latestVitalsFor } from './personDashboard.js';
+import { examView, sensorRecords } from './sensorRecords.js';
+import { onOrBefore } from './demoState.js';
 
 export const SPARK_DAYS = 14;
 
@@ -24,7 +26,7 @@ export const CARD_DEFS = [
   { id: 'core-temperature', area: 'g6', name: 'Core temperature', unit: '°C', dayKey: 'temperature', readingKey: 'temperature', limitKey: 'temperature' },
 ];
 
-/** Readings behind each body-map region. Bones and muscles has none: it stays sample. */
+/** Readings behind each body-map region. Bones and muscles comes from lib/fitness.js instead. */
 export const REGION_READINGS = {
   head: ['mood', 'reaction', 'sleep_hours'],
   chest: ['blood_pressure', 'heart_rate'],
@@ -78,7 +80,8 @@ export function overallReason(statuses) {
     const names = by(level);
     if (names.length) parts.push(`${joinNames(names)} ${names.length === 1 ? 'is' : 'are'} on ${level}`);
   }
-  if (!parts.length) return `All ${READINGS.length} readings are within your limits and usual range.`;
+  const counted = READINGS.filter((k) => statuses[k]).length || READINGS.length;
+  if (!parts.length) return `All ${counted} readings are within your limits and usual range.`;
   return `${capital(parts.join('; '))}.`;
 }
 
@@ -109,18 +112,30 @@ export function preflightAverage(preflight, key) {
  * @param {object[]} p.crewDays   the person's crew.json days
  * @param {object[]} p.preflight  the person's crew.json preflight list
  * @param {object[]} [p.saved]    the person's check-ins saved on this device (any order)
+ * @param {object[]} [p.sensorDays] simulated sensor days up to the demo's today (lib/sensorFeed.js)
+ * @param {string|null} [p.today]  the demo's today (YYYY-MM-DD); saved check-ins after it are left out until then
+ * @param {(crewId: string) => string|null} [p.nameFor]  crew member names, for "Entered by" chips
  */
-export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved = [] }) {
+export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved = [], sensorDays = [], today = null, nameFor }) {
   const days = [...(crewDays ?? [])].sort((a, b) => a.day - b.day);
   const crewRecord = crewRecordLatest(crewId, days);
   const crewAt = crewRecord ? Date.parse(crewRecord.recorded_at) : -Infinity;
   // Check-ins newer than the crew record, oldest first: they extend the sparklines and the newest wins.
-  const newer = saved
+  const newer = onOrBefore(saved, today)
     .filter((r) => r?.payload?.reading && Date.parse(r.recorded_at) > crewAt)
     .sort((a, b) => Date.parse(a.recorded_at) - Date.parse(b.recorded_at));
-  const latest = latestVitalsFor(crewRecord, newer.at(-1) ?? null);
+  // Sensor days, scored in the same timeline; a check-in on the same date replaces that day's sensor values.
+  const sensors = sensorRecords({ crewId, crewDays: days, sensorDays, saved: newer });
+  // CMO exams never add a day of their own: they are merged into that date's check-in or sensor day.
+  const exams = examView({ crewDays: days, sensorDays, saved: newer });
+  const shownSaved = newer.filter((r) => !exams.hidden.has(r.id)).map((r) => exams.overrides.get(r.id) ?? r);
+  const entries = [...shownSaved, ...sensors].sort((a, b) => Date.parse(a.recorded_at) - Date.parse(b.recorded_at));
+  const latest = latestVitalsFor(crewRecord, entries.at(-1) ?? null);
 
-  const points = [...days.map((d) => ({ day: d })), ...newer.map((r) => ({ reading: r.payload.reading }))];
+  const points = [
+    ...days.map((d) => ({ day: d })),
+    ...entries.map((r) => (r.fromSensor ? { day: r.payload.day } : { reading: r.payload.reading })),
+  ];
   const series = (def) =>
     points
       .map((p) => (p.day ? p.day[def.dayKey] : def.readingKey ? p.reading[def.readingKey] : undefined))
@@ -130,7 +145,7 @@ export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved =
   const sleepPre = preflightAverage(preflight, 'sleepHours');
   const cards = CARD_DEFS.map((def) => {
     const base = { id: def.id, name: def.name, unit: def.unit, limitKey: def.limitKey, status: 'normal', trend: 'flat', trendText: '' };
-    const shown = def.id === 'reaction-time' ? applyReaction({ ...base, sample: true }, crewRecord) : applyVitals(base, latest, null);
+    const shown = def.id === 'reaction-time' ? applyReaction({ ...base, sample: true }, crewRecord) : applyVitals(base, latest, null, nameFor);
     const card = { ...shown, area: def.area, history: series(def) };
     if (def.id === 'sleep' && sleepPre !== null) {
       card.preflightAverage = { value: Number(sleepPre.toFixed(1)), text: `Preflight average: ${sleepPre.toFixed(1)} h` };
@@ -140,8 +155,8 @@ export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved =
 
   const statuses = statusesOf(latest, crewRecord);
   // "Since yesterday": the same rule on the reading before the latest one.
-  const previous = newer.length
-    ? statusesOf(newer.at(-2) ?? crewRecord, crewRecord)
+  const previous = entries.length
+    ? statusesOf(entries.at(-2) ?? crewRecord, crewRecord)
     : (() => {
         const prev = crewRecordLatest(crewId, days.slice(0, -1));
         return statusesOf(prev, prev);
@@ -159,6 +174,7 @@ export function buildPersonDashboard({ crewId, crewDays, preflight = [], saved =
   return {
     crewRecord,
     latest,
+    entries,
     cards,
     cardsById: Object.fromEntries(cards.map((c) => [c.id, c])),
     statuses,

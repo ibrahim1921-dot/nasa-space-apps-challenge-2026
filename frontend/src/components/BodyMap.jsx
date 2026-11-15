@@ -45,6 +45,7 @@ export default function BodyMap({
   onOpen,
   labelRefs,
   source,
+  simulated = false,
   wholeBody = null, // status from the person's temperature
   sampleRegions = [], // regions still showing the shared demo status
 }) {
@@ -231,7 +232,7 @@ export default function BodyMap({
           })}
         </div>
       </div>
-      <SourceLabel source={source} />
+      <SourceLabel source={source} simulated={simulated} />
     </section>
   );
 }

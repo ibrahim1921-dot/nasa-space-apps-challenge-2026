@@ -64,12 +64,17 @@ export function newRecordId() {
   }
 }
 
-export function makeRecord({ crewId, test, status, reasons, engineVersion, scoredOn = 'device' }) {
+/**
+ * `recordedAt` (optional): the demo date with the real time of day (lib/demoState.js stampOnDemoDate), so
+ * the test lands on the demo's "today" like a check-in. Without it, the real time is used, as before;
+ * records saved earlier keep loading unchanged.
+ */
+export function makeRecord({ crewId, test, status, reasons, engineVersion, scoredOn = 'device', recordedAt }) {
   return {
     id: newRecordId(),
     crew_id: crewId,
     kind: 'stand_test',
-    recorded_at: new Date().toISOString(),
+    recorded_at: typeof recordedAt === 'string' && !Number.isNaN(Date.parse(recordedAt)) ? recordedAt : new Date().toISOString(),
     payload: test,
     status,
     reasons,

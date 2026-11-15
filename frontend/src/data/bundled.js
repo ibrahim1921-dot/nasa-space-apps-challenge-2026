@@ -2,8 +2,10 @@
 // onboard server cannot be reached. Same files the server reads, so results match.
 import crewFile from './crew.json';
 import standFile from './standtests.json';
+import fitnessFile from './fitness.json';
+import environmentFile from './environment.json';
 
-export { crewFile, standFile };
+export { crewFile, standFile, fitnessFile, environmentFile };
 
 export const crewDaysOf = (crewId) => {
   const person = crewFile.crew.find((c) => c.id === crewId);

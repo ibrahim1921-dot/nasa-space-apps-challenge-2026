@@ -79,6 +79,7 @@ export const LIMIT_GROUPS = {
   mood: ['mood'],
   stand_test: ['stand_systolic_drop', 'stand_diastolic_drop', 'stand_hr_rise', 'stand_test'],
   reaction_test: ['reaction_test'],
+  grip_strength: ['grip_drop'],
 };
 
 /**
@@ -127,7 +128,7 @@ export function crossingPhrase(limit) {
 
 export function formatLimitValue(limit) {
   if (typeof limit.value !== 'number') return '';
-  const d = DECIMALS[limit.unit] ?? 0;
+  const d = limit.decimals ?? DECIMALS[limit.unit] ?? 0;
   return `${limit.value.toFixed(d)} ${limit.unit}`;
 }
 

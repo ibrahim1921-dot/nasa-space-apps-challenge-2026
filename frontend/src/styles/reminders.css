@@ -1,0 +1,339 @@
+/* Reminders: header bell, its panel, the "Due today" card, CMO missed markers, the grip log and the
+   notifications switch. Dark glass like the rest of the app. Overdue uses the watch colour with an icon
+   and the word "Overdue"; red is for emergencies only and never appears here. */
+
+.header__controls {
+  position: relative; /* the reminders panel is placed against the controls row */
+}
+
+/* ---------- Bell ---------- */
+.reminders__bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  color: var(--color-text);
+  cursor: pointer;
+}
+.reminders__bell:hover {
+  background: rgba(123, 147, 255, 0.14);
+}
+.reminders__bell:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.reminders__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: #7b93ff; /* CMO accent */
+  color: var(--color-on-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+
+/* ---------- Panel ---------- */
+.reminders__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 29;
+}
+.reminders__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  max-height: min(70vh, 640px);
+  overflow-y: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  background: var(--drawer-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  text-align: left;
+}
+.reminders__panel:focus-visible {
+  outline: var(--focus-ring);
+}
+.reminders__panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.reminders__panel-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.reminders__close {
+  background: transparent;
+  color: var(--color-text);
+}
+.reminders__close:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.reminders__sub {
+  margin: 14px 0 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+.reminders__empty {
+  margin: 4px 0 8px;
+}
+.reminders__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.reminders__footer {
+  margin: 12px 0 0;
+  font-size: 0.8125rem;
+}
+.reminders__teamset {
+  font-weight: 600;
+}
+
+/* ---------- One reminder ---------- */
+.reminder {
+  padding: 10px 12px;
+  border: 1px solid var(--glass-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.03);
+}
+.reminder--overdue {
+  border-left-color: var(--status-watch);
+}
+.reminder--snoozed {
+  border-left-color: var(--glass-border);
+  opacity: 0.85;
+}
+.reminder__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.reminder__title {
+  font-weight: 600;
+}
+.reminder__overdue {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--status-watch-bg);
+  color: var(--status-watch);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.reminder__snoozed {
+  font-size: 0.8125rem;
+}
+.reminder__detail {
+  margin: 4px 0 8px;
+  font-size: 0.9375rem;
+}
+.reminder__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.reminder__actions .btn {
+  padding: 0 14px;
+}
+.reminder .btn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.reminder__reason {
+  display: grid;
+  gap: 6px;
+}
+.reminder__reason-label {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+.reminder__message {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  background: rgba(123, 147, 255, 0.08);
+}
+.reminder__message-subject {
+  font-weight: 700;
+}
+.reminder__message-from {
+  font-size: 0.8125rem;
+}
+.reminder__message-body {
+  white-space: pre-wrap;
+}
+.reminder__message .btn {
+  justify-self: start;
+}
+
+/* ---------- Due today ---------- */
+.due-today {
+  margin-bottom: 16px;
+}
+.due-today__all {
+  min-height: 44px;
+}
+
+/* ---------- CMO: missed marker ---------- */
+.crew-overview__missed {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-self: start;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--status-watch-bg);
+  color: var(--status-watch);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.crew-overview__missed-ground {
+  font-weight: 700;
+}
+
+/* ---------- Grip log ---------- */
+.grip-log {
+  margin-top: 16px;
+}
+.grip-log__form {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0;
+}
+.grip-log__label {
+  font-size: 0.9375rem;
+}
+.grip-log__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.grip-log__note {
+  font-size: 0.875rem;
+}
+.grip-log__done {
+  color: var(--status-normal);
+}
+.grip-log__list {
+  margin: 0 0 8px;
+  padding-left: 18px;
+  font-size: 0.9375rem;
+}
+
+/* ---------- Notifications switch (More → About) ---------- */
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.switch__input {
+  position: absolute;
+  opacity: 0;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  cursor: pointer;
+}
+.switch__track {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  transition: background 0.15s;
+}
+.switch__track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-muted);
+  transition: transform 0.15s;
+}
+.switch__input:checked + .switch__track {
+  background: var(--color-accent);
+}
+.switch__input:checked + .switch__track::after {
+  transform: translateX(18px);
+  background: var(--color-on-accent);
+}
+.switch__input:focus-visible + .switch__track {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.switch__input:disabled + .switch__track,
+.switch__input:disabled ~ .switch__label {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ---------- Demo controls: ground list ---------- */
+.demo-ground__list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+/* ---------- Small screens (375 px) ---------- */
+@media (max-width: 480px) {
+  .reminders__panel {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    top: 72px;
+    width: auto;
+    max-width: none;
+    max-height: calc(100vh - 96px);
+  }
+  .reminder__actions .btn {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch__track,
+  .switch__track::after {
+    transition: none;
+  }
+}

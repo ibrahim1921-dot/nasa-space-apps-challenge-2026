@@ -73,6 +73,82 @@ const SRC = {
   },
 };
 
+// Spacecraft cabin air (NASA-STD-3001 and its OCHMO technical briefs).
+SRC.csa_muscle = {
+  source_short: 'Canadian Space Agency',
+  source_name: 'Canadian Space Agency',
+  source_title: 'What happens to muscles in space? (up to 20% loss of muscle mass on flights of 5 to 11 days)',
+  source_url: 'https://asc-csa.gc.ca/eng/sciences/osm/muscles.asp',
+};
+SRC.nasa_co2_std = {
+  source_short: 'NASA-STD-3001',
+  source_name: 'NASA-STD-3001 Volume 2 [V2 6004]',
+  source_title: 'NASA-STD-3001 Vol. 2, 6.0 Natural and Induced Environments: average 1-hour CO2 at most 3 mmHg',
+  source_url: 'https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2',
+};
+SRC.nasa_co2_tb = {
+  source_short: 'NASA OCHMO',
+  source_name: 'NASA OCHMO-TB-004 Carbon Dioxide',
+  source_title: 'Carbon Dioxide technical brief: 7-day average below 2.5 mmHg keeps headache risk below 1%',
+  source_url: 'https://www.nasa.gov/ochmo-tb-004-carbon-dioxide-2/',
+};
+SRC.nasa_eclss = {
+  source_short: 'NASA OCHMO',
+  source_name: 'NASA OCHMO-TB-002 ECLSS',
+  source_title: 'Environmental Control & Life Support System technical brief: operating limit 18 °C/75% to 27 °C/25% humidity',
+  source_url: 'https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-002-eclss.pdf',
+};
+// "Why it matters in space" sources (content/whyItMatters.js). Not health limits: no LIMITS entry uses them.
+SRC.stahn_2017 = {
+  source_short: 'Stahn 2017',
+  source_name: 'Stahn A.C. et al. (2017), Scientific Reports 7:16180',
+  source_title: 'Increased core body temperature in astronauts during long-duration space missions',
+  source_url: null,
+};
+SRC.barger_2014 = {
+  source_short: 'Barger 2014',
+  source_name: 'Barger L.K. et al. (2014), Lancet Neurology 13:904–912',
+  source_title: 'Prevalence of sleep deficiency and use of hypnotic drugs in astronauts before, during, and after spaceflight',
+  source_url: null,
+};
+SRC.nasa_hrp_hazards = {
+  source_short: 'NASA HRP',
+  source_name: 'NASA Human Research Program',
+  source_title: 'Five hazards of human spaceflight',
+  source_url: 'https://www.nasa.gov/hrp/hazards',
+};
+SRC.nasa_std_3001_v1 = {
+  source_short: 'NASA-STD-3001 Vol. 1',
+  source_name: 'NASA-STD-3001 Volume 1 (crew health)',
+  source_title: 'NASA-STD-3001 Volume 1, crew health, including the 600 mSv career effective dose limit',
+  source_url: null,
+};
+// Emergency guide sources (content/emergency.js). Not health limits: no LIMITS entry uses them.
+SRC.cpr_micro_2020 = {
+  source_short: 'Microgravity CPR guideline 2020',
+  source_name: 'Hinkelbein J. et al. (2020), Scand J Trauma Resusc Emerg Med 28:108',
+  source_title:
+    'Cardiopulmonary resuscitation (CPR) during spaceflight – a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG)',
+  source_url: 'https://doi.org/10.1186/s13049-020-00793-y',
+};
+SRC.aha_erc = {
+  source_short: 'AHA/ERC',
+  source_name: 'AHA / ERC adult basic life support guidelines',
+  source_title: 'Adult basic life support: compression rate 100–120 per minute, depth 5–6 cm, AED as soon as available',
+  source_url: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines',
+  source_urls: [
+    { label: 'American Heart Association: CPR and ECC guidelines', url: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines' },
+    { label: 'European Resuscitation Council guidelines', url: 'https://cprguidelines.eu' },
+  ],
+};
+// Mission environment source (constants/mission.js gravity line). Not a health limit: no LIMITS entry uses it.
+SRC.nasa_planetary_facts = {
+  source_short: 'NASA Planetary Fact Sheet',
+  source_name: 'NASA Planetary Fact Sheet',
+  source_title: 'NASA Planetary Fact Sheet: surface gravity of the Moon (about 0.17 g) and Mars (about 0.38 g)',
+  source_url: 'https://nssdc.gsfc.nasa.gov/planetary/factsheet/',
+};
+
 const cited = (key) => ({ ...SRC[key], team_set: false });
 
 export const CRISIS_ACTION = 'Tell the Crew Medical Officer now';
@@ -116,6 +192,19 @@ export const LIMITS = [
   // ---- Mood (self-rated, 1 = very low … 5 = very good) ----
   // Team-set floor: a 1 shows as watch even when it is "usual" for that person.
   { indicator: 'mood', level: 'watch', value: 1, unit: '/ 5', rule: '<=', label: 'Very low', ...TEAM },
+
+  // ---- Grip strength: drop from the person's own preflight value, in % ----
+  // Watch is the team's choice (half the cited figure); alert is the CSA's "up to 20% loss of muscle mass".
+  { indicator: 'grip_drop', level: 'watch', value: 10, unit: '%', rule: '>=', ...TEAM },
+  { indicator: 'grip_drop', level: 'alert', value: 20, unit: '%', rule: '>=', ...cited('csa_muscle') },
+
+  // ---- Cabin air (station environment, not a crew member's reading) ----
+  { indicator: 'cabin_co2_1h', level: 'alert', value: 3, unit: 'mmHg', decimals: 1, rule: '>', ...cited('nasa_co2_std') },
+  { indicator: 'cabin_co2_7d', level: 'watch', value: 2.5, unit: 'mmHg', decimals: 1, rule: '>=', ...cited('nasa_co2_tb') },
+  { indicator: 'cabin_temp', level: 'alert', value: 27, unit: '°C', rule: '>', ...cited('nasa_eclss') },
+  { indicator: 'cabin_temp', level: 'alert', value: 18, unit: '°C', rule: '<', label: 'Low', ...cited('nasa_eclss') },
+  { indicator: 'cabin_rh', level: 'alert', value: 75, unit: '%', rule: '>', ...cited('nasa_eclss') },
+  { indicator: 'cabin_rh', level: 'alert', value: 25, unit: '%', rule: '<', label: 'Low', ...cited('nasa_eclss') },
 
   // ---- Stand test (change from lying down to standing) ----
   { indicator: 'stand_systolic_drop', level: 'alert', value: 20, unit: 'mmHg', rule: '>=', label: 'Systolic drop', ...cited('freeman') },
@@ -202,4 +291,19 @@ export const INDICATOR_NAMES = {
   stand_hr_rise: 'Stand test: heart-rate rise',
   stand_test: 'Stand test',
   reaction_test: 'Reaction test (PVT-B)',
+  grip_drop: 'Grip strength: drop from preflight',
+  cabin_co2_1h: 'Cabin CO₂ (1-hour average)',
+  cabin_co2_7d: 'Cabin CO₂ (7-day average)',
+  cabin_temp: 'Cabin temperature',
+  cabin_rh: 'Cabin humidity',
 };
+
+/** Sources of the emergency guide steps (content/emergency.js), by step `source` key. 'team' is Team-set. */
+export const EMERGENCY_SOURCES = {
+  aha_erc: { key: 'aha_erc', ...SRC.aha_erc, team_set: false },
+  cpr_micro_2020: { key: 'cpr_micro_2020', ...SRC.cpr_micro_2020, team_set: false },
+  team: { key: 'team', ...TEAM, source_short: 'Team-set' },
+};
+
+/** Looks up a source by SRC key for the "Why it matters in space" panels; 'team' is Team-set. Null if unknown. */
+export const sourceFor = (key) => (key === 'team' ? { key, ...TEAM } : SRC[key] ? { key, ...SRC[key], team_set: false } : null);

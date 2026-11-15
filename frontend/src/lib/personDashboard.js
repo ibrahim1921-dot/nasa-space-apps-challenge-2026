@@ -58,7 +58,7 @@ export function latestVitalsFor(crewRecord, savedLatest) {
 /** Note shown under a card's name: "Sample", the crew record date, or the check-in time. */
 export function sourceNoteFor(record) {
   if (!record) return null;
-  if (record.fromCrewRecord) return record.source;
+  if (record.fromCrewRecord || record.fromSensor) return record.source;
   return `Your check-in, ${new Date(record.recorded_at).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`;
 }
 

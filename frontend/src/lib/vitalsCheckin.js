@@ -57,16 +57,26 @@ export function validateField(key, raw, label = 'reading') {
   return null;
 }
 
-/** Check a whole reading. @returns {string|null} */
+/**
+ * Check a whole reading. @returns {string|null}
+ * A value set to null means "not measured" (a sensor gap, or a question not answered); it is skipped,
+ * never guessed. A missing key or an empty string is still an error, so a typo is not silently dropped.
+ * At least one value must be present, and blood pressure needs both numbers or neither.
+ */
 export function validateReading(reading, label = 'reading') {
   if (!reading || typeof reading !== 'object' || Array.isArray(reading)) {
     return `${label} must be an object with ${READING_KEYS.join(', ')}.`;
   }
   for (const key of READING_KEYS) {
+    if (reading[key] === null) continue;
     const error = validateField(key, reading[key], label);
     if (error) return error;
   }
-  if (reading.diastolic >= reading.systolic) {
+  if (READING_KEYS.every((k) => reading[k] === null)) return `${label} has no values: at least one reading is needed.`;
+  if ((reading.systolic === null) !== (reading.diastolic === null)) {
+    return `${label}: blood pressure needs both systolic and diastolic, or neither.`;
+  }
+  if (reading.systolic !== null && reading.diastolic >= reading.systolic) {
     return `${label}: diastolic (${reading.diastolic}) must be lower than systolic (${reading.systolic}).`;
   }
   return null;
@@ -93,29 +103,133 @@ export function validateExtraHistory(list) {
   return null;
 }
 
-/** Keep only the reading fields, so the echo and any later sync carry no extra input. */
-export const cleanReading = (reading) => Object.fromEntries(READING_KEYS.map((k) => [k, reading[k]]));
+/** Keep only the reading fields, so the echo and any later sync carry no extra input. Not measured = null. */
+export const cleanReading = (reading) => Object.fromEntries(READING_KEYS.map((k) => [k, reading[k] ?? null]));
+
+/** Is this reading value present (a finite number)? */
+export const hasValue = (v) => typeof v === 'number' && Number.isFinite(v);
 
 // ---------- History ----------
 
 /** A request reading (snake_case) as a baseline-engine day (crew.json keys). */
 export function toBaselineDay(reading, extra = {}) {
   const day = { ...extra };
-  for (const key of READING_KEYS) day[READING_FIELDS[key].baselineKey] = reading[key];
+  for (const key of READING_KEYS) day[READING_FIELDS[key].baselineKey] = reading[key] ?? null;
   return day;
 }
+
+const SENSOR_STAMP = 'T06:00:00.000Z';
+const stampOf = (e) => e.recorded_at ?? `${e.date}${SENSOR_STAMP}`;
+
+/** kind_detail of an exam the Crew Medical Officer recorded for a crew member. */
+export const CMO_EXAM = 'cmo_exam';
+/** Is this saved reading (or record payload) a CMO exam? */
+export const isExamItem = (r) => r?.kind_detail === CMO_EXAM;
+
+/**
+ * One timeline per person, oldest first: their crew.json days, then (merged by time) simulated sensor
+ * days and readings saved later. A saved check-in replaces the sensor day of the same date (the
+ * newest data wins). Day numbers continue after the last crew.json day.
+ *
+ * CMO exams (saved items with kind_detail 'cmo_exam') never add a second entry on a date that has one:
+ * each date's base is its latest check-in, else its sensor day, else its crew.json day, and the exams
+ * of that date overlay their measured fields in time order, each field only when the exam is newer
+ * than the value already there. So a check-in after an exam wins for the fields it has, and the
+ * exam's values stay only where the check-in left null. A date with no entry at all gets one partial
+ * entry holding just the exam values. Merged entries carry `exams: [{ recorded_at, fields, ref?,
+ * entered_by? }]` and `provenance[field] = 'cmo_exam'`. Without exams the result is exactly as before.
+ * @param {{ crewDays?: object[], sensorDays?: object[], saved?: object[] }} p
+ *   saved: [{ recorded_at, systolic, diastolic, heart_rate, …, kind_detail?, ref?, entered_by? }] (snake_case readings)
+ */
+export function buildTimeline({ crewDays = [], sensorDays = [], saved = [] } = {}) {
+  const seeded = crewDays.map((d) => ({ ...d }));
+  const lastDay = seeded.at(-1)?.day ?? 0;
+  const exams = saved.filter(isExamItem);
+  const checkins = exams.length ? saved.filter((r) => !isExamItem(r)) : saved;
+  const savedDates = new Set(checkins.map((r) => r.recorded_at.slice(0, 10)));
+  const later = [
+    ...sensorDays.filter((d) => d && !savedDates.has(d.date)).map((d) => ({ kind: 'sensor', at: stampOf(d), d })),
+    ...checkins.map((r) => ({ kind: 'saved', at: r.recorded_at, r })),
+  ].sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
+  const rest = later.map((e, i) =>
+    e.kind === 'sensor'
+      ? { ...e.d, day: lastDay + i + 1 }
+      : toBaselineDay(e.r, { day: lastDay + i + 1, date: e.r.recorded_at.slice(0, 10) }),
+  );
+  if (!exams.length) return [...seeded, ...rest];
+  return overlayExams({ seeded, later, rest, exams, lastDay });
+}
+
+const BASE_RANK = { seed: 0, sensor: 1, saved: 2 };
+
+function overlayExams({ seeded, later, rest, exams, lastDay }) {
+  const entries = [
+    ...seeded.map((d) => ({ kind: 'seed', at: `${d.date}${SENSOR_STAMP}`, date: d.date, d })),
+    ...rest.map((d, i) => ({ kind: later[i].kind, at: later[i].at, date: d.date, d })),
+  ];
+  // Each date's base: its latest check-in, else its sensor day, else its crew.json day.
+  const baseOf = new Map();
+  for (const e of entries) {
+    if (!e.date) continue;
+    const cur = baseOf.get(e.date);
+    if (!cur || BASE_RANK[e.kind] > BASE_RANK[cur.kind] || (e.kind === cur.kind && Date.parse(e.at) >= Date.parse(cur.at))) {
+      baseOf.set(e.date, e);
+    }
+  }
+  const standalone = [];
+  const ordered = [...exams].sort((a, b) => Date.parse(a.recorded_at) - Date.parse(b.recorded_at));
+  for (const x of ordered) {
+    const date = x.recorded_at.slice(0, 10);
+    let base = baseOf.get(date);
+    if (!base) {
+      base = { kind: 'exam', at: x.recorded_at, date, d: toBaselineDay({}, { date, examOnly: true }) };
+      baseOf.set(date, base);
+      standalone.push(base);
+    }
+    if (!base.times) {
+      // Copy before changing: sensor days share their provenance object with the feed.
+      const baseMs = base.kind === 'exam' ? -Infinity : Date.parse(base.at);
+      base.d = { ...base.d, exams: [...(base.d.exams ?? [])] };
+      if (base.d.provenance) base.d.provenance = { ...base.d.provenance };
+      base.times = Object.fromEntries(
+        READING_KEYS.map((k) => [k, hasValue(base.d[READING_FIELDS[k].baselineKey]) ? baseMs : -Infinity]),
+      );
+    }
+    const t = Date.parse(x.recorded_at);
+    const fields = [];
+    for (const k of READING_KEYS) {
+      if (!hasValue(x[k]) || !(t > base.times[k])) continue;
+      base.d[READING_FIELDS[k].baselineKey] = x[k];
+      base.times[k] = t;
+      fields.push(k);
+    }
+    if (fields.length) {
+      base.d.provenance = { ...(base.d.provenance ?? {}), ...Object.fromEntries(fields.map((k) => [k, CMO_EXAM])) };
+    }
+    base.d.exams.push({
+      recorded_at: x.recorded_at,
+      fields,
+      ...(x.ref !== undefined ? { ref: x.ref } : {}),
+      ...(x.entered_by ? { entered_by: x.entered_by } : {}),
+    });
+  }
+  const seededOut = entries.slice(0, seeded.length).map((e) => e.d);
+  const restOut = [...entries.slice(seeded.length), ...standalone]
+    .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
+    .map((e, i) => ({ ...e.d, day: lastDay + i + 1 }));
+  return [...seededOut, ...restOut];
+}
+
+/** A timeline entry (crew.json keys) as a check-in reading (snake_case); missing values are null. */
+export const readingFromEntry = (entry) =>
+  Object.fromEntries(READING_KEYS.map((k) => [k, hasValue(entry?.[READING_FIELDS[k].baselineKey]) ? entry[READING_FIELDS[k].baselineKey] : null]));
 
 /**
  * The person's history, oldest first: their crew.json days, then readings saved on this device
  * (sorted by time). Day numbers continue after the last crew.json day.
  */
 export function buildHistory(crewDays = [], extraHistory = []) {
-  const seeded = crewDays.map((d) => ({ ...d }));
-  const lastDay = seeded.at(-1)?.day ?? 0;
-  const saved = [...extraHistory]
-    .sort((a, b) => Date.parse(a.recorded_at) - Date.parse(b.recorded_at))
-    .map((r, i) => toBaselineDay(r, { day: lastDay + i + 1, date: r.recorded_at.slice(0, 10) }));
-  return [...seeded, ...saved];
+  return buildTimeline({ crewDays, saved: extraHistory });
 }
 
 // ---------- Evaluation ----------
@@ -188,15 +302,16 @@ function overallAction(rows, status, needsAttention, crisis) {
 }
 
 /**
- * Score today's reading against the person's history.
- * @param {object} reading  validated { systolic, diastolic, heart_rate, glucose, temperature, sleep_hours, mood }
- * @param {object[]} history  baseline-engine days, oldest first (see buildHistory)
+ * The check-in result for one evaluated day (an evaluateSeries() result), with its reading.
+ * Rows whose value is missing (null) are left out and listed in `missing`; nothing is guessed.
+ * @param {object} today        evaluateSeries() result for the day
+ * @param {object} reading      { systolic, diastolic, heart_rate, glucose, temperature, sleep_hours, mood }
+ * @param {number} historyDays  how many days came before it
  */
-export function evaluateCheckin(reading, history = []) {
-  const lastDay = history.at(-1)?.day ?? 0;
-  const series = evaluateSeries([...history, toBaselineDay(reading, { day: lastDay + 1 })]);
-  const today = series.at(-1);
-  const rows = VITALS_ROWS.map((row) => rowResult(row, today, reading));
+export function checkinResultFrom(today, reading, historyDays) {
+  const scored = VITALS_ROWS.filter((row) => row.parts.every((k) => hasValue(reading[k])));
+  const missing = VITALS_ROWS.filter((row) => !scored.includes(row)).map((row) => row.id);
+  const rows = scored.map((row) => rowResult(row, today, reading));
   const indicators = Object.fromEntries(rows.map((r) => [r.id, r]));
   const status = worst(rows.map((r) => r.status));
   const crisis = rows.some((r) => r.crisis);
@@ -211,9 +326,22 @@ export function evaluateCheckin(reading, history = []) {
     order: rows.map((r) => r.id),
     action: overallAction(rows, status, needsAttention, crisis),
     reasons: rows.flatMap((r) => r.reasons),
-    history_days: history.length,
+    history_days: historyDays,
     baseline_window_days: SETTINGS.windowDays,
+    ...(missing.length ? { missing } : {}),
   };
+}
+
+/**
+ * Score today's reading against the person's history.
+ * @param {object} reading  validated { systolic, diastolic, heart_rate, glucose, temperature, sleep_hours, mood };
+ *                          a value may be null (not measured), and that row is skipped
+ * @param {object[]} history  baseline-engine days, oldest first (see buildHistory)
+ */
+export function evaluateCheckin(reading, history = []) {
+  const lastDay = history.at(-1)?.day ?? 0;
+  const series = evaluateSeries([...history, toBaselineDay(reading, { day: lastDay + 1 })]);
+  return checkinResultFrom(series.at(-1), reading, history.length);
 }
 
 /**

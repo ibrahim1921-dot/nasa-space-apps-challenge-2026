@@ -165,8 +165,6 @@ textarea {
 
 /* ---------- Header ---------- */
 .header {
-  position: relative;
-  z-index: 20;
   border-bottom: 1px solid var(--glass-border);
 }
 
@@ -1742,28 +1740,6 @@ select.input option {
 /* ======================================================================
    Header mission profile, Today gravity prompt, stand test
    ====================================================================== */
-.header__profile {
-  display: grid;
-  grid-template-columns: auto minmax(180px, 220px);
-  align-items: center;
-  gap: 2px 10px;
-}
-
-.header__profile-label {
-  font-weight: 600;
-  font-size: 0.9375rem;
-}
-
-.header__profile-select {
-  min-height: 40px;
-  padding: 6px 10px;
-}
-
-.header__profile-delay {
-  grid-column: 1 / -1;
-  font-size: 0.8125rem;
-}
-
 .gravity-prompt {
   display: flex;
   flex-wrap: wrap;
@@ -2225,10 +2201,6 @@ select.input option {
 @media (max-width: 640px) {
   .standchart__grid,
   .reading__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .header__profile {
     grid-template-columns: 1fr;
   }
 
@@ -3143,9 +3115,10 @@ a.limits__source:hover {
   line-height: 1.5;
 }
 
+/* One door per crew member: 2 x 2 on wider screens, one column under 600px. */
 .landing__doors {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin: 24px 0 16px;
 }
@@ -3181,9 +3154,26 @@ a.limits__source:hover {
 }
 
 .landing__door-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   color: var(--color-accent);
   font-size: 1.0625rem;
   font-weight: 700;
+}
+
+/* Marks the Crew Medical Officer. The word "CMO" carries the meaning; the colour only supports it. */
+.landing__pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(123, 147, 255, 0.15);
+  color: #7b93ff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
 }
 
 .landing__door-note {
@@ -3213,7 +3203,7 @@ a.limits__source:hover {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 38px;
+  min-height: 44px;
 }
 
 .account-menu__list {
@@ -3222,6 +3212,7 @@ a.limits__source:hover {
   top: calc(100% + 6px);
   z-index: 30;
   min-width: 220px;
+  max-width: calc(100vw - 32px);
   margin: 0;
   padding: 6px;
   list-style: none;
@@ -3234,9 +3225,10 @@ a.limits__source:hover {
 }
 
 .account-menu__item {
-  display: block;
+  display: grid;
+  gap: 2px;
   width: 100%;
-  min-height: 40px;
+  min-height: 44px;
   padding: 8px 12px;
   border: 0;
   border-radius: 8px;
@@ -3254,6 +3246,24 @@ a.limits__source:hover {
   outline: none;
 }
 
+.account-menu__item:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.account-menu__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.account-menu__title {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
 .account-menu__item--signout {
   color: var(--color-muted);
 }
@@ -3268,6 +3278,12 @@ a.limits__source:hover {
   display: flex;
   align-items: baseline;
   gap: 8px;
+}
+
+@media (max-width: 599px) {
+  .landing__doors {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
@@ -3312,431 +3328,1180 @@ a.limits__source:hover {
 }
 
 /* ---- Station environment view ---- */
-.env__total {
-  margin: 0;
-  text-align: right;
+.env {
+  display: grid;
+  gap: 20px;
 }
-.env__total .num {
-  font-size: 2rem;
+.env__tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.env__tile {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.env__tile-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.env__tile-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.env__tile-value {
+  margin: 10px 0 4px;
+}
+.env__tile-value .num {
+  font-size: 1.9rem;
+}
+.env__tile-note {
+  margin: 0;
+  font-size: 0.85rem;
 }
 .env__chart {
   width: 100%;
   min-width: 0;
-  margin: 8px 0 16px;
+  margin: 12px 0;
 }
-.env__why {
+.env__days {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.env__day {
+  border-top: 1px solid var(--glass-border);
+  padding-top: 10px;
+}
+.env__day-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.env__day-date {
+  font-weight: 600;
+  min-width: 64px;
+}
+.env__reasons {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 0.92rem;
+}
+.env__method {
   font-size: 0.85rem;
-  margin-top: 12px;
+  margin-top: 14px;
+}
+@media (max-width: 900px) {
+  .env__tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .env__tiles {
+    grid-template-columns: 1fr;
+  }
 }
 
-.onboard--mock .onboard__dot {
-  background: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(123, 147, 255, 0.18);
+
+/* ---- About: how it works, models, data ---- */
+.about__steps,
+.about__models {
+  margin: 8px 0 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 10px;
+  max-width: 80ch;
 }
-
-
-/* ======================================
-   MEDICAL OFFICER DASHBOARD
-   ====================================== */
-
-/* Search */
-
-.cmo-search-wrapper {
-  margin: 1.25rem 0;
-}
-
-.cmo-search-label {
-  display: block;
-  font-weight: 650;
-  margin-bottom: 0.5rem;
-}
-
-.cmo-search {
+.about__data {
   width: 100%;
-  padding: 0.85rem 1rem;
-  border: 1px solid #66758b;
-  border-radius: 0.7rem;
-  background: transparent;
-  color: inherit;
-  font: inherit;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin-top: 8px;
+}
+.about__data th,
+.about__data td {
+  text-align: left;
+  vertical-align: top;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.about__data thead th {
+  color: var(--color-muted);
+  font-weight: 500;
+}
+.about__data tbody th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.footer__disclaimer {
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
-.cmo-search:focus-visible,
-.cmo-profile-button:focus-visible {
-  outline: 3px solid #46c5df;
+
+/* ---- CMO: the crew page (her Today), and "viewing someone else" ---- */
+.crew-overview {
+  margin-bottom: 16px;
+}
+.crew-overview__head {
+  margin-bottom: 12px;
+}
+.crew-overview__title,
+.account-menu__section,
+.account-menu__switch-word {
+  color: var(--color-accent);
+}
+.crew-overview__title {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(123, 147, 255, 0.15);
+}
+.crew-overview__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.crew-overview__card {
+  width: 100%;
+  height: 100%;
+  min-height: 44px;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  text-align: left;
+  padding: 14px 16px;
+  border: 1px solid var(--glass-border);
+  border-left: 4px solid var(--status-normal);
+  border-radius: var(--radius-control);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.crew-overview__card--watch {
+  border-left-color: var(--status-watch);
+}
+.crew-overview__card--alert {
+  border-left-color: var(--status-alert);
+}
+.crew-overview__card.has-emergency {
+  border-color: rgba(255, 90, 90, 0.6);
+  border-left-color: #ff5a5a;
+  background: rgba(255, 90, 90, 0.08);
+}
+.crew-overview__card:hover {
+  border-color: var(--color-accent);
+}
+.crew-overview__card:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.crew-overview__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.crew-overview__name {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.crew-overview__me {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(123, 147, 255, 0.18);
+  color: var(--color-accent);
+}
+.crew-overview__emergency {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 90, 90, 0.16);
+  color: #ff5a5a;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.crew-overview__role,
+.crew-overview__time {
+  font-size: 0.8125rem;
+}
+.crew-overview__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.crew-overview__reason {
+  font-size: 0.875rem;
+}
+.crew-overview__time {
+  font-variant-numeric: tabular-nums;
+}
+.crew-overview__back {
+  margin: 0 0 8px;
+}
+.crew-overview__back-btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* "Your data" next to a page title, for the CMO on her own data. */
+.owner-label {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(123, 147, 255, 0.15);
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* Header menu: the CMO's Switch view section. */
+.account-menu__switch-word {
+  font-size: 0.8125rem;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(123, 147, 255, 0.15);
+}
+.account-menu__list {
+  min-width: 260px;
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+}
+.account-menu__section {
+  margin: 2px 4px 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(123, 147, 255, 0.15);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.account-menu__item.is-current {
+  background: rgba(123, 147, 255, 0.1);
+  box-shadow: 0 0 0 1px rgba(123, 147, 255, 0.45) inset;
+}
+.account-menu__check {
+  display: inline-block;
+  width: 1em;
+  color: var(--color-accent);
+}
+.account-menu__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.account-menu__item .account-menu__title {
+  padding-left: calc(1em + 8px);
+}
+
+.viewing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-control);
+  background: rgba(123, 147, 255, 0.08);
+}
+.viewing__text {
+  margin: 0;
+}
+.cmo-card__open {
+  justify-self: start;
+  margin-top: 4px;
+}
+@media (max-width: 599px) {
+  .crew-overview__list {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .crew-overview__card {
+    transition: none;
+  }
+}
+
+
+/* ---- Today: summary first, details on demand ---- */
+.today {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-areas: 'map side';
+  gap: 20px;
+  align-items: start;
+}
+.today .bodymap-section {
+  grid-area: map;
+}
+.today__side {
+  grid-area: side;
+  display: grid;
+  gap: 16px;
+}
+.tiles {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.tiles--grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.tiles--list {
+  grid-template-columns: 1fr;
+}
+.tile {
+  width: 100%;
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'name chip' 'value value';
+  align-items: center;
+  gap: 4px 8px;
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px solid var(--glass-border);
+  border-left: 4px solid var(--status-normal);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+.tile--watch {
+  border-left-color: var(--status-watch);
+}
+.tile--alert {
+  border-left-color: var(--status-alert);
+}
+.tile:hover,
+.tile.is-active {
+  border-color: var(--color-accent);
+}
+.tile.is-active {
+  background: rgba(123, 147, 255, 0.1);
+}
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.tile__name {
+  grid-area: name;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.tile .chip {
+  grid-area: chip;
+}
+.tile__value {
+  grid-area: value;
+}
+.tile__value .num {
+  font-size: 1.5rem;
+}
+.tile__unit {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+.tile__sample {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+.attention__list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.attention__item {
+  border-top: 1px solid var(--glass-border);
+  padding-top: 10px;
+}
+.attention__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.attention__name {
+  font-weight: 600;
+}
+.attention__reason {
+  margin: 6px 0 4px;
+  font-size: 0.9375rem;
+}
+.attention__clear {
+  margin: 8px 0 0;
+  color: var(--status-normal);
+}
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  min-height: 32px;
+  color: var(--color-accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.link-btn:focus-visible {
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
-/* Profile button */
+/* ---- Vitals: list on the left, one reading's details on the right ---- */
+.vitals {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: 20px;
+  align-items: start;
+}
+.viewing--slim {
+  margin-bottom: 12px;
+}
 
-.cmo-profile-button {
+/* ---- More menu, folded details ---- */
+.more-menu {
+  position: relative;
+  display: inline-block;
+}
+.more-menu__toggle {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.65rem 1rem;
-  margin-top: 0.8rem;
-  border: 1px solid #4b93a8;
-  border-radius: 0.65rem;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
+  gap: 6px;
 }
-
-.cmo-profile-button:hover {
-  background: rgba(70, 197, 223, 0.13);
-}
-
-/* Crew medical profile */
-
-.cmo-profile {
-  margin: 1.25rem 0;
-}
-
-.cmo-profile__heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.cmo-profile__section {
-  margin-top: 1.5rem;
-}
-
-.cmo-profile__section h3 {
-  margin-bottom: 0.8rem;
-}
-
-/* Vital measurement cards */
-
-.cmo-profile__metrics {
-  display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.85rem;
-}
-
-.cmo-profile__metrics > div {
-  padding: 1rem;
-  border: 1px solid rgba(128, 145, 160, 0.35);
-  border-radius: 0.75rem;
-}
-
-.cmo-profile__metrics dt {
-  font-size: 0.9rem;
-  opacity: 0.75;
-}
-
-.cmo-profile__metrics dd {
-  margin: 0.45rem 0 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-/* Medical history */
-
-.cmo-profile__history {
-  padding-left: 1.5rem;
-}
-
-.cmo-profile__history > li {
-  margin: 0.8rem 0;
-  padding-bottom: 0.8rem;
-  border-bottom:
-    1px solid rgba(128, 145, 160, 0.2);
-}
-
-@media (max-width: 600px) {
-  .cmo-profile__heading {
-    flex-direction: column;
-  }
-
-  .cmo-profile__metrics {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-
-
-/* ============================================
-   COMPACT MY DATA DROPDOWN
-   Medical Officer Portal
-   ============================================ */
-
-/* Navigation wrappers */
-
-.mydata-nav-item,
-.mydata-nav-group {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-width: 0;
-}
-
-/* Small dropdown arrow */
-
-.mydata-chevron {
-  margin-left: 5px;
-  font-size: 11px;
-  opacity: 0.7;
-}
-
-/* Floating dropdown below My Data */
-
-.mydata-submenu {
-  position: absolute;
-  top: calc(100% + 6px);
+.more-menu__list {
   left: 0;
-  z-index: 100;
-
+  right: auto;
+  min-width: 180px;
+  z-index: 20;
+}
+.env__more {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-
-  width: 185px;
-  padding: 5px;
-
-  background: #111c2b;
-  border: 1px solid rgba(150, 170, 190, 0.2);
-  border-radius: 8px;
-
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  justify-content: center;
 }
-
-/* Dropdown options */
-
-.mydata-submenu__tab {
-  display: block;
-  width: 100%;
-  padding: 8px 10px;
-
-  border: none;
-  border-radius: 5px;
-  background: transparent;
-
-  color: #cbd5e1;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  text-align: left;
-
+.cmo-card__more summary {
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
+  min-height: 32px;
+  display: list-item;
 }
 
-/* Hover effect */
-
-.mydata-submenu__tab:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: #ffffff;
-}
-
-/* Active dropdown option */
-
-.mydata-submenu__tab.is-active {
-  background: rgba(70, 197, 223, 0.12);
-  color: #71e3f5;
-  font-weight: 600;
-}
-
-/* Keyboard focus */
-
-.mydata-submenu__tab:focus-visible {
-  outline: 2px solid #46c5df;
-  outline-offset: -2px;
-}
-
-/* Mobile screens */
-
-@media (max-width: 700px) {
-  .mydata-submenu {
-    width: 175px;
-    max-width: calc(100vw - 24px);
+@media (max-width: 899px) {
+  .today,
+  .vitals {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'map' 'side';
+  }
+  .vitals {
+    grid-template-areas: none;
   }
 }
 
-
-/* ==========================================
-   FIX MY DATA DROPDOWN OVERLAPPING TABS
-   ========================================== */
-
-/* Keep navigation above dashboard content */
 .viewtabs {
   position: relative;
   z-index: 10;
-  overflow: visible;
 }
 
-/* Normal navigation tabs */
-.mydata-nav-item {
+/* The header (and its Switch / Sign out menu) sits above the page content but below the region drawer (z-index 40). */
+.header {
   position: relative;
-  z-index: 1;
+  z-index: 20;
 }
 
-/* Put My Data above all other tabs */
-.mydata-nav-group {
-  position: relative;
-  z-index: 200;
+/* ======================================================================
+   Simulated sensors: provenance chips, sensor rows, demo controls
+   ====================================================================== */
+.prov,
+.prov-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Ensure dropdown appears on top */
-.mydata-submenu {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  z-index: 300;
+.prov__chip {
+  gap: 5px;
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
-/* Prevent dropdown items from being covered */
-.mydata-submenu__tab {
-  position: relative;
-  z-index: 1;
+.device-icon {
+  flex-shrink: 0;
 }
 
-/* StellarHealth entry screen */
-.landing {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-height: 100svh;
-  background:
-    radial-gradient(ellipse at 18% 18%, #24496380, transparent 48%),
-    radial-gradient(ellipse at 85% 85%, #40356670, transparent 50%),
-    #080e1b;
-  color: #f2f6ff;
+/* "Simulated" tag: outlined, so it never reads as a status colour. */
+.prov__sim {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border: 1px dashed var(--input-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.6;
 }
-.landing::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(135deg, #050c1b45, #050c1b95);
-  pointer-events: none;
+
+.source-label__sim {
+  margin-left: 8px;
 }
-.landing__background {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+
+.indicator__prov,
+.vrow__prov {
+  margin: 4px 0 8px;
 }
-.landing__panel {
-  max-width: 540px;
-  padding: clamp(28px, 6vw, 56px);
-  border: 1px solid #c2d8ff26;
-  border-radius: 28px;
-  background: #101a2bbd;
-  backdrop-filter: blur(22px);
-  box-shadow: 0 32px 100px #0005, inset 0 1px #ffffff0d;
+
+.tile .prov {
+  margin-top: 2px;
 }
-.landing__brand {
+
+.tile .prov__chip {
+  font-size: 0.75rem;
+  padding: 0 8px;
+}
+
+.tile__missing {
+  font-size: 0.8125rem;
+}
+
+.cmo-card__reading .prov-list,
+.cmo-feed__head .prov-list {
+  flex-basis: auto;
+}
+
+.context__prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--glass-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: var(--radius-control);
+  font-weight: 600;
+}
+
+/* ---- Check-in: overnight from your sensors ---- */
+.sensor-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.sensor-rows {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.sensor-row {
+  border-left-color: var(--glass-border);
+}
+
+.sensor-row__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sensor-row__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  color: var(--color-accent);
+}
+
+.sensor-row__gap {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 1px dashed var(--status-watch);
+  border-radius: var(--radius-control);
+  font-weight: 600;
+}
+
+.sensor-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.sensor-row__btn,
+.demo-event__remove {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sensor-row__manual {
+  margin-top: 8px;
+}
+
+.checkin__alt {
+  margin: 14px 0 0;
+}
+
+.checkin__alt .link-btn,
+.cmo .link-btn {
+  min-height: 44px;
+}
+
+.field__tag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 0 8px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: 2px;
+}
+
+.vresult__missing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- Demo controls: dashed, so they never look like a crew feature ---- */
+.demo {
+  display: grid;
+  gap: 16px;
+}
+
+.demo-panel {
+  border: 2px dashed var(--input-border);
+}
+
+.demo-banner {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-bottom: 44px;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px dashed var(--status-watch);
+  border-radius: var(--radius-control);
+  color: var(--status-watch);
 }
-.landing__icon {
-  display: grid;
-  place-items: center;
-  flex: 0 0 100px;
-  width: 100px;
-  height: 100px;
-  color: #9edfe8;
+
+.demo-clock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin: 12px 0 16px;
 }
-.landing__icon img, .landing__icon svg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+
+.demo-clock dt {
+  color: var(--color-muted);
+  font-size: 0.875rem;
 }
-.landing__icon img {
-  /* Convert black pixels to transparent pixels on every GIF frame. */
-  filter: url(#landing-logo-transparency);
-}
-.landing__filters { position: absolute; pointer-events: none; }
-.landing__form { display: grid; gap: 22px; }
-.landing__form .landing__door { justify-content: center; padding: 14px 10px; min-height: 60px; background: #d1e5ff08; border-color: #b9d5ff30; }
-.landing__form .landing__door .landing__door-name { color: #eef4ff; }
-.landing__form .landing__door.is-selected { background: #b1e5ed; border-color: #b1e5ed; }
-.landing__form .landing__door.is-selected .landing__door-name { color: #102b37; }
-.landing__form .landing__door:hover:not(:disabled) { background: #b1e5ed24; }
-.landing__form .landing__door.is-selected:hover:not(:disabled) { background: #d2f3f7; }
-.landing__field { display: grid; gap: 9px; font-size: 0.9375rem; color: #e2ebfa; }
-.landing__field input { width: 100%; box-sizing: border-box; min-height: 50px; padding: 12px 16px; border: 1px solid #b9d5ff30; border-radius: 12px; background: #080e1b80; color: #f2f6ff; font: inherit; }
-.landing__field input:focus-visible, .landing__submit:focus-visible { outline: 2px solid #b1e5ed; outline-offset: 3px; }
-.landing__submit { min-height: 52px; border: 1px solid #b1e5ed; border-radius: 12px; background: #b1e5ed; color: #102b37; font: inherit; font-weight: 700; cursor: pointer; }
-.landing__submit:hover:not(:disabled) { background: #d2f3f7; }
-.landing__submit:disabled { opacity: 0.6; cursor: progress; }
-.landing__error { margin: 0; color: #ffbaba; font-size: 0.9rem; }
-.landing__title {
+
+.demo-clock dd {
   margin: 0;
-  font-size: clamp(1.5rem, 5vw, 2.1rem);
+  font-size: 1.25rem;
   font-weight: 600;
-  letter-spacing: -0.045em;
-  color: #f2f6ff;
 }
-.landing__doors {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+
+.demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.demo-limit {
+  margin: 10px 0 0;
+  font-weight: 600;
+}
+
+.demo-help {
+  margin: 10px 0 0;
+  font-size: 0.875rem;
+}
+
+.demo-form {
+  display: grid;
+  gap: 4px;
+  max-width: 420px;
+}
+
+.demo-select {
+  min-height: 44px;
+  width: 100%;
+}
+
+.demo-sub {
+  margin: 20px 0 8px;
+  font-size: 1rem;
+}
+
+.demo-events {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.demo-event {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px dashed var(--glass-border);
+  border-radius: var(--radius-control);
+}
+
+.demo-event--ended {
+  opacity: 0.75;
+}
+
+.demo-message {
+  margin: 10px 0 0;
+  font-weight: 600;
+}
+
+.demo-dialog {
+  position: fixed;
+  z-index: 41;
+  top: 50%;
+  left: 50%;
+  width: min(480px, calc(100vw - 32px));
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background: var(--drawer-bg);
+  border: 2px dashed var(--input-border);
+}
+
+.demo-dialog:focus-visible,
+.sensor-row h4:focus-visible,
+.vstep__title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .sensor-row__actions,
+  .demo-actions {
+    flex-direction: column;
+  }
+
+  .sensor-row__btn,
+  .demo-actions .btn,
+  .demo-form .btn,
+  .demo-panel > .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sensor-row .vrow__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .demo-event {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-dialog,
+  .sensor-row {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ---- CMO exam for a crew member ---- */
+/* The same CMO pill as the landing page: the word carries the meaning, the colour only supports it. */
+.cmo-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(123, 147, 255, 0.15);
+  color: #7b93ff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+.exam {
+  border-top: 3px solid rgba(123, 147, 255, 0.55);
+}
+.exam__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.exam__sensor {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(123, 147, 255, 0.25);
+  border-radius: var(--radius-control);
+  background: rgba(123, 147, 255, 0.06);
+}
+.exam__sensor p {
   margin: 0;
 }
-.landing__door {
+.exam__sensor-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.exam__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+.exam__choices .btn,
+.viewing__exam,
+.cmo-card__actions .btn,
+.exam-notice__close {
+  min-height: 44px;
+}
+.exam__choices .btn[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+.exam__choices .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.exam__measure {
+  margin-top: 8px;
+}
+.exam__summary {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+.exam__summary li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-control);
+  background: rgba(150, 175, 230, 0.06);
+}
+.exam__count {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+  text-align: right;
+}
+.exam__confirmed,
+.exam__note {
+  margin: 12px 0 0;
+}
+.vresult__by {
+  margin: 4px 0 8px;
+  color: #7b93ff;
+  font-weight: 600;
+}
+.prov__chip--exam {
+  color: #b4c2ff;
+}
+.viewing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.viewing--slim {
+  display: flex;
+}
+.cmo-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* "Lena recorded an exam for you at 14:02" on the crew member's own Today. */
+.exam-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border: 1px solid rgba(123, 147, 255, 0.45);
+  border-radius: var(--radius-control);
+  background: rgba(123, 147, 255, 0.1);
+  color: var(--color-text);
+}
+.exam-notice > .device-icon {
+  color: #7b93ff;
+}
+.exam-notice__text {
+  flex: 1 1 220px;
+  margin: 0;
+}
+
+/* Access log lists (CMO "Recent access", About "Your data"). */
+.cmo__access {
+  margin-top: 20px;
+}
+.access-list {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.access-list__item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  min-width: 0;
-  min-height: 68px;
-  padding: 20px clamp(10px, 2vw, 20px);
-  border: 1px solid #b9d5ff30;
-  border-radius: 14px;
-  background: #d1e5ff08;
-  transition: background 160ms ease, border-color 160ms ease;
-}
-.landing__door:first-child {
-  background: #b1e5ed;
-  border-color: #b1e5ed;
-}
-.landing__door-name { color: #eef4ff; font-size: 1rem; font-weight: 600; }
-.landing__arrow { color: #b1e5ed; font-size: 1.4rem; }
-.landing__door:first-child .landing__door-name,
-.landing__door:first-child .landing__arrow { color: #102b37; }
-.landing__door:first-child:hover:not(:disabled) { background: #d2f3f7; border-color: #d2f3f7; }
-.landing__door:hover:not(:disabled) { background: #b1e5ed18; border-color: #b1e5ed; }
-@media (prefers-reduced-motion: reduce) {
-  .landing__background { display: none; }
-  .landing__icon img { visibility: hidden; }
-  .landing__door { transition: none; }
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 32px;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Crew card and PIN mock login */
-.landing__panel:has(.crew-login) { max-width: 720px; }
-.crew-login__heading { margin: 0; color: #f2f6ff; font-size: 1.35rem; font-weight: 600; }
-.crew-login__intro { margin: 8px 0 24px; color: #b8c9df; }
-.crew-login__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.crew-login__card { display: grid; justify-items: center; align-content: start; gap: 10px; padding: 20px 14px; border: 1px solid #b9d5ff30; border-radius: 18px; background: #d1e5ff08; color: #f2f6ff; font: inherit; cursor: pointer; transition: background 150ms ease, border-color 150ms ease; }
-.crew-login__card:hover { background: #b1e5ed18; border-color: #b1e5ed; }
-.crew-login__card:focus-visible, .crew-login__back:focus-visible { outline: 2px solid #b1e5ed; outline-offset: 4px; }
-.crew-login__card svg { width: min(100%, 132px); height: auto; }
-.crew-login__name { font-weight: 600; }
-.crew-login__role { font-size: 0.8rem; color: #b8c9df; }
-.crew-login__back { justify-self: start; padding: 4px 0; border: 0; background: transparent; color: #b1e5ed; font: inherit; cursor: pointer; }
-.crew-login__selected { text-align: center; }
-.crew-login__selected svg { width: 120px; height: 120px; margin-bottom: 16px; }
-.crew-login__selected .crew-login__intro { margin-bottom: 0; }
-.crew-login__pin input { text-align: center; letter-spacing: 0.6em; font-size: 1.5rem; }
-.crew-login__hint { margin: -10px 0 0; color: #b8c9df; font-size: 0.85rem; }
-@media (max-width: 380px) {
-  .crew-login__grid { gap: 10px; }
-  .crew-login__card { padding: 12px 8px; }
-  .crew-login__name { font-size: 0.85rem; }
-  .landing__brand { gap: 4px; }
-  .landing__icon { flex-basis: 76px; width: 76px; height: 76px; }
+@media (max-width: 480px) {
+  .exam__choices .btn,
+  .viewing__actions .btn,
+  .cmo-card__actions .btn {
+    flex: 1 1 100%;
+  }
+  .exam__summary li {
+    flex-direction: column;
+    gap: 2px;
+  }
 }
-@media (prefers-reduced-motion: reduce) { .crew-login__card { transition: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .exam__choices .btn,
+  .exam-notice,
+  .vprogress__bar span {
+    transition: none;
+  }
+}
+
+/* ---------- Mission environment (header chip, panel, context lines) ---------- */
+.header__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.env-chip {
+  position: relative;
+  min-width: 0;
+}
+
+.env-chip__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.env-chip__toggle:hover {
+  background: rgba(123, 147, 255, 0.14);
+}
+
+.env-chip__toggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.env-chip__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.env-icon {
+  flex-shrink: 0;
+  color: var(--color-muted);
+}
+
+.env-chip__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  padding: 14px 16px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  background: var(--drawer-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.env-chip__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+.env-chip__facts {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.env-chip__fact dt {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.env-chip__fact dd {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.env-chip__fact .why__source {
+  margin: 2px 0 0;
+}
+
+.env-chip__change {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--glass-border);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.env-chip__select {
+  min-height: 44px;
+  width: 100%;
+}
+
+.env-chip__note {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--glass-border);
+  font-size: 0.8125rem;
+}
+
+.today__context,
+.stand__gravity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.stand__unavailable {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  background: rgba(5, 9, 20, 0.35);
+}
+
+.howto__env {
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
+.env__sample {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 6px 0 8px;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .header__controls {
+    justify-content: flex-start;
+  }
+
+  .env-chip__panel {
+    left: 0;
+    right: auto;
+  }
+}

@@ -1,0 +1,562 @@
+/* Activities: three short games, the shared Crew Journey and mission patches. Dark glass like the rest of
+   the app, with one calm accent (teal on a ~15% tint). Never the watch or alert colours, never red.
+   Game chips are outlined, with no status dot, so they never read as a status chip. */
+
+:root {
+  --activity: #4cc9f0;
+  --activity-tint: rgba(76, 201, 240, 0.15);
+  --activity-line: rgba(76, 201, 240, 0.45);
+  --activity-on: #05261a;
+  --activity-grey: rgba(163, 176, 200, 0.45);
+}
+
+/* ---------- Shared ---------- */
+.act-page {
+  display: grid;
+  gap: 16px;
+}
+.act-btn {
+  background: var(--activity);
+  color: var(--activity-on);
+  border: 1px solid var(--activity);
+  font-weight: 700;
+}
+.act-btn:hover:not(:disabled) {
+  background: #5ee6ab;
+}
+.act-btn:focus-visible,
+.act-choice:focus-visible,
+.act-leave:focus-visible,
+.rr-area:focus-visible {
+  outline: 3px solid var(--activity);
+  outline-offset: 3px;
+}
+.act-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border: 1px solid var(--activity-line);
+  border-radius: var(--radius-pill);
+  color: var(--activity);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  width: fit-content;
+}
+.act-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 2px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.act-chip.is-done,
+.act-chip--tag {
+  border-color: var(--activity-line);
+  background: var(--activity-tint);
+  color: var(--activity);
+}
+.act-screen__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.act-leave {
+  min-height: 44px;
+  min-width: 44px;
+}
+.act-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.act-gate {
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--activity-line);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  color: var(--color-text);
+}
+.act-note {
+  min-height: 1.5em;
+  margin: 8px 0 0;
+  text-align: center;
+  color: var(--color-muted);
+}
+.act-timer {
+  margin: 8px 0;
+  color: var(--color-muted);
+}
+.act-done {
+  margin: 12px 0 0;
+  color: var(--activity);
+  font-weight: 600;
+}
+
+/* ---------- Game cards ---------- */
+.act-games {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.act-game {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.02);
+}
+.act-game__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.act-game__name {
+  margin: 0;
+  font-size: 1.0625rem;
+}
+.act-game__helps,
+.act-game__time {
+  margin: 0;
+}
+.act-game__go {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* ---------- Reaction Run ---------- */
+.rr-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 280px;
+  margin-top: 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.rr-count {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--activity);
+}
+.rr-wait {
+  color: var(--color-muted);
+  font-size: 1.25rem;
+}
+.rr-shape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: var(--activity);
+  color: var(--activity-on);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  animation: rr-pop 120ms ease-out;
+}
+@keyframes rr-pop {
+  from {
+    transform: scale(0.85);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.act-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.act-results div {
+  padding: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+}
+.act-results dt {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+.act-results dd {
+  margin: 4px 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* ---------- Calm Orbit ---------- */
+.co-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 0;
+}
+.co-orbit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  height: 220px;
+  border: 1px dashed var(--activity-line);
+  border-radius: 50%;
+}
+.co-planet {
+  display: block;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #8ff0c4, var(--activity) 45%, #1f7f58 100%);
+  box-shadow: 0 0 40px var(--activity-tint);
+  transform: scale(0.55);
+  animation: co-breathe 10s ease-in-out infinite;
+}
+.co-orbit.is-paused .co-planet {
+  animation-play-state: paused;
+}
+@keyframes co-breathe {
+  0%,
+  100% {
+    transform: scale(0.55);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+.co-phase {
+  margin: 8px 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.co-count {
+  margin: 0;
+  font-size: 2rem;
+  color: var(--activity);
+}
+.co-question {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.co-answers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.act-choice {
+  min-height: 52px;
+}
+
+/* ---------- Crew Journey ---------- */
+.act-journey {
+  display: grid;
+  gap: 16px;
+}
+.cj-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.cj-form .field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.cj-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.act-segmented .visually-hidden-input:checked + .segmented__face {
+  background: var(--activity);
+  border-color: var(--activity);
+  color: var(--activity-on);
+}
+.act-segmented .segmented__option:hover .segmented__face {
+  border-color: var(--activity);
+}
+.act-segmented .visually-hidden-input:focus-visible + .segmented__face {
+  outline: 3px solid var(--activity);
+}
+.journey__line {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  margin: 8px 0;
+}
+.journey__track {
+  stroke: var(--glass-border);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.journey__done {
+  stroke: var(--activity);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.journey__tick {
+  fill: var(--space-center);
+  stroke: var(--activity-grey);
+  stroke-width: 1.5;
+}
+.journey__tick.is-reached {
+  fill: var(--activity);
+  stroke: var(--activity);
+}
+.journey__earth {
+  fill: #4f7cff;
+}
+.journey__dest--moon {
+  fill: #c9d1e2;
+}
+.journey__dest--mars {
+  fill: #c98a5e;
+}
+.journey__ship path {
+  fill: var(--color-text);
+}
+.journey__label {
+  fill: var(--color-muted);
+  font-size: 9px;
+}
+.journey__total,
+.journey__mine {
+  margin: 4px 0;
+}
+.journey__mine {
+  color: var(--activity);
+  font-weight: 600;
+}
+.journey__milestones {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-muted);
+}
+.journey__milestones li.is-reached {
+  color: var(--color-text);
+}
+.journey__mark {
+  display: inline-block;
+  width: 1.4em;
+  color: var(--activity);
+}
+
+/* ---------- Patches ---------- */
+.patches__note {
+  margin: 0 0 12px;
+}
+.patches__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.patch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.patch__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+.patch.is-earned .patch__name {
+  color: var(--color-text);
+}
+.patch__when {
+  font-size: 0.8125rem;
+}
+.patch__svg .ring {
+  fill: none;
+  stroke: var(--activity-grey);
+  stroke-width: 2;
+}
+.patch__svg .ring--inner {
+  stroke-dasharray: 2 3;
+  stroke-width: 1;
+}
+.patch__svg .motif {
+  fill: none;
+  stroke: var(--activity-grey);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.patch__svg .motif .fill {
+  fill: var(--activity-grey);
+  stroke: none;
+}
+.patch__svg .motif .seg {
+  stroke-width: 3;
+}
+.patch__svg {
+  opacity: 0.6;
+}
+.patch__svg.is-earned {
+  opacity: 1;
+}
+.patch__svg.is-earned .ring:not(.ring--inner) {
+  fill: var(--activity-tint);
+  stroke: var(--activity);
+}
+.patch__svg.is-earned .ring--inner,
+.patch__svg.is-earned .motif {
+  stroke: var(--activity);
+}
+.patch__svg.is-earned .motif .fill {
+  fill: var(--activity);
+}
+
+/* ---------- CMO view of someone else ---------- */
+.act-week {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.act-week__row {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) auto;
+  gap: 2px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+}
+.act-week__row .muted {
+  grid-column: 1 / -1;
+}
+.act-week__name {
+  font-weight: 600;
+}
+
+/* ---------- Vitals panel ---------- */
+.rr-panel {
+  margin-top: 16px;
+  display: grid;
+  gap: 8px;
+}
+.rr-panel .card__head {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.rr-panel__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rr-panel__value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.rr-panel__sub {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+.rr-panel .act-btn {
+  width: fit-content;
+}
+.spark--activity polyline {
+  stroke: var(--activity);
+}
+.spark--activity circle {
+  fill: var(--activity);
+}
+
+/* ---------- Leave dialog ---------- */
+.act-confirm__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(3, 6, 16, 0.7);
+}
+.act-confirm {
+  width: min(420px, 100%);
+  background: var(--drawer-bg);
+}
+.act-confirm__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ---------- Small screens (375 px) ---------- */
+@media (max-width: 480px) {
+  .rr-area {
+    min-height: 240px;
+  }
+  .rr-shape {
+    width: 130px;
+    height: 130px;
+  }
+  .co-orbit {
+    width: 190px;
+    height: 190px;
+  }
+  .co-planet {
+    width: 156px;
+    height: 156px;
+  }
+  .co-answers {
+    grid-template-columns: 1fr;
+  }
+  .cj-row .btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* ---------- Reduced motion: no scaling, no pop; the shape just appears ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .rr-shape {
+    animation: none;
+  }
+  .co-orbit {
+    display: none;
+  }
+  .co-planet {
+    animation: none;
+    transform: none;
+  }
+}

@@ -11,7 +11,9 @@ import TrendIndicator from './TrendIndicator.jsx';
 import Sparkline from './Sparkline.jsx';
 import ErrorPanel from './ErrorPanel.jsx';
 import LimitsInfo from './LimitsInfo.jsx';
-import { IndicatorAction } from './IndicatorCard.jsx';
+import { IndicatorAction, StatusOrMissing } from './IndicatorCard.jsx';
+import ProvenanceChip from './ProvenanceChip.jsx';
+import { WhyButton } from './WhyItMatters.jsx';
 import { applyVitals } from '../lib/vitalsDashboard.js';
 import { applyReaction } from '../lib/personDashboard.js';
 
@@ -24,18 +26,26 @@ function summarize(items) {
   return `${flagged} of ${items.length} indicators need attention`;
 }
 
-function IndicatorRow({ indicator, profile }) {
+function IndicatorRow({ indicator, profile, onOpenWhy }) {
   const { name, value, unit, status, trend, trendText, history, limitKey, sample, usual } = indicator;
   return (
     <li className="row">
       <div className="row__top">
         <h3 className="row__name">{name}</h3>
-        <StatusChip status={status} />
+        <span className="row__chips">
+          <WhyButton id={indicator.id} name={name} onOpen={onOpenWhy} />
+          <StatusOrMissing indicator={indicator} />
+        </span>
       </div>
       {sample ? (
         <p className="indicator__sample">Sample</p>
       ) : (
         indicator.sourceNote && <p className="indicator__source">{indicator.sourceNote}</p>
+      )}
+      {indicator.provenance && (
+        <p className="indicator__prov">
+          <ProvenanceChip chip={indicator.provenance} />
+        </p>
       )}
       <IndicatorAction indicator={indicator} profile={profile} />
       <div className="row__mid">
@@ -80,6 +90,8 @@ export default function RegionDrawer({
   usual = null,
   personal = {}, // the person's own main-dashboard cards by id; they replace the matching drawer rows
   pinned = [], // the person's own cards shown first (e.g. sleep and mood in the head drawer)
+  vitalIds = [], // readings that are also on the Vitals page: their "Why?" opens it there
+  onOpenVital = null, // (id) => open that reading on Vitals
 }) {
   const region = REGIONS_BY_ID[regionId];
   const panelRef = useRef(null);
@@ -156,7 +168,19 @@ export default function RegionDrawer({
           {!loading && !error && (
             <ul className="rows">
               {items.map((indicator) => (
-                <IndicatorRow key={indicator.id} indicator={indicator} profile={profile} />
+                <IndicatorRow
+                  key={indicator.id}
+                  indicator={indicator}
+                  profile={profile}
+                  onOpenWhy={
+                    onOpenVital && vitalIds.includes(indicator.id)
+                      ? (id) => {
+                          onClose();
+                          onOpenVital(id);
+                        }
+                      : null
+                  }
+                />
               ))}
             </ul>
           )}

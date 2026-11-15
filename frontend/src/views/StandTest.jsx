@@ -16,11 +16,14 @@ import {
   validateStandTest,
 } from '../lib/standTest.js';
 import { makeRecord, readStandTests, writeStandTest } from '../lib/standTestStore.js';
+import { stampOnDemoDate } from '../lib/demoState.js';
 import { scoreStandTestOnDevice } from '../lib/deviceScoring.js';
 import { SCORED_LABEL } from '../lib/scoring.js';
 import { useOnboard } from '../hooks/useOnboard.jsx';
 import SyncBadge from '../components/SyncBadge.jsx';
 import { getProfile } from '../constants/mission.js';
+import { environmentRules } from '../lib/environmentRules.js';
+import EnvironmentIcon from '../components/EnvironmentIcon.jsx';
 import { formatTime } from '../utils/format.js';
 import StatusChip from '../components/StatusChip.jsx';
 import SourceLabel from '../components/SourceLabel.jsx';
@@ -28,6 +31,7 @@ import ErrorPanel from '../components/ErrorPanel.jsx';
 import StandTestChart from '../components/StandTestChart.jsx';
 import ActionCard from '../components/ActionCard.jsx';
 import LimitsInfo from '../components/LimitsInfo.jsx';
+import { WhyLine } from '../components/WhyItMatters.jsx';
 
 const REST_SECONDS = 5 * 60;
 const MARK_1 = 60;
@@ -134,10 +138,11 @@ const STAND_STEPS = [
 ];
 
 /** The stand test for the signed-in person only (no person picker: tests for others could not sync). */
-export default function StandTest({ profileId, crewId, crewName: nameProp, focusSignal }) {
+export default function StandTest({ profileId, crewId, crewName: nameProp, focusSignal, today = null }) {
   const seeded = useHealthData(() => getStandTests());
   const [demoMode, setDemoMode] = useStoredSetting('ahm.demoMode.v1', false, (v) => typeof v === 'boolean');
   const profile = getProfile(profileId);
+  const standRules = environmentRules(profile).standTest;
 
   const roster = seeded.data?.crew ?? [];
 
@@ -315,6 +320,8 @@ export default function StandTest({ profileId, crewId, crewName: nameProp, focus
       reasons: result.reasons,
       engineVersion: result.engine_version,
       scoredOn: result.scored_on,
+      // On the demo's today, like a check-in, so it counts for that day's reminders and views.
+      recordedAt: stampOnDemoDate(today),
     });
     const stored = writeStandTest(record);
     setSaved((prev) => [record, ...prev.filter((r) => r.id !== record.id)]);
@@ -367,6 +374,7 @@ export default function StandTest({ profileId, crewId, crewName: nameProp, focus
               A check of how heart rate and BP respond when you stand up after lying down. Compared with general limits
               and with this person&apos;s own preflight tests.
             </p>
+            <WhyLine id="stand_test" />
           </div>
           <div className="stand__controls">
             <p className="stand__person">
@@ -436,11 +444,26 @@ export default function StandTest({ profileId, crewId, crewName: nameProp, focus
               <p className="muted">
                 The test takes about 9 minutes: 5 min lying down, then 3 min standing still. You can stop at any time.
               </p>
-              <div className="checkin__actions">
-                <button type="button" className="btn btn--primary btn--lg" onClick={start} disabled={!crewId}>
-                  Start: lie down
-                </button>
-              </div>
+              {standRules.available ? (
+                <>
+                  <p className="stand__gravity">
+                    <EnvironmentIcon setting={profile.setting} size={16} />
+                    {profile.title} · gravity about {standRules.gravity}
+                  </p>
+                  <div className="checkin__actions">
+                    <button type="button" className="btn btn--primary btn--lg" onClick={start} disabled={!crewId}>
+                      Start: lie down
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p className="stand__unavailable" role="note">
+                  <EnvironmentIcon setting={profile.setting} size={18} />
+                  <span>
+                    <strong>Not available: {profile.title}.</strong> {standRules.reason}
+                  </span>
+                </p>
+              )}
             </div>
           )}
 
@@ -597,7 +620,7 @@ export default function StandTest({ profileId, crewId, crewName: nameProp, focus
               )}
               <p className="muted stand__saved-note">
                 {outcome.stored
-                  ? 'Stand test saved.'
+                  ? 'Stand test saved on this device.'
                   : 'This browser could not save the result, so it will be gone after a reload.'}
               </p>
               <div className="checkin__actions">

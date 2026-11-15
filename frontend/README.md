@@ -1,45 +1,82 @@
 # Frontend
 
-Next.js (App Router, JavaScript) app for the crew and the Crew Medical Officer.
+Next.js (App Router, JavaScript) app for the crew, the onboard Crew Medical Officer and the ground
+medical officer. It talks to the Spring Boot backend in `../backend` for login, crew, alerts, baselines
+and monitoring rules. Readings (check-ins, stand tests, sensor days, exams) stay local-first on the device.
 
 ## Run
 
 ```bash
 cd frontend
 npm install
-cp .env.example .env.local   # Windows: copy .env.example .env.local
-npm run dev                  # http://localhost:3000
-npm test                     # node:test, 80+ tests on the scoring, outbox and contract mapping
+npm run dev      # http://localhost:3000
+npm test         # node:test
 npm run build
 ```
 
-## Two data modes
+Configuration (names only):
 
-| `NEXT_PUBLIC_USE_MOCKS` | Where data comes from |
+| Variable | Use |
 | --- | --- |
-| `true` (default) | The app's own mock API in `src/app/api` plus the bundled files in `src/data`. Works with no backend, so the demo never breaks. |
-| `false` | The Java backend at `NEXT_PUBLIC_API_URL` for what `docs/api-contract.md` covers today: health check, check-ins (sent by the outbox) and radiation. The rest stays on the mock API until the backend serves it. |
+| `NEXT_PUBLIC_API_URL` | Backend base URL. Default `http://localhost:8080`. |
 
-Check-ins are always scored and saved on the device first, so the app keeps working when the onboard server is down. When the backend is reachable, the outbox sends each check-in to `POST /api/crew/{crewId}/checkins` and the backend's result becomes the official one.
+The backend must allow the frontend origin (`FRONTEND_ORIGINS`, default `http://localhost:3000`). For local
+HTTP only, the backend needs `SESSION_COOKIE_SECURE=false` or the browser drops the session cookie.
+
+## Sign-in
+
+- **Backend accounts.** Login name + password, `POST /api/auth/login`. The backend decides the role
+  (`ASTRONAUT` or `NASA_OFFICER`); `GET /api/auth/me` restores it on reload. Accounts are provisioned by an
+  administrator: see `../docs/demo-account-provisioning.md`. No password is stored in this app.
+- **Explore with demo data.** Offered when the backend is not reachable. Opens the local demo crew on
+  bundled synthetic data, labelled "Demo data" throughout.
+
+Roles in the UI:
+
+| Account | Screens |
+| --- | --- |
+| Astronaut | Today, Vitals, Sleep, Station, More (My alerts, Knowledge hub, ML assessment, Activities, …) |
+| Astronaut `crew-03` (Lena, onboard CMO) | Crew (local whole-crew view), My data ▸, Station, More |
+| `NASA_OFFICER` (ground medical officer) | Crew (live roster + local health status), Alerts, Baselines, Rules, More |
+
+## Data sources
+
+| Screen | Source |
+| --- | --- |
+| Login, identity, crew roster, alerts (list, detail, acknowledge, resolve), baselines, rules | **Live** backend |
+| Indicator cards, sleep, labs, station, stand tests, check-ins, CMO crew view | **Local** bundled synthetic data + this device |
+| ML assessment | **Demo data** (`src/mocks/mlAssessment.js`), model not connected yet |
+
+## Backend endpoints used
+
+| Method | Path | Where |
+| --- | --- | --- |
+| GET | `/api/auth/csrf` | `lib/api.js` (token kept in memory, sent as `X-CSRF-TOKEN` on every POST) |
+| POST | `/api/auth/login` | Landing |
+| POST | `/api/auth/logout` | Account menu |
+| GET | `/api/auth/me` | App start |
+| GET | `/api/crew` | Officer crew, alerts filter, baselines, rules |
+| GET | `/api/crew/me` | `services/crewService.js` |
+| GET | `/api/alerts/me` | My alerts (astronaut) |
+| GET | `/api/alerts` | Alerts (officer), open-alert counts |
+| GET | `/api/alerts/{id}` | Alert detail |
+| POST | `/api/alerts/{id}/acknowledge` | Astronaut and officer |
+| POST | `/api/alerts/{id}/resolve` | Officer, body `{ note }` (1–2000 chars) |
+| GET | `/api/crew/{astronautId}/baselines`, `/versions` | Baselines (read only) |
+| GET | `/api/monitoring-rules` | Rules (read only) |
 
 ## Where things are
 
 | Path | What |
 | --- | --- |
-| `src/App.jsx` | App shell: landing, header, tabs, views |
-| `src/views/` | Dashboard, Sleep & recovery, Lab baseline, Environment, Stand test, Crew Medical Officer, About |
-| `src/components/` | Body map, region drawer, cards, check-in form, charts |
-| `src/services/healthService.js` | The one data-access layer |
-| `src/lib/backend.js` | Mock/real switch and the backend fetch |
-| `src/lib/contractMap.js` | App readings ⇄ API contract ids |
-| `src/hooks/useOnboard.jsx` | Demo identity, server status, outbox loop |
-| `src/lib/*.js` | Pure logic (scoring, baselines, outbox), each with a `.test.js` |
-| `src/content/limits.js` | Every cited limit and its source, in one place |
-| `src/app/api/` | Mock API, used only in mock mode |
-| `src/data/` | Bundled synthetic crew data, PhysioNet nights, Inspiration4 labs, RR-1 radiation |
-
-## Next tasks
-
-1. Bones and muscles: replace the sample rows in `src/mocks/regions.js` with the ML fitness baseline (`ml/outputs/fitness_norms.json`).
-2. When the backend serves `GET /api/crew/{crewId}/summary` and `/readings`, load the Crew Medical Officer view from it (see the TODO in `src/views/CrewMedicalOfficer.jsx`).
-3. Move nights and labs to the backend once it returns the same shape as `src/app/api/nights` and `src/app/api/labs`.
+| `src/App.jsx` | App shell: landing, crew/CMO tabs and views |
+| `src/views/OfficerApp.jsx` | Ground medical officer shell |
+| `src/lib/api.js` | Backend client: CSRF, credentials, error kinds, validators |
+| `src/lib/session.js` | Backend identity → app account; sign-out |
+| `src/lib/crewAdapter.js` | Backend crew profile → frontend crew view (`crewCode` = local `crewId`) |
+| `src/services/` | `crewService`, `alertService`, `baselineService`, `assessmentService`, `healthService` (local) |
+| `src/content/knowledge.js` | Knowledge hub, assembled from `whyItMatters.js`, `limits.js` and the check-in how-tos |
+| `src/content/limits.js` | Every cited limit and its source |
+| `src/app/api/` | Local data routes for bundled synthetic data (not the Java backend) |
+| `src/ground/` | `/ground` console (local) |
+| `public/health-education/` | Placeholder images, labelled as placeholders |

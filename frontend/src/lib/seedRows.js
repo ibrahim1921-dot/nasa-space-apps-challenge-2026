@@ -1,12 +1,17 @@
 // The demo database contents, built from src/data/crew.json and src/data/standtests.json.
-// Pure functions, used by the Crew Medical Officer view (device copy of the crew's readings) and
-// by the tests. Rows carry a stable `key` (e.g. "daily:crew-01:17").
+// Pure functions, shared by:
+//   - (formerly lib/seedSql.js, the Supabase seed; removed in the monorepo), and
+//   - the device fallback for the Crew Medical Officer view when the onboard server is offline,
+// so both show exactly the same seeded readings and statuses.
+//
+// Rows carry a stable `key` (e.g. "daily:crew-01:17"); the SQL generator turns it into a UUID.
 
 import { ENGINE_VERSION, INDICATORS, evaluateSeries } from './baseline.js';
 import { STAND_TEST_ENGINE_VERSION, cleanStandTest, evaluateStandTest } from './standTest.js';
+import { CMO_CREW_ID, appRoleFor } from '../constants/crewRoles.js';
 
+export { CMO_CREW_ID };
 export const DEMO_MISSION = 'Demo mission';
-export const CMO_CREW_ID = 'crew-03';
 export const BASELINE_SOURCE = 'Synthetic preflight average (crew.json)';
 export const SEED_ORIGIN = 'seed';
 const SEED_TIME = 'T08:00:00.000Z';
@@ -24,7 +29,7 @@ export function seedCrewMembers(crewFile) {
   return crewFile.crew.map((c) => ({
     id: c.id,
     name: c.name,
-    role: c.id === CMO_CREW_ID ? 'cmo' : 'crew',
+    role: appRoleFor(c.id),
     mission: DEMO_MISSION,
     title: c.role,
     launch_date: c.launchDate,

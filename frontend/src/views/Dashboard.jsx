@@ -1,19 +1,20 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { useHealthData } from '../hooks/useHealthData.js';
-import { getRegionStatuses } from '../services/healthService.js';
-import IndicatorCard from '../components/IndicatorCard.jsx';
+import ReadingTiles from '../components/ReadingTiles.jsx';
+import NeedsAttention from '../components/NeedsAttention.jsx';
 import BodyMap from '../components/BodyMap.jsx';
 import RegionDrawer from '../components/RegionDrawer.jsx';
 import OverallHealthCard from '../components/OverallHealthCard.jsx';
 import ContextCard from '../components/ContextCard.jsx';
 import SourceLabel from '../components/SourceLabel.jsx';
 import { getProfile } from '../constants/mission.js';
+import { contextLine, environmentRules } from '../lib/environmentRules.js';
+import EnvironmentIcon from '../components/EnvironmentIcon.jsx';
 import { DRAWER_PINS } from '../lib/personCards.js';
+import { fitnessFor } from '../lib/fitness.js';
+import { fitnessFile } from '../data/bundled.js';
 
-/** Regions with no per-person data: their status is the shared demo value, labelled "Sample". */
-const SAMPLE_REGIONS = ['limbs'];
 
 function GravityPrompt({ profile, onStart }) {
   return (
@@ -34,13 +35,27 @@ function GravityPrompt({ profile, onStart }) {
 /**
  * The signed-in person's dashboard. `person` comes from lib/personCards.js (buildPersonDashboard):
  * six cards, region statuses and the overall score, all from that person's own crew.json rows and
- * check-ins. Only Bones and muscles is sample.
+ * check-ins. Bones and muscles comes from their grip strength against their own preflight value.
  */
-export default function Dashboard({ latestCheckin, onLogCheckin, checkinButtonRef, profileId, onStartStandTest, person }) {
+export default function Dashboard({
+  crewId,
+  latestCheckin,
+  onLogCheckin,
+  checkinButtonRef,
+  profileId,
+  onStartStandTest,
+  person,
+  readings = person.cards,
+  onOpenVital = () => {},
+  today = null,
+  sensorsToday = false,
+  drawerExtras = null, // { [indicatorId]: row } game rows for the body-map drawer (Activities: exercise time, not scored)
+}) {
   const profile = getProfile(profileId);
-  // Bones and muscles: the shared demo status (no per-person data), from the API or its device copy.
-  const sample = useHealthData(getRegionStatuses);
-  const regionStatuses = { ...person.regions, limbs: sample.data?.limbs ?? null };
+  const rules = environmentRules(profile);
+  // Bones and muscles: this person's grip strength against their own preflight value (lib/fitness.js).
+  const fitness = fitnessFor(crewId, fitnessFile);
+  const regionStatuses = { ...person.regions, limbs: fitness?.grip.status ?? null };
 
   const [openRegion, setOpenRegion] = useState(null);
   const labelRefs = useRef({});
@@ -48,36 +63,49 @@ export default function Dashboard({ latestCheckin, onLogCheckin, checkinButtonRe
   const returnTarget = useCallback(() => labelRefs.current[openRegion], [openRegion]);
 
   const latest = person.latest;
-  const basis = latest?.fromCrewRecord ? 'synthetic crew record' : 'your check-in';
+  const basis = latest?.fromCrewRecord ? 'synthetic crew record' : latest?.fromSensor ? 'simulated sensors' : 'your check-in';
   const overallState = { data: person.overall, loading: false, error: null, reload: () => {} };
 
   return (
     <>
-      {profile.gravityArrival && <GravityPrompt profile={profile} onStart={onStartStandTest} />}
-      <div className="dashboard">
+      <p className="today__context">
+        <EnvironmentIcon setting={profile.setting} size={16} />
+        {contextLine(profile)}
+      </p>
+      {/* Only where the stand test can be done (a surface base); in weightlessness standing has no effect. */}
+      {rules.standTest.available && onStartStandTest && <GravityPrompt profile={profile} onStart={onStartStandTest} />}
+      <div className="today">
         <BodyMap
           statuses={regionStatuses}
-          statusError={sample.error}
-          sampleRegions={SAMPLE_REGIONS}
           wholeBody={person.regions.wholeBody}
           openRegion={openRegion}
           onOpen={setOpenRegion}
           labelRefs={labelRefs}
-          source={`Region status: from your latest readings (${basis}) · Bones and muscles: sample`}
+          source={`Region status: from your latest readings (${basis}) · Bones and muscles: your grip strength vs preflight`}
+          simulated={Boolean(latest?.fromSensor)}
         />
 
-        <div className="area-overall">
+        <div className="today__side">
           <OverallHealthCard state={overallState} label="Computed from your latest readings" />
-        </div>
-
-        {person.cards.map((card) => (
-          <div key={card.id} className={`area-${card.area}`}>
-            <IndicatorCard indicator={card} profile={profile} />
-          </div>
-        ))}
-
-        <div className="area-context">
-          <ContextCard latestCheckin={latestCheckin} onLogCheckin={onLogCheckin} buttonRef={checkinButtonRef} />
+          <NeedsAttention cards={readings} onOpen={onOpenVital} onOpenAll={() => onOpenVital()} />
+          <section className="card" aria-labelledby="readings-title">
+            <div className="card__head">
+              <h2 id="readings-title" className="card__title">
+                Today&apos;s readings
+              </h2>
+              <button type="button" className="link-btn" onClick={() => onOpenVital()}>
+                All details
+              </button>
+            </div>
+            <ReadingTiles cards={readings} onOpen={onOpenVital} label="Today's readings" />
+          </section>
+          <ContextCard
+            latestCheckin={latestCheckin}
+            onLogCheckin={onLogCheckin}
+            buttonRef={checkinButtonRef}
+            today={today}
+            sensorsToday={sensorsToday}
+          />
         </div>
       </div>
 
@@ -87,13 +115,19 @@ export default function Dashboard({ latestCheckin, onLogCheckin, checkinButtonRe
           status={regionStatuses[openRegion]}
           latestVitals={latest}
           crewRecord={person.crewRecord}
-          personal={person.cardsById}
-          pinned={(DRAWER_PINS[openRegion] ?? []).map((id) => person.cardsById[id]).filter(Boolean)}
+          personal={drawerExtras ? { ...person.cardsById, ...drawerExtras } : person.cardsById}
+          pinned={
+            openRegion === 'limbs'
+              ? (fitness?.rows ?? [])
+              : (DRAWER_PINS[openRegion] ?? []).map((id) => person.cardsById[id]).filter(Boolean)
+          }
           onClose={() => setOpenRegion(null)}
+          vitalIds={readings.map((r) => r.id)}
+          onOpenVital={onOpenVital}
           getReturnTarget={returnTarget}
           profile={profile}
           onStartStandTest={
-            openRegion === 'chest'
+            openRegion === 'chest' && onStartStandTest
               ? () => {
                   setOpenRegion(null);
                   onStartStandTest();

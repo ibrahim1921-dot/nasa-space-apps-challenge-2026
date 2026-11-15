@@ -1,22 +1,18 @@
-// Single data-access layer. Every view gets its data through this file.
+// Single data-access layer for the dashboard.
+// Every function calls the app's own API routes (src/app/api), which serve mock data today.
+// When the prediction model's API is ready, only the routes and this file should need to
+// change; keep the return shapes.
 //
-// Two modes (see lib/backend.js):
-//   NEXT_PUBLIC_USE_MOCKS=true  (default) the app's own mock API in src/app/api, plus bundled data.
-//   NEXT_PUBLIC_USE_MOCKS=false the team's Java backend for what docs/api-contract.md covers today
-//                               (check-ins go through the outbox in hooks/useOnboard.jsx; radiation
-//                               below). The rest stays on the mock API until the backend serves it in
-//                               the same shape: crew details, region indicators, nights, labs, stand tests.
-//
-// Offline-first: where the data is bundled (crew, region indicators, seeded stand tests, radiation),
-// a failed request falls back to the same data on this device, so the app keeps working with no network.
+// Offline-first: where the route only serves bundled data (crew, region indicators, seeded stand
+// tests), a failed request falls back to the same data computed on this device, so the app
+// keeps working with no network. PhysioNet nights and Inspiration4 labs have no device fallback.
 
 import { crewMemberFor, crewRoster } from '../mocks/crew.js';
 import { regionIndicators, regionStatuses } from '../mocks/regions.js';
 import { applyRangeStatus } from '../lib/rangeCheck.js';
 import { CRITERIA, PERSONAL_MARGIN, STAND_TEST_ENGINE_VERSION, evaluateStandTest } from '../lib/standTest.js';
 import { preflightTestsOf, standFile } from '../data/bundled.js';
-import radiationFile from '../data/rr1_radiation.json';
-import { USE_MOCKS, backend } from '../lib/backend.js';
+import environmentFile from '../data/environment.json';
 
 /** Try the route; if the network or server is down, use the same data from this device. */
 async function withDeviceFallback(remote, local) {
@@ -44,7 +40,8 @@ async function request(path, init) {
 }
 
 /**
- * The logged-in crew member (ids, names and roles come from data/crew.json).
+ * One crew member's header details (ids, names and roles come from data/crew.json). Without a crewId
+ * only `{ roster, lastUpdated }` comes back: there is no default person.
  * @returns {Promise<{ id, name, role, missionDay, totalMissionDays, roster: {id, name, role}[], lastUpdated }>}
  */
 export async function getCrewMember(crewId) {
@@ -52,8 +49,11 @@ export async function getCrewMember(crewId) {
   return withDeviceFallback(
     () => request(`/api/crew${query}`),
     () => {
-      const member = crewMemberFor(crewId ?? 'crew-01');
-      return member && { ...member, roster: crewRoster, lastUpdated: new Date().toISOString(), fromDevice: true };
+      const lastUpdated = new Date().toISOString();
+      // Same shape as the server: no id → roster only, no default person.
+      if (!crewId) return { roster: crewRoster, lastUpdated, fromDevice: true };
+      const member = crewMemberFor(crewId);
+      return member && { ...member, roster: crewRoster, lastUpdated, fromDevice: true };
     },
   );
 }
@@ -147,12 +147,12 @@ export async function getStandTests(crewId) {
 }
 
 /**
- * ISS radiation dose per day (NASA RR-1). Backend: GET /api/environment/radiation.
- * @returns {Promise<{ source, note, unit, days: { date, gcr, saa, total, accumulated }[] }>}
+ * Station environment (NASA RR-1, ISS 2014): radiation per day and cabin air per day.
+ * Bundled with the app (built by ml/environment.py), so it works with no network.
+ * @returns {Promise<{ source, note, method, evaluation, radiation: { days }, cabin: { days, hourly_co2_mmhg } }>}
  */
-export async function getRadiation() {
-  if (USE_MOCKS) return radiationFile;
-  return withDeviceFallback(() => backend('/api/environment/radiation'), () => ({ ...radiationFile, fromDevice: true }));
+export async function getEnvironment() {
+  return environmentFile;
 }
 
 /**

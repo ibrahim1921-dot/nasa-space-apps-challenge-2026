@@ -3,6 +3,16 @@ import TrendIndicator from './TrendIndicator.jsx';
 import Sparkline from './Sparkline.jsx';
 import LimitsInfo from './LimitsInfo.jsx';
 import ActionCard, { CRISIS_STEPS } from './ActionCard.jsx';
+import ProvenanceChip from './ProvenanceChip.jsx';
+import { WhySection } from './WhyItMatters.jsx';
+
+/** Status chip, or the reason a reading is missing today (never shown as "Normal"). */
+export function StatusOrMissing({ indicator }) {
+  // Game data (Activities): "Logged · not scored" in place of a status chip.
+  if (indicator.notScored) return <span className="act-chip act-chip--tag">{indicator.notScoredText}</span>;
+  if (indicator.missing) return <span className="chip chip--muted">{indicator.missingText}</span>;
+  return <StatusChip status={indicator.status} />;
+}
 
 /** The crisis action card for an indicator whose reading crossed a crisis line (see content/limits.js). */
 export function IndicatorAction({ indicator, profile }) {
@@ -19,18 +29,24 @@ export function IndicatorAction({ indicator, profile }) {
   );
 }
 
-export default function IndicatorCard({ indicator, profile }) {
+/** @param {{ indicator, profile, showWhy?: boolean }} props  showWhy: the Vitals detail adds "What to do" and "Why it matters in space" */
+export default function IndicatorCard({ indicator, profile, showWhy = false }) {
   const { name, value, unit, status, trend, trendText, history, limitKey, sample, usual } = indicator;
   return (
     <article className="card indicator">
       <div className="indicator__top">
         <h3 className="indicator__name">{name}</h3>
-        <StatusChip status={status} />
+        <StatusOrMissing indicator={indicator} />
       </div>
       {sample ? (
         <p className="indicator__sample">Sample</p>
       ) : (
         indicator.sourceNote && <p className="indicator__source">{indicator.sourceNote}</p>
+      )}
+      {indicator.provenance && (
+        <p className="indicator__prov">
+          <ProvenanceChip chip={indicator.provenance} />
+        </p>
       )}
       <p className="indicator__value">
         <span className="num">{value}</span>
@@ -42,6 +58,7 @@ export default function IndicatorCard({ indicator, profile }) {
         <TrendIndicator trend={trend} text={trendText} />
         <Sparkline values={history} status={status} />
       </div>
+      {showWhy && <WhySection id={indicator.id} status={indicator.missing || sample ? null : status} />}
       {limitKey && <LimitsInfo limitKey={limitKey} usual={usual} />}
     </article>
   );

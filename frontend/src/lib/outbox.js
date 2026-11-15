@@ -24,10 +24,20 @@ export function syncStateOf(record, state = {}) {
   return 'on_device';
 }
 
-/** Unsynced records for one crew member that are due now, oldest first. */
+/**
+ * Who sends a record: its author. A CMO exam is sent by the CMO who entered it (payload.entered_by),
+ * never by the examined crew member; everything else by the crew member it belongs to. So one person's
+ * outbox never sends anyone else's records.
+ */
+export function senderOf(record) {
+  if (record?.payload?.kind_detail === 'cmo_exam') return record.payload.entered_by?.crew_id ?? null;
+  return record?.crew_id ?? null;
+}
+
+/** Unsynced records this crew member sends (their own, and exams they entered) that are due now, oldest first. */
 export function dueRecords(records, crewId, state, now) {
   return records
-    .filter((r) => !r.synced_at && r.crew_id === crewId && !state[r.id]?.rejected && (state[r.id]?.next_at ?? 0) <= now)
+    .filter((r) => !r.synced_at && senderOf(r) === crewId && !state[r.id]?.rejected && (state[r.id]?.next_at ?? 0) <= now)
     .sort((a, b) => Date.parse(a.recorded_at) - Date.parse(b.recorded_at))
     .slice(0, MAX_BATCH);
 }
@@ -35,17 +45,22 @@ export function dueRecords(records, crewId, state, now) {
 /** Earliest time (ms) any pending record of this crew member is due, or null. */
 export function nextDueAt(records, crewId, state) {
   const times = records
-    .filter((r) => !r.synced_at && r.crew_id === crewId && !state[r.id]?.rejected)
+    .filter((r) => !r.synced_at && senderOf(r) === crewId && !state[r.id]?.rejected)
     .map((r) => state[r.id]?.next_at ?? 0);
   return times.length ? Math.min(...times) : null;
 }
 
 /** What goes over the wire for one record: the reading itself plus what this device scored. */
 export function toSyncReading(record) {
-  const payload =
-    record.kind === 'daily_vitals'
-      ? { reading: record.payload.reading, context: record.payload.context ?? null }
-      : record.payload;
+  let payload = record.payload;
+  if (record.kind === 'daily_vitals') {
+    payload = { reading: record.payload.reading, context: record.payload.context ?? null };
+    // Provenance and the demo events behind the simulated sensor days, only when the record has them,
+    // so older records sync exactly as before.
+    for (const key of ['provenance', 'devices', 'entered_by', 'demo_events', 'kind_detail', 'note']) {
+      if (record.payload[key] !== undefined) payload[key] = record.payload[key];
+    }
+  }
   return {
     id: record.id,
     crew_id: record.crew_id,
@@ -86,7 +101,7 @@ const PERMANENT = new Set([400, 403, 409, 422]);
  * Send what is due and work out the new state.
  * @param {object} p
  * @param {object[]} p.records    every saved record (both kinds)
- * @param {string} p.crewId       the signed-in crew member; other people's records wait
+ * @param {string} p.crewId       the signed-in crew member; other people's records wait (see senderOf)
  * @param {object} p.state        retry bookkeeping (not mutated)
  * @param {number} p.now          ms
  * @param {(readings: object[]) => Promise<{ results: object[] }>} p.send  throws on network / server failure

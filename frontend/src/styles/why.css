@@ -1,0 +1,154 @@
+/* ======================================================================
+   "Why it matters in space" and "What to do" (components/WhyItMatters.jsx).
+   Same dark glass UI: why text in the body colour at ~85% opacity, sources in the muted style,
+   "What to do" in the watch / alert colours with icon + word (never colour alone).
+   ====================================================================== */
+.why {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.why__panel,
+.why__station {
+  display: grid;
+  gap: 6px;
+}
+
+.why__title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.why__text {
+  margin: 0;
+  color: var(--color-text);
+  opacity: 0.85;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.why__source {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.why__source a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.why__source a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.why__line {
+  margin: 8px 0 0;
+  color: var(--color-text);
+  opacity: 0.85;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.why__line-key {
+  font-weight: 600;
+}
+
+/* ---- What to do ---- */
+.why-todo {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-left-width: 4px;
+  border-radius: var(--radius-control);
+}
+
+.why-todo--watch {
+  border-left-color: var(--status-watch);
+  background: var(--status-watch-bg);
+}
+
+.why-todo--alert {
+  border-left-color: var(--status-alert);
+  background: var(--status-alert-bg);
+}
+
+.why-todo__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.why-todo__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.why-todo__list {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+}
+
+/* ---- Station details ---- */
+.why__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+}
+
+.why__station {
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+}
+
+/* ---- Drawer rows: "Why?" button and popover ---- */
+.row__chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px 10px;
+}
+
+.why__btn {
+  min-height: 32px;
+  font-size: 0.875rem;
+}
+
+.why__pop-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.why__pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 5;
+  display: grid;
+  gap: 6px;
+  width: min(280px, calc(100vw - 48px));
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  background: var(--drawer-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.why__pop .link-btn {
+  justify-self: start;
+}

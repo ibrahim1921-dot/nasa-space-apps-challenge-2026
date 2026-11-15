@@ -1,0 +1,404 @@
+/* Crew health dashboard: search, crew cards and medical profile (teammate commit b87d574
+   "Changes to admin dashboard and data section"). Their My Data nav rules are not needed: the grouped
+   tab now reuses the More menu. */
+
+
+/* ======================================
+   MEDICAL OFFICER DASHBOARD
+   ====================================== */
+
+/* Search */
+
+.cmo-search-wrapper {
+  margin: 1.25rem 0;
+}
+
+.cmo-search-label {
+  display: block;
+  font-weight: 650;
+  margin-bottom: 0.5rem;
+}
+
+.cmo-search {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #66758b;
+  border-radius: 0.7rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.cmo-search:focus-visible,
+.cmo-profile-button:focus-visible {
+  outline: 3px solid #46c5df;
+  outline-offset: 2px;
+}
+
+/* Profile button */
+
+.cmo-profile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  margin-top: 0.8rem;
+  border: 1px solid #4b93a8;
+  border-radius: 0.65rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cmo-profile-button:hover {
+  background: rgba(70, 197, 223, 0.13);
+}
+
+/* Crew medical profile */
+
+.cmo-profile {
+  margin: 1.25rem 0;
+}
+
+.cmo-profile__heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cmo-profile__section {
+  margin-top: 1.5rem;
+}
+
+.cmo-profile__section h3 {
+  margin-bottom: 0.8rem;
+}
+
+/* Vital measurement cards */
+
+.cmo-profile__metrics {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.85rem;
+}
+
+.cmo-profile__metrics > div {
+  padding: 1rem;
+  border: 1px solid rgba(128, 145, 160, 0.35);
+  border-radius: 0.75rem;
+}
+
+.cmo-profile__metrics dt {
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.cmo-profile__metrics dd {
+  margin: 0.45rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Medical history */
+
+.cmo-profile__history {
+  padding-left: 1.5rem;
+}
+
+.cmo-profile__history > li {
+  margin: 0.8rem 0;
+  padding-bottom: 0.8rem;
+  border-bottom:
+    1px solid rgba(128, 145, 160, 0.2);
+}
+
+@media (max-width: 600px) {
+  .cmo-profile__heading {
+    flex-direction: column;
+  }
+
+  .cmo-profile__metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+
+/* ============================================
+   COMPACT MY DATA DROPDOWN
+   Medical Officer Portal
+   ============================================ */
+
+/* Navigation wrappers */
+
+/* ======================================================================
+   Backend integration screens: alerts, roster, baselines, rules,
+   knowledge hub, ML assessment. Dark glass UI; accents follow the app:
+   CMO #7b93ff (--color-accent), emergency #ff5a5a, drill #ffb020,
+   activities #4cc9f0. Status = icon + word; colour only supports it.
+   ====================================================================== */
+
+:root {
+  --ix-emergency: #ff5a5a;
+  --ix-drill: #ffb020;
+  --ix-activities: #4cc9f0;
+}
+
+.ix-screen { display: grid; gap: 16px; }
+.ix-screen__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.ix-icon { flex: none; }
+
+/* Chips */
+.ix-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ix-chip--open { color: var(--status-watch); border-color: var(--status-watch); background: var(--status-watch-bg); }
+.ix-chip--ack { color: var(--color-accent); border-color: var(--color-accent); background: rgba(123, 147, 255, 0.14); }
+.ix-chip--resolved { color: var(--status-normal); border-color: var(--status-normal); background: var(--status-normal-bg); }
+.ix-chip--info { color: var(--color-muted); }
+.ix-chip--warning { color: var(--status-watch); border-color: var(--status-watch); background: var(--status-watch-bg); }
+.ix-chip--sev-info { color: var(--color-text); }
+.ix-chip--sev-warning { color: var(--status-watch); border-color: var(--status-watch); background: var(--status-watch-bg); }
+.ix-chip--sev-critical { color: var(--ix-emergency); border-color: var(--ix-emergency); background: rgba(255, 90, 90, 0.16); }
+.ix-chip--synthetic { color: var(--ix-drill); border-color: var(--ix-drill); background: rgba(255, 176, 32, 0.12); }
+
+.ix-source {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid currentColor;
+}
+.ix-source--live { color: var(--status-normal); }
+.ix-source--local { color: var(--ix-activities); }
+.ix-source--mock { color: var(--ix-drill); }
+
+.ix-demo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px dashed var(--ix-drill);
+  border-radius: var(--radius-control);
+  background: rgba(255, 176, 32, 0.1);
+  color: #ffd27a;
+}
+.ix-note { padding: 8px 12px; border-left: 3px solid var(--ix-drill); background: rgba(255, 176, 32, 0.08); }
+.ix-done { color: var(--status-normal); font-weight: 600; }
+.ix-pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* States */
+.ix-state { display: grid; gap: 8px; padding: 16px; border-radius: var(--radius-control); border: 1px solid var(--glass-border); background: var(--input-bg); }
+.ix-state p { margin: 0; }
+.ix-state__title { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.ix-state--error { border-color: var(--ix-emergency); }
+.ix-state--error .ix-state__title { color: #ffb3b3; }
+.ix-state--denied { border-color: var(--status-watch); }
+.ix-state--denied .ix-state__title { color: var(--status-watch); }
+.ix-state .btn { justify-self: start; }
+
+/* Fields and filters */
+.ix-field { display: grid; gap: 6px; font-size: 0.9rem; color: var(--color-muted); }
+.ix-field--inline { max-width: 320px; margin: 8px 0 16px; }
+.ix-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin: 16px 0;
+}
+.ix-filters__reset { min-height: 44px; }
+
+/* Alert list */
+.ix-alerts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.ix-alert {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--glass-border);
+  border-left: 4px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  background: var(--input-bg);
+}
+.ix-alert--warning { border-left-color: var(--status-watch); }
+.ix-alert--critical { border-left-color: var(--ix-emergency); }
+.ix-alert--info { border-left-color: var(--color-accent); }
+.ix-alert.is-selected { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.ix-alert__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ix-alert__reason { margin: 0; overflow-wrap: anywhere; }
+.ix-alert__meta { margin: 0; font-size: 0.85rem; }
+.ix-alert__open { justify-self: start; }
+.ix-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; }
+
+/* Detail */
+.ix-detail__head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.ix-detail__head h3:focus { outline: none; }
+.ix-detail__head h3:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+.ix-detail__section { margin-top: 16px; }
+.ix-detail__section h4 { margin: 0 0 8px; }
+.ix-detail__actions { display: grid; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--glass-border); }
+.ix-detail__actions > .btn { justify-self: start; }
+.ix-refs { display: grid; gap: 6px; margin: 10px 0; }
+.ix-refs > div { display: grid; grid-template-columns: minmax(110px, 30%) 1fr; gap: 8px; }
+.ix-refs dt { color: var(--color-muted); }
+.ix-refs dd { margin: 0; overflow-wrap: anywhere; }
+.ix-evidence { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.ix-evidence__item { padding: 10px 12px; border: 1px solid var(--glass-border); border-radius: var(--radius-control); }
+.ix-evidence__item p { margin: 0 0 4px; }
+.ix-evidence__head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ix-measure { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 6px 0 0; }
+.ix-measure dt { font-size: 0.8rem; color: var(--color-muted); text-transform: capitalize; }
+.ix-measure dd { margin: 0; font-weight: 600; }
+.ix-history { margin: 0; padding-left: 20px; }
+.ix-resolve { display: grid; gap: 8px; }
+.ix-resolve__note { min-height: 110px; resize: vertical; font: inherit; }
+.ix-resolve__count { margin: 0; font-size: 0.85rem; }
+.ix-resolve .btn { justify-self: start; }
+
+/* Roster */
+.ix-roster { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
+.ix-roster__item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  background: var(--input-bg);
+}
+.ix-roster__item p { margin: 0; }
+.ix-roster__name { font-weight: 700; }
+.ix-roster__alerts { display: grid; gap: 4px; justify-items: end; }
+.ix-local { display: grid; gap: 12px; }
+.ix-local__label { margin: 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--color-muted); }
+
+/* Tables */
+.ix-table-wrap { overflow-x: auto; margin: 8px 0 20px; -webkit-overflow-scrolling: touch; }
+.ix-table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 0.9rem; }
+.ix-table th,
+.ix-table td { padding: 10px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--glass-border); }
+.ix-table th { color: var(--color-muted); font-weight: 600; }
+.ix-table__sub { display: block; font-size: 0.78rem; margin-top: 4px; }
+.ix-list { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+
+/* Knowledge hub */
+.kh-grid { list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.kh-card {
+  width: 100%;
+  height: 100%;
+  min-height: 44px;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 16px;
+  text-align: left;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  background: var(--input-bg);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.kh-card:hover { border-color: var(--color-accent); background: rgba(123, 147, 255, 0.08); }
+.kh-card:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+.kh-card__title { font-weight: 700; font-size: 1.05rem; }
+.kh-card__text { color: var(--color-muted); font-size: 0.9rem; }
+.kh-card__more { color: var(--color-accent); font-weight: 600; font-size: 0.9rem; }
+.kh-back { min-height: 44px; }
+.kh-detail h2:focus { outline: none; }
+.kh-detail h2:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+.kh-section { margin-top: 20px; }
+.kh-section h3 { margin: 0 0 8px; font-size: 1.05rem; }
+.kh-section p { margin: 0 0 8px; }
+.kh-how { display: grid; gap: 8px; margin: 0; }
+.kh-how dt { font-weight: 600; }
+.kh-how dd { margin: 0; color: var(--color-muted); }
+.kh-list { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.kh-cms { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.kh-steps { margin-top: 12px; padding: 12px; border-radius: var(--radius-control); background: var(--input-bg); }
+.kh-steps h4 { margin: 0 0 6px; }
+.kh-foot { margin-top: 24px; }
+.is-todo { color: var(--ix-drill); font-style: italic; }
+
+/* Countermeasure card */
+.cm-card { display: grid; border: 1px solid var(--glass-border); border-radius: var(--radius-card); overflow: hidden; background: var(--input-bg); }
+.cm-card__media { position: relative; margin: 0; aspect-ratio: 16 / 9; background: #0e1830; }
+.cm-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cm-card__empty { display: grid; place-items: center; height: 100%; color: var(--color-muted); }
+.cm-card__caption {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(5, 9, 20, 0.85);
+  color: var(--color-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.cm-card__body { padding: 12px 14px; }
+.cm-card__title { margin: 0 0 6px; }
+.cm-card__body p { margin: 0 0 6px; }
+.cm-card__link { display: inline-flex; align-items: center; min-height: 44px; color: var(--ix-activities); }
+.cm-card__source { font-size: 0.85rem; }
+
+/* ML assessment */
+.ml-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.ml-meta { margin: 0 0 12px; }
+.ml-block { margin-bottom: 16px; }
+.ml-block h3 { margin: 0 0 8px; font-size: 1.05rem; }
+.ml-risk { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ml-aside { display: grid; gap: 12px; }
+.ml-aside h3,
+.ml-aside h4 { margin: 0; }
+.ml-aside__group { display: grid; gap: 8px; }
+
+/* Collapsible "Data source" and detail disclosures (teammate change 26f3be5) */
+details.source-label > summary,
+.sleep__details > summary,
+.card details > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+details.source-label > summary:focus-visible,
+.sleep__details > summary:focus-visible,
+.card details > summary:focus-visible { outline: var(--focus-ring); outline-offset: 2px; border-radius: 6px; }
+details.source-label > p { margin: 4px 0 0; }
+
+/* Narrow screens (375 px) */
+@media (max-width: 720px) {
+  .ml-layout { grid-template-columns: 1fr; }
+  .ix-refs > div { grid-template-columns: 1fr; gap: 2px; }
+  .ix-roster__alerts { justify-items: start; }
+  .ix-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 380px) {
+  .ix-filters { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kh-card { transition: none; }
+}
