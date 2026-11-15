@@ -1,0 +1,112 @@
+{
+  "schema_version": "astrohealth.simulation.export.v1",
+  "synthetic": true,
+  "workspace_id": "42c3c89a-0ef3-495e-962a-1c4397a93b01",
+  "durable": false,
+  "after": 0,
+  "through": 45,
+  "last_sequence": 1,
+  "retained_observations": 45,
+  "record_limit": 50000,
+  "items": [
+    {
+      "sequence": 1,
+      "envelope": {
+        "schema_version": "astrohealth.simulation.observation.v1",
+        "source": "synthetic",
+        "is_simulated": true,
+        "crew_code": "sim-crew-03",
+        "observation": {
+          "astronaut_id": "26904e81-d975-5d15-8f4f-6af546ffe6d8",
+          "astronaut_mission_id": null,
+          "checkin_id": null,
+          "indicator_code": "heart_rate",
+          "storage_kind": "SCALAR",
+          "comparison_scope_id": null,
+          "activity_context": "RESTING",
+          "measured_at": "2026-01-01T08:15:00Z",
+          "source_kind": "SIMULATION",
+          "source_name": "AstroHealth synthetic engine",
+          "source_record_id": "9ce4f368-d616-5c3c-a652-419979816bac",
+          "provenance": {
+            "engine_version": "0.1.0",
+            "synthetic": true
+          },
+          "simulation_metadata": {
+            "run_id": "14721900-a8d9-5b83-96c7-4822526c1cf8",
+            "seed": 42,
+            "scenario": "normal",
+            "phase": "REST",
+            "tick": 1,
+            "time_scale": 86400,
+            "stress": 0.1,
+            "activity": 0.7,
+            "sleep_hours": 8,
+            "radiation_mgy_per_day": 0.25,
+            "radiation_multiplier": 1
+          }
+        },
+        "comparison_scope": {
+          "indicator_code": "heart_rate",
+          "storage_kind": "SCALAR",
+          "scope_code": "default"
+        },
+        "value_table": "health_measurements",
+        "values": {
+          "metric_code": "value",
+          "value": 58.219207,
+          "unit": "beats/min"
+        },
+        "metrics": [
+          {
+            "metric_code": "value",
+            "value": 58.219207,
+            "unit": "beats/min"
+          }
+        ],
+        "baseline_parameters": {
+          "original": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "beats/min",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 60,
+              "simulation_noise_sd": 1.8,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ],
+          "activity": [
+            {
+              "baseline_kind": "ORIGINAL",
+              "version": 1,
+              "metric_code": "value",
+              "unit": "beats/min",
+              "activity_context": "RESTING",
+              "scope_code": "default",
+              "reference_value": 60,
+              "simulation_noise_sd": 1.8,
+              "lower_bound": null,
+              "upper_bound": null,
+              "source_name": "Synthetic configured reference"
+            }
+          ]
+        },
+        "baseline_deviations": [
+          {
+            "metric_code": "value",
+            "unit": "beats/min",
+            "from_original": -1.780793,
+            "from_activity": -1.780793
+          }
+        ]
+      }
+    }
+  ],
+  "next_url": "/api/v1/observations?workspace_id=42c3c89a-0ef3-495e-962a-1c4397a93b01&after=1&limit=1&through=45",
+  "checkpoint_url": null
+}

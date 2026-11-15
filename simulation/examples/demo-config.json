@@ -1,0 +1,29 @@
+{
+  "seed": 42,
+  "start_at": "2026-01-01T08:00:00Z",
+  "scenario": "normal",
+  "time_scale": 86400,
+  "stress": 0.1,
+  "activity": 0.7,
+  "sleep_hours": 8,
+  "radiation_mgy_per_day": 0.25,
+  "radiation_multiplier": 1,
+  "profiles": [
+    {
+      "crew_code": "sim-crew-01",
+      "original": {
+        "heart_rate.value": {"reference_value": 64, "noise_sd": 2},
+        "blood_pressure.systolic": {"reference_value": 116, "noise_sd": 3},
+        "blood_pressure.diastolic": {"reference_value": 74, "noise_sd": 2},
+        "blood_sugar.value": {"reference_value": 4.9, "noise_sd": 0.12},
+        "body_temperature.value": {"reference_value": 36.7, "noise_sd": 0.05},
+        "sleep_hours.duration": {"reference_value": 7.6, "noise_sd": 0.25},
+        "mood.score": {"reference_value": 4, "noise_sd": 0.2},
+        "muscle.grip_strength": {"reference_value": 36, "noise_sd": 0.4},
+        "muscle.muscle_mass": {"reference_value": 28, "noise_sd": 0.05},
+        "bone_mineral_density.areal_density": {"reference_value": 1.08, "noise_sd": 0.001},
+        "cumulative_absorbed_radiation_dose.value": {"reference_value": 0, "noise_sd": 0}
+      }
+    }
+  ]
+}
