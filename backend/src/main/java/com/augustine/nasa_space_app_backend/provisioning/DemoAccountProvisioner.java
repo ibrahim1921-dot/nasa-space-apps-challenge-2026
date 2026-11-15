@@ -11,6 +11,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javax.sql.DataSource;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -107,6 +108,17 @@ public final class DemoAccountProvisioner {
             if (!hasV30) throw new ProvisioningException(failure);
         } catch (RuntimeException exception) {
             // Keep connection details and Flyway/SQL errors out of the command's output.
+            // A connection failure says nothing about the applied schema version.
+            for (Throwable cause = exception; cause != null; cause = cause.getCause()) {
+                if (cause instanceof SQLException sql && sql.getSQLState() != null) {
+                    if (sql.getSQLState().startsWith("28")) {
+                        throw new ProvisioningException("Database authentication failed. Check DB_USER and DB_PASSWORD for the approved local database.");
+                    }
+                    if (sql.getSQLState().startsWith("08")) {
+                        throw new ProvisioningException("Database connection failed. Check DB_URL and that the approved local database is running.");
+                    }
+                }
+            }
             throw new ProvisioningException(failure);
         }
     }

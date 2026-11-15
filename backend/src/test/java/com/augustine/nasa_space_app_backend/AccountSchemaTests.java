@@ -28,8 +28,8 @@ class AccountSchemaTests extends PostgreSqlIntegrationTest {
     @Test
     void allMigrationsAreAppliedAndChecksumsValidate() throws SQLException {
         flyway.validate();
-        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("35");
-        assertThat(flyway.info().applied()).hasSize(35);
+        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("38");
+        assertThat(flyway.info().applied()).hasSize(38);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("SHOW server_version_num");
              ResultSet result = statement.executeQuery()) {
@@ -59,7 +59,7 @@ class AccountSchemaTests extends PostgreSqlIntegrationTest {
                     "upgrade-01", "Upgrade Astronaut");
         }
         Flyway latest = Flyway.configure().configuration(upgrade.getConfiguration()).target("latest").load();
-        assertThat(latest.migrate().migrationsExecuted).isEqualTo(6);
+        assertThat(latest.migrate().migrationsExecuted).isEqualTo(9);
         latest.validate();
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
