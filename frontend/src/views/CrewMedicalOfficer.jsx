@@ -23,6 +23,9 @@ import StatusChip from '../components/StatusChip.jsx';
 import StatusIcon from '../components/StatusIcon.jsx';
 import SourceLabel from '../components/SourceLabel.jsx';
 import SyncBadge from '../components/SyncBadge.jsx';
+import RecordObservationContexts from '../components/RecordObservationContexts.jsx';
+import { WellnessAnswers } from '../components/WellnessCheckinForm.jsx';
+import { needsUrgentHelp, readWellnessCheckins } from '../lib/wellnessCheckin.js';
 import { accessText, recentAccess } from '../lib/accessLog.js';
 import { crewNameFor } from '../lib/provenance.js';
 
@@ -128,8 +131,37 @@ function ReadingLine({ label, row, note }) {
       {note && <span className="chip chip--muted">{note}</span>}
       <ProvenanceChips chips={recordChips(row)} />
       {hasSync(row) && <SyncBadge record={row} />}
+      <RecordObservationContexts record={row} />
       {row.status !== 'normal' && row.reasons?.[0] && <p className="cmo-card__reason">{row.reasons[0]}</p>}
     </div>
+  );
+}
+
+/** Self-reported wellness check-ins saved on this browser (teammate feature, f291403). Separate from measured vitals. */
+function WellnessLine({ crewId }) {
+  const { version } = useOnboard();
+  const records = useMemo(() => readWellnessCheckins(crewId), [crewId, version]);
+  const urgent = records[0] && needsUrgentHelp(records[0].answers);
+  return (
+    <details className="cmo-card__more">
+      <summary className="cmo-card__sub">
+        Wellness answers{urgent ? ' · Urgent symptoms reported' : ''}
+      </summary>
+      <p className="muted">Self-reported check-ins saved on this browser. Separate from measured vitals.</p>
+      {records.length ? (
+        records.slice(0, 5).map((record) => (
+          <details key={record.id}>
+            <summary>
+              {new Date(record.recorded_at).toLocaleString()}
+              {needsUrgentHelp(record.answers) ? ' — Urgent symptoms reported' : ''}
+            </summary>
+            <WellnessAnswers answers={record.answers} />
+          </details>
+        ))
+      ) : (
+        <p className="muted">No wellness check-ins saved here.</p>
+      )}
+    </details>
   );
 }
 
@@ -160,6 +192,7 @@ function CrewCard({ card, isSelf, onOpen, onRecordExam }) {
         <summary className="cmo-card__sub">Preflight vs now</summary>
         <Comparison rows={card.comparison} />
       </details>
+      <WellnessLine crewId={card.id} />
       <div className="cmo-card__actions">
         {onOpen && (
           <button type="button" className="btn btn--secondary cmo-card__open" onClick={() => onOpen(card.id)}>
@@ -222,7 +255,7 @@ export default function CrewMedicalOfficer({ selfId = null, onOpenCrew = null, o
           </p>
         </div>
         <ul className="cmo__counts" aria-label="Crew by status">
-          {['alert', 'watch', 'normal'].map((s) => (
+          {['alert', 'watch', 'normal', ...(counts.unknown ? ['unknown'] : [])].map((s) => (
             <li key={s} className={`cmo__count status-text--${s}`}>
               <StatusIcon status={s} size={18} />
               <span className="num cmo__count-n">{counts[s]}</span>

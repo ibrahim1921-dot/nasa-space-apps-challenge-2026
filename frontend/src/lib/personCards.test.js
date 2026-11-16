@@ -13,6 +13,19 @@ const lastDay = (id) => [...person(id).days].sort((a, b) => a.day - b.day).at(-1
 const last14 = (id, key) => [...person(id).days].sort((a, b) => a.day - b.day).slice(-14).map((d) => d[key]);
 const SEV = { normal: 0, watch: 1, alert: 2 };
 
+test('a manual check-in preserves the last blood pressure card and status without restamping it', () => {
+  const before = dashFor('crew-01');
+  const saved = {
+    crew_id: 'crew-01', recorded_at: '2099-01-01T08:00:00Z',
+    payload: { reading: { heart_rate: 70 }, result: { indicators: {
+      heart_rate: { id: 'heart_rate', value: 70, status: 'normal', reasons: [], unit: 'bpm' },
+    } } },
+  };
+  const after = dashFor('crew-01', [saved]);
+  assert.deepEqual(after.cardsById['blood-pressure'], before.cardsById['blood-pressure']);
+  assert.equal(after.statuses.blood_pressure, before.statuses.blood_pressure);
+});
+
 for (const id of ['crew-01', 'crew-03']) {
   test(`${person(id).name}: sleep, BP, HR and reaction time come from their own latest crew.json row`, () => {
     const d = dashFor(id);

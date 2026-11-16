@@ -11,6 +11,7 @@ import { SCORED_LABEL } from '../lib/scoring.js';
 import { provenanceOf, rowProvenance } from '../lib/provenance.js';
 import ProvenanceChip from './ProvenanceChip.jsx';
 import { missingText } from '../lib/vitalsDashboard.js';
+import RecordObservationContexts from './RecordObservationContexts.jsx';
 
 /** Which check fired, as a short tag before each reason. */
 function checkTag(reason) {
@@ -160,6 +161,7 @@ export default function CheckinResult({ record, result, profile, stored, crewNam
           ))}
         </ul>
       )}
+      <RecordObservationContexts record={record} />
       {children}
 
       <p className="muted vresult__note">

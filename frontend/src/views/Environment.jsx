@@ -96,6 +96,7 @@ export default function Environment() {
 
         {env.loading && <span className="skel" style={{ width: '100%', height: 140 }} />}
         {!env.loading && env.error && <ErrorPanel onRetry={env.reload} />}
+        {!env.loading && !env.error && data && !(today && lastDose) && <p className="muted">No environmental readings connected.</p>}
         {data && today && lastDose && (
           <div className="env__tiles">
             <Tile

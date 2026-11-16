@@ -50,12 +50,14 @@ export default function Header({ crew, profileId, updatedAt, missionDay = null, 
             <p className="header__signed-in">
               <span className="muted">Signed in as</span>{' '}
               <strong className="header__name">{data.name}</strong>
-              <span className="muted"> · {data.role}</span>
+              <span className="muted"> · {data.title ?? data.role}</span>
             </p>
             <div className="header__meta">
-              <p>
-                Mission day <strong className="num">{missionDay ?? data.missionDay}</strong> of {data.totalMissionDays}
-              </p>
+              {(missionDay ?? data.missionDay) != null && (
+                <p>
+                  Mission day <strong className="num">{missionDay ?? data.missionDay}</strong> of {data.totalMissionDays}
+                </p>
+              )}
               {updatedAt && (
                 <p className="muted">
                   Latest reading <time dateTime={updatedAt}>{updatedText(updatedAt)}</time>

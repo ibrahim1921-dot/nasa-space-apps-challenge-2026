@@ -7,6 +7,9 @@ import BodyMap from '../components/BodyMap.jsx';
 import RegionDrawer from '../components/RegionDrawer.jsx';
 import OverallHealthCard from '../components/OverallHealthCard.jsx';
 import ContextCard from '../components/ContextCard.jsx';
+import WellnessCard from '../components/WellnessCard.jsx';
+import RecordObservationContexts from '../components/RecordObservationContexts.jsx';
+import PersistedObservationHistory from '../components/PersistedObservationHistory.jsx';
 import SourceLabel from '../components/SourceLabel.jsx';
 import { getProfile } from '../constants/mission.js';
 import { contextLine, environmentRules } from '../lib/environmentRules.js';
@@ -50,6 +53,8 @@ export default function Dashboard({
   today = null,
   sensorsToday = false,
   drawerExtras = null, // { [indicatorId]: row } game rows for the body-map drawer (Activities: exercise time, not scored)
+  latestWellness = null, // newest wellness check-in on this device (lib/wellnessCheckin.js)
+  onLogWellness = null,
 }) {
   const profile = getProfile(profileId);
   const rules = environmentRules(profile);
@@ -106,8 +111,24 @@ export default function Dashboard({
             today={today}
             sensorsToday={sensorsToday}
           />
+          <WellnessCard latest={latestWellness} onLog={onLogWellness} />
         </div>
       </div>
+
+      {/* Teammate feature (f291403): saved check-ins with their measurement context, and the backend's history. */}
+      {!!person.observationHistory?.length && (
+        <details className="card observation-history">
+          <summary>Saved check-in history</summary>
+          <p className="muted">Saved on this device.</p>
+          {person.observationHistory.slice(0, 10).map((record) => (
+            <article key={record.id}>
+              <time dateTime={record.recorded_at}>{new Date(record.recorded_at).toLocaleString()}</time>
+              <RecordObservationContexts record={record} />
+            </article>
+          ))}
+        </details>
+      )}
+      <PersistedObservationHistory crewCode={crewId} />
 
       {openRegion && (
         <RegionDrawer

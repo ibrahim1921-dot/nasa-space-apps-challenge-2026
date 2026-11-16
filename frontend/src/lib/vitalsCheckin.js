@@ -69,6 +69,8 @@ export function validateReading(reading, label = 'reading') {
   }
   for (const key of READING_KEYS) {
     if (reading[key] === null) continue;
+    // Blood pressure is optional for a manual check-in: both keys left out is fine; one alone is still an error.
+    if (['systolic', 'diastolic'].includes(key) && reading.systolic === undefined && reading.diastolic === undefined) continue;
     const error = validateField(key, reading[key], label);
     if (error) return error;
   }

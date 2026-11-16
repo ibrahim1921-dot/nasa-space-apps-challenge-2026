@@ -21,6 +21,7 @@ const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 function summarize(items) {
+  if (!items.length) return 'No recorded indicators for this region';
   const flagged = items.filter((i) => i.status !== 'normal').length;
   if (flagged === 0) return `All ${items.length} indicators are in the normal range`;
   return `${flagged} of ${items.length} indicators need attention`;
@@ -165,6 +166,7 @@ export default function RegionDrawer({
             </ul>
           )}
           {!loading && error && <ErrorPanel onRetry={reload} />}
+          {!loading && !error && items.length === 0 && <p className="muted">No recorded measurements available for this region.</p>}
           {!loading && !error && (
             <ul className="rows">
               {items.map((indicator) => (

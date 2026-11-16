@@ -75,6 +75,6 @@ export function homeFor(account) {
 /** May this account open this view? Only the CMO may open the exam form; officers never get check-ins. */
 export const canOpen = (account, viewId) =>
   Boolean(account) &&
-  ((viewId === 'checkin' && account.role !== 'officer') ||
+  (((viewId === 'checkin' || viewId === 'wellness') && account.role !== 'officer') ||
     (viewId === 'exam' && account.role === 'cmo') ||
     tabsFor(account).some((t) => t.id === viewId || t.items?.some((i) => i.id === viewId)));

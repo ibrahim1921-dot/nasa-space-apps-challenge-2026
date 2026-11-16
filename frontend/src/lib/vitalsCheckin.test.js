@@ -32,6 +32,18 @@ const usualReading = () => ({
   mood: Math.round(usual.mood.mean),
 });
 
+test('manual check-in omits device blood pressure and still validates and scores', () => {
+  const { systolic, diastolic, ...reading } = usualReading();
+  assert.equal(validateReading(reading), null);
+  assert.equal(validateExtraHistory([{ ...reading, recorded_at: '2026-11-15T08:00:00Z' }]), null);
+  const result = evaluateCheckin(reading, history);
+  assert.equal(result.indicators.blood_pressure, undefined);
+  assert.equal(result.order.includes('blood_pressure'), false);
+  assert.equal(result.order.length, 5);
+  assert.match(validateReading({ ...reading, systolic }), /diastolic.*missing/);
+  assert.match(validateReading({ ...reading, diastolic }), /systolic.*missing/);
+});
+
 test('crew-01’s sleep has drifted down in crew.json: the drift check flags it at their usual value', () => {
   const sleep = evaluateCheckin(usualReading(), history).indicators.sleep_hours;
   assert.equal(sleep.range_status, 'normal');

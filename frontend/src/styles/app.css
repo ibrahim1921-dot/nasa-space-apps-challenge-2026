@@ -4505,3 +4505,42 @@ a.limits__source:hover {
     right: auto;
   }
 }
+
+/* ---------- Wellness check-in and measurement context (teammate, f291403) ---------- */
+.status-text--unknown {
+  color: var(--color-muted);
+}
+.wellness { max-width: 850px; margin-inline: auto; }
+.wellness-attention { padding: 16px; margin-block: 20px; border: 1px solid currentColor; border-radius: 12px; }
+.wellness-attention li + li { margin-top: 10px; }
+.wellness-review { margin-top: 18px; }
+.wellness__question { margin-block: 24px; }
+.wellness__choices { display: flex; flex-wrap: wrap; gap: 10px; }
+.wellness__choice { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid currentColor; border-radius: 10px; cursor: pointer; }
+.wellness__choice:has(input:checked) { background: rgba(96, 165, 250, .16); }
+.wellness__choice:focus-within { outline: 2px solid currentColor; outline-offset: 3px; }
+.wellness__choice input { width: 18px; height: 18px; flex-shrink: 0; }
+.wellness__urgent { border: 2px solid #ed7777; padding: 16px; border-radius: 10px; margin-block: 20px; }
+.wellness__urgent p { margin-bottom: 0; }
+.wellness__summary > div { padding-block: 10px; border-bottom: 1px solid rgba(128,128,128,.3); }
+.wellness__summary dt { font-weight: 600; }
+.wellness__summary dd { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.observation-context, .record-observation-contexts { margin: 10px 0; font-size: 0.82rem; color: var(--color-muted); }
+.observation-context summary, .record-observation-contexts summary, .observation-history summary,
+.observation-context-fields summary { cursor: pointer; padding: 5px 0; }
+.observation-context dl { display: grid; gap: 6px; margin: 10px 0; }
+.observation-context dl > div { display: flex; flex-wrap: wrap; gap: 5px 12px; }
+.observation-context dt { font-weight: 600; }
+.observation-context dd { margin: 0; overflow-wrap: anywhere; }
+.observation-context__notes { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--color-text); }
+.observation-context-fields { margin: 16px 0; padding: 10px 14px; border: 1px solid var(--glass-border); border-radius: var(--radius-control); }
+.observation-context-fields__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; margin: 12px 0; }
+.observation-context-fields .field { min-width: 0; display: grid; gap: 7px; }
+.observation-context-fields .input { width: 100%; min-width: 0; }
+.observation-context-fields p { font-size: 0.82rem; margin-top: 10px; }
+.record-observation-contexts__item { padding: 8px 0; }
+.observation-history { margin-top: 20px; }
+.observation-history__controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin: 12px 0; }
+.observation-history__controls .field { display: grid; gap: 6px; }
+.observation-history__entry, .observation-history article { padding: 12px 0; border-top: 1px solid var(--glass-border); }
+.observation-history__entry h4 { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }

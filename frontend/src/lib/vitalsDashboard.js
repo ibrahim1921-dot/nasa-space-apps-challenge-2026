@@ -6,6 +6,7 @@ import { formatRowValue } from './vitalsCheckin.js';
 import { sourceNoteFor } from './personDashboard.js';
 import { rowProvenance } from './provenance.js';
 import { DEVICES, DEVICE_OF_READING } from './sensorFeed.js';
+import { contextForRecord, indicatorCode } from './observationContext.js';
 
 /** Dashboard indicator id → daily-vitals result row id. */
 export const DASHBOARD_VITALS = {
@@ -78,8 +79,12 @@ export function applyVitals(indicator, record, usual = null, nameFor = undefined
     return { ...indicator, sample: true, usual: usual?.[rowId] ?? null };
   }
   const flagged = row.status !== 'normal';
+  // Measurement conditions (teammate feature, f291403). Heart rate is called "resting" only when the
+  // reading was recorded as resting.
+  const observationContext = contextForRecord(record, indicatorCode(rowId));
   return {
     ...indicator,
+    ...(rowId === 'heart_rate' && observationContext.activityContext !== 'RESTING' ? { name: 'Heart rate' } : {}),
     value: formatRowValue(row),
     status: row.status,
     crisis: row.crisis,
@@ -90,6 +95,7 @@ export function applyVitals(indicator, record, usual = null, nameFor = undefined
     sourceNote: sourceNoteFor(record),
     provenance: rowProvenance(record, rowId, nameFor),
     checkedAt: record.recorded_at,
+    observationContext,
     trend: trendVsUsual(row),
     trendText: flagged
       ? row.reasons[0]

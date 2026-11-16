@@ -71,8 +71,10 @@ export function clearVitalsCheckins() {
   }
 }
 
-export function makeVitalsRecord({ crewId, reading, context, result, recordedAt, provenance, devices, enteredBy, demoEvents, kindDetail, note }) {
+export function makeVitalsRecord({ crewId, reading, context, observationContexts, result, recordedAt, provenance, devices, enteredBy, demoEvents, kindDetail, note }) {
   const payload = { reading, context, result };
+  // Measurement conditions per reading (lib/observationContext.js), copied so later edits never change history.
+  if (observationContexts) payload.observationContexts = JSON.parse(JSON.stringify(observationContexts));
   // A CMO exam for a crew member: crew_id is the patient, entered_by the Crew Medical Officer.
   if (kindDetail) payload.kind_detail = kindDetail;
   if (kindDetail && note) payload.note = note;

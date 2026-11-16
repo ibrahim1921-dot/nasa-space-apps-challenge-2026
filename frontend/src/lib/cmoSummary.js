@@ -3,7 +3,7 @@
 //   { id, crew_id, kind, recorded_at, payload, status, reasons, synced_at? }
 // Seeded daily rows carry payload.day (crew.json keys); entered rows carry payload.reading (snake_case).
 
-const RANK = { alert: 0, watch: 1, normal: 2 };
+const RANK = { alert: 0, watch: 1, normal: 2, unknown: 3 };
 const SEVERITY = { normal: 0, watch: 1, alert: 2 };
 const worse = (a, b) => ((SEVERITY[a] ?? 0) >= (SEVERITY[b] ?? 0) ? a : b);
 const newestFirst = (a, b) => Date.parse(b.recorded_at) - Date.parse(a.recorded_at);
@@ -57,7 +57,11 @@ export function preflightVsNow(baseline, latestVitalsRow) {
       change: Math.round(now.systolic - before.systolic),
       worseWhen: 'higher',
     },
-  ].filter((row) => shown[row.id]);
+  ].filter((row) => {
+    // Both sides must be numbers: a missing preflight value is left out, not shown as NaN.
+    const keys = { sleep: ['sleepHours'], heart_rate: ['heartRate'], blood_pressure: ['systolic', 'diastolic'] }[row.id];
+    return shown[row.id] && keys.every((key) => has(before[key]));
+  });
 }
 
 /**
@@ -72,7 +76,8 @@ export function buildCrewCards({ crew, readings, baselines }) {
     const stands = mine.filter((r) => r.kind === 'stand_test');
     const standInFlight = stands.find((r) => !isSeed(r)) ?? null;
     const stand = standInFlight ?? stands[0] ?? null;
-    const status = worse(vitals?.status ?? 'normal', standInFlight?.status ?? 'normal');
+    // No vitals and no in-flight stand test: unknown, never "normal".
+    const status = vitals || standInFlight ? worse(vitals?.status ?? 'normal', standInFlight?.status ?? 'normal') : 'unknown';
     return {
       id: c.id,
       name: c.name,

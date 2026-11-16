@@ -39,6 +39,8 @@ import { crewMemberFor, crewRoster } from './mocks/crew.js';
 import Header from './components/Header.jsx';
 import Banner from './components/Banner.jsx';
 import CheckinForm from './components/CheckinForm.jsx';
+import WellnessCheckinForm from './components/WellnessCheckinForm.jsx';
+import { readWellnessCheckins } from './lib/wellnessCheckin.js';
 import ExamForm from './components/ExamForm.jsx';
 import ExamNotice from './components/ExamNotice.jsx';
 import { useAccessLog } from './hooks/useAccessLog.js';
@@ -324,6 +326,8 @@ function AppShell() {
   const latestCheckin = savedLatest?.payload?.context
     ? { ...savedLatest.payload.context, savedAt: savedLatest.recorded_at }
     : null;
+  // The shown person's newest wellness check-in on this device (teammate feature, f291403).
+  const latestWellness = useMemo(() => readWellnessCheckins(shownId)[0] ?? null, [shownId, onboard.version, view]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Never show a view this person may not open (e.g. the CMO view for crew).
   useEffect(() => {
@@ -340,6 +344,17 @@ function AppShell() {
   function openCheckin() {
     setView('checkin');
     window.scrollTo(0, 0);
+  }
+
+  function openWellness() {
+    setView('wellness');
+    window.scrollTo(0, 0);
+  }
+
+  function handleWellnessSaved() {
+    setBanner('Wellness check-in saved.');
+    pendingFocus.current = 'banner';
+    setView('dashboard');
   }
 
   /** A reminder's action button: open the screen that completes it (always the signed-in person's own). */
@@ -526,6 +541,8 @@ function AppShell() {
             today={demo.today}
             sensorsToday={!viewingOther && Boolean(sensorToday)}
             drawerExtras={drawerExtras}
+            latestWellness={latestWellness}
+            onLogWellness={viewingOther ? null : openWellness}
           />
           </div>
         </div>
@@ -561,6 +578,10 @@ function AppShell() {
             onSaved={handleSaved}
             onCancel={handleCancel}
           />
+        )}
+
+        {view === 'wellness' && (
+          <WellnessCheckinForm missionDay={demo.missionDay} crewId={crewId} onSaved={handleWellnessSaved} onCancel={handleCancel} />
         )}
       </main>
 

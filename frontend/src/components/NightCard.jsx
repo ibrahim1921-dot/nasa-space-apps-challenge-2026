@@ -1,5 +1,6 @@
 import StatusIcon from './StatusIcon.jsx';
 import SourceLabel from './SourceLabel.jsx';
+import ObservationContext from './ObservationContext.jsx';
 import { STATUS_LABELS } from '../constants/status.js';
 import { rangeStatus } from '../lib/rangeCheck.js';
 
@@ -70,6 +71,7 @@ export default function NightCard({ night, source, isNew = false }) {
       {night.status === 'not enough history' && (
         <p className="night__reason muted">Needs at least 2 other clean nights from this person.</p>
       )}
+      <ObservationContext context={night.observationContext || { activityContext: 'SLEEPING', contextOrigin: 'MEASUREMENT_TYPE', sourceKind: night.logged ? 'SELF_REPORT' : source ? 'IMPORT' : 'UNKNOWN', recordedAt: night.logged_at || null }} />
       <SourceLabel source={source} />
     </article>
   );

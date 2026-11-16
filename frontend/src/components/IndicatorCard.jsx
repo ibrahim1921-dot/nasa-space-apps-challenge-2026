@@ -5,6 +5,7 @@ import LimitsInfo from './LimitsInfo.jsx';
 import ActionCard, { CRISIS_STEPS } from './ActionCard.jsx';
 import ProvenanceChip from './ProvenanceChip.jsx';
 import { WhySection } from './WhyItMatters.jsx';
+import ObservationContext from './ObservationContext.jsx';
 
 /** Status chip, or the reason a reading is missing today (never shown as "Normal"). */
 export function StatusOrMissing({ indicator }) {
@@ -53,6 +54,7 @@ export default function IndicatorCard({ indicator, profile, showWhy = false }) {
         {unit && <span className="indicator__unit">{unit}</span>}
       </p>
       {indicator.preflightAverage && <p className="indicator__preflight">{indicator.preflightAverage.text}</p>}
+      {indicator.observationContext && <ObservationContext context={indicator.observationContext} />}
       <IndicatorAction indicator={indicator} profile={profile} />
       <div className="indicator__foot">
         <TrendIndicator trend={trend} text={trendText} />

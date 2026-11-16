@@ -34,6 +34,7 @@ export default function OverallHealthCard({ state, label = null }) {
       )}
 
       {!loading && error && <ErrorPanel onRetry={reload} />}
+      {!loading && !error && !data && <p className="muted">No recorded measurements available.</p>}
 
       {!loading && !error && data && (
         <>

@@ -44,7 +44,7 @@ export default function SleepRecovery() {
 
   const summary = useMemo(() => sleepSummary(list, recordingDate, period), [list, recordingDate, period]);
 
-  async function handleLog({ night, date }) {
+  async function handleLog({ night, date, observationContext }) {
     const id = newNightId();
     const result = await scoreTonight({
       subject_id: subject,
@@ -60,6 +60,7 @@ export default function SleepRecovery() {
       date: result.date,
       night,
       status: result.status,
+      observationContext,
       heart_rate_score: result.heart_rate_score,
       sleep_score: result.sleep_score,
       reason: result.reason,

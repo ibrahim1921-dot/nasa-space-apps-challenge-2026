@@ -23,6 +23,7 @@ export default function StatusIcon({ status, size = 14 }) {
       </svg>
     );
   }
+  if (status === 'unknown' || !status) return <svg {...common}><circle cx="8" cy="8" r="6.6" /><path d="M5 8h6" /></svg>;
   if (status === 'watch') {
     return (
       <svg {...common}>
